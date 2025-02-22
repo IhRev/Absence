@@ -1,5 +1,5 @@
 <div class="container">
-  <button class="add-button">Add</button>
+  <button class="add-button" (click)="openForm()">Add</button>
   <div class="item">
     <span class="absence-id">#</span>
     <span class="absence-name">Name</span>
@@ -11,3 +11,4 @@
     <absence-item [item]="absence" />
   </div>
 </div>
+<app-absence-form [isVisible]="isFormOpened" />
