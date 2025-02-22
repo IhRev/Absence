@@ -11,4 +11,4 @@
     <absence-item [item]="absence" />
   </div>
 </div>
-<app-absence-form [isVisible]="isFormOpened" />
+<app-absence-form (closeModal)="closeForm()" [isVisible]="isFormOpened" />

@@ -26,4 +26,8 @@ export class AbsenceListComponent implements OnInit {
   openForm() {
     this.isFormOpened = true;
   }
+
+  closeForm() {
+    this.isFormOpened = false;
+  }
 }

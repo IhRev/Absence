@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -10,4 +10,9 @@ import { NgIf } from '@angular/common';
 })
 export class AbsenceFormComponent {
   @Input() isVisible = false;
+  @Output() closeModal = new EventEmitter();
+
+  close(){
+    this.closeModal.emit();
+  }
 }
