@@ -1,4 +1,4 @@
-export class AbsenceItem {
+export class Absence {
     constructor(
         public id: number,
         public name: string,     

@@ -1,6 +1,8 @@
 <div class="container">
-  <button class="add-button" (click)="openForm()">Add</button>
-  <div class="item">
+  <div class="buttons">
+    <button class="add-button" (click)="openForm()">New</button>
+  </div>
+  <div class="header">
     <span class="absence-id">#</span>
     <span class="absence-name">Name</span>
     <span class="absence-type">Type</span>
@@ -8,7 +10,17 @@
     <span class="absence-date">End Date</span>
   </div>
   <div *ngFor="let absence of absences">
-    <absence-item [item]="absence" />
+    <div class="item">
+      <span class="absence-id">{{ absence.id }}</span>
+      <span class="absence-name">{{ absence.name }}</span>
+      <span class="absence-type">{{ absence.type }}</span>
+      <span class="absence-date">{{
+        absence.startDate | date : "d MMMM, y"
+      }}</span>
+      <span class="absence-date">{{
+        absence.endDate | date : "d MMMM, y"
+      }}</span>
+    </div>
   </div>
 </div>
-<app-absence-form (closeModal)="closeForm()" [isVisible]="isFormOpened" />
+<app-absence-form (closeModal)="closeForm($event)" [isVisible]="isFormOpened" />

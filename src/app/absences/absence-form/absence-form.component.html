@@ -1,6 +1,30 @@
 <div class="modal-container" *ngIf="isVisible">
   <div class="modal-dialog">
-    <p>Hello</p>
-    <button (click)="close()">X</button>
+    <div>
+      <p>Hello</p>
+      <button (click)="close()">X</button>
+    </div>
+    <div>
+      <div class="input-item">
+        <label for="name" id="name">Name</label>
+        <input type="text" name="name" [(ngModel)]="name" />
+      </div>
+      <div class="input-item">
+        <label for="type" id="type">Type</label>
+        <select name="type" [(ngModel)]="selectedType">
+          <option name *ngFor="let type of types" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+      </div>
+      <div class="input-item">
+        <label for="startDate" id="startDate">Start Date</label>
+        <input type="date" name="startDate" [(ngModel)]="startDate" />
+      </div>
+      <div class="input-item">
+        <label for="endDate" id="endDate">End Date</label>
+        <input type="date" name="endDate" [(ngModel)]="endDate" />
+      </div>
+    </div>
   </div>
 </div>
