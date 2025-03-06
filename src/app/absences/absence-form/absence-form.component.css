@@ -15,7 +15,69 @@
     background: white;
     border-radius: 5px;
     box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.3);
-    width: 400px;
-    height: 200px;
+    width: auto;
+    height: auto;
+    padding: 0px 5px 10px 5px;
     text-align: center;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between; /* pushes p and button to opposite ends */
+    align-items: center;
+    padding: 10px;
+}
+
+.input-item{
+    padding: 10px;
+}
+
+label{
+    font-size: 14px;
+    width: 80px;
+    display: inline-block;
+    text-align: left;
+}
+
+input,select{
+    width: 150px;
+} 
+
+input, select{
+    border: 1px solid rgb(47, 45, 45);
+    outline: none;
+    transition: 0.4s;
+    border-radius: 5px;
+}
+
+input[type="text"]{
+    padding: 2px 5px;
+} 
+
+input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+}
+
+select:focus{
+    border-color: #007BFF;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+}
+
+button{
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.submit-button{
+    border: 1px solid rgb(47, 45, 45);
+    padding: 2px;
+    border-radius: 5px;
+    width: 100px;
+}
+
+.submit-button:hover{
+    border-color: #007BFF;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
 }

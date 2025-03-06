@@ -1,7 +1,7 @@
 <div class="modal-container" *ngIf="isVisible">
   <div class="modal-dialog">
-    <div>
-      <p>Hello</p>
+    <div class="header">
+      <p>Absence Form</p>
       <button (click)="close()">X</button>
     </div>
     <div>
@@ -25,6 +25,7 @@
         <label for="endDate" id="endDate">End Date</label>
         <input type="date" name="endDate" [(ngModel)]="endDate" />
       </div>
+      <button class="submit-button">Submit</button>
     </div>
   </div>
 </div>
