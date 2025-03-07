@@ -1,9 +1,12 @@
 <div class="modal-container" *ngIf="isVisible">
   <div class="modal-dialog">
     <div class="header">
-      <p>Absence Form</p>
-      <button (click)="close()">X</button>
+      <p class="header-label">Absence Form</p>
+      <button class="close-button" (click)="close()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
+    <hr />
     <div>
       <div class="input-item">
         <label for="name" id="name">Name</label>
