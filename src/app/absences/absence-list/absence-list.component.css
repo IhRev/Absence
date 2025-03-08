@@ -1,64 +1,71 @@
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 100px;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
 }
 
-.buttons{
-    display: flex;
-    align-items: end;
-    justify-content: end;
-    width: 800px;
-    margin-bottom: 8px;
+.buttons {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 1rem;
 }
 
 .item,
-.header{
-    display: flex;
-    justify-content: center;
-    border-radius: 5px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-    margin-bottom: 8px; 
-    width: 800px;
-    gap: 50px;
+.header {
+  display: flex;
+  justify-content: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 800px;
+  gap: 50px;
 }
 
-.header{
-    background-color: rgb(161, 211, 75);
+.header {
+  background-color: rgb(37, 37, 36);
+  box-shadow: 0px 0px 10px rgba(199, 193, 20, 0.6);
+  border: 1px solid rgba(197, 193, 68, 0.6);
 }
 
-.item{
-    background-color: rgb(193, 224, 138);
+.item {
+  background-color: rgb(94, 94, 92);
+  box-shadow: 0px 0px 2px rgba(199, 193, 20, 0.9);
 }
 
-.absence-id{
-    width: 10px;
+.absence-id {
+  width: 10px;
 }
 
 .absence-name,
 .absence-type,
-.absence-date{
-    width: 120px;
+.absence-date {
+  width: 120px;
 }
 
 span {
-    margin: 5px;
-    color: white;
+  margin: 5px;
+  color: white;
 }
 
-.add-button{
-    background-color: #007bff;
-    color: white;
-    border: none;
-    width: 100px;
-    height: 30px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    font-size: 20px;
+.add-button {
+  color: #d4ff00;
+  background-color: rgb(37, 37, 36);
+  border: 0.5px solid #d4ff00;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  font-size: 20px;
 }
 
-.add-button:hover{
-    background-color: #4e90d6;
+.add-button:hover {
+  background-color: transparent;
+  box-shadow: 0px 0px 10px rgba(199, 193, 20, 0.6);
+  color: #defb50;
 }

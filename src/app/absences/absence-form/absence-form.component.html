@@ -22,13 +22,22 @@
       </div>
       <div class="input-item">
         <label for="startDate" id="startDate">Start Date</label>
-        <input type="date" name="startDate" [(ngModel)]="startDate" />
+        <mat-form-field class="example-full-width">
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="picker" />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <!-- <input type="date" name="startDate" [(ngModel)]="startDate" /> -->
       </div>
       <div class="input-item">
         <label for="endDate" id="endDate">End Date</label>
         <input type="date" name="endDate" [(ngModel)]="endDate" />
       </div>
-      <button class="submit-button">Submit</button>
+      <button (click)="submit()" class="submit-button">Submit</button>
     </div>
   </div>
 </div>

@@ -1,6 +1,8 @@
 <div class="container">
   <div class="buttons">
-    <button class="add-button" (click)="openForm()">New</button>
+    <button class="add-button" (click)="openForm()">
+      <i class="fa-solid fa-plus"></i>
+    </button>
   </div>
   <div class="header">
     <span class="absence-id">#</span>
@@ -23,4 +25,8 @@
     </div>
   </div>
 </div>
-<app-absence-form (closeModal)="closeForm($event)" [isVisible]="isFormOpened" />
+<app-absence-form
+  (closeModal)="closeForm()"
+  (submitModal)="submitForm($event)"
+  [isVisible]="isFormOpened"
+/>
