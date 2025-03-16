@@ -61,6 +61,53 @@ select {
   height: 25px;
 }
 
+.mat-label-color {
+  color: white;
+}
+
+::ng-deep .mat-datepicker-toggle-default-icon {
+  color: white;
+}
+
+.aaa {
+  color: #e8e8e8 !important;
+}
+
+/* ::ng-deep .mat-form-field-outline {
+  border-color: #d9ccc8 !important; 
+}
+
+::ng-deep .mat-form-field-label {
+  color: #e8e8e8 !important; 
+}
+
+::ng-deep .mat-input-element {
+  color: #e2e2e2 !important; 
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-input-element {
+  background-color: #e8f5e9 !important; 
+  color: #388e3c !important; 
+  border-radius: 4px; 
+}
+
+::ng-deep .mat-datepicker-content {
+  background-color: #f1e7e7 !important;
+}
+
+::ng-deep .mat-calendar-body-cell-content {
+  color: #fffb22 !important; 
+}
+
+::ng-deep .mat-calendar-body-selected {
+  background-color: #1dce23 !important; 
+  color: white !important;
+}
+
+::ng-deep .mat-calendar-body-today {
+  border: 2px solid #ffffff !important; 
+} */
+
 select option {
   background-color: black;
 }
@@ -124,5 +171,10 @@ button {
     flex-direction: column;
     align-items: flex-start;
     gap: 5;
+  }
+
+  .modal-dialog {
+    height: 100vh;
+    width: 100vh;
   }
 }

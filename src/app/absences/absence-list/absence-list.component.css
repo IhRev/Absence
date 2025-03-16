@@ -1,71 +1,102 @@
+/* General */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem;
+  padding: 100px 3rem;
   width: 100%;
-  max-width: 900px;
-  margin: auto;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-.buttons {
+/* Buttons */
+.btns {
   display: flex;
   justify-content: end;
   width: 100%;
-  max-width: 900px;
+  max-width: 1100px;
   margin-bottom: 1rem;
 }
 
-.item,
-.header {
-  display: flex;
-  justify-content: center;
+.btns button {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
   border-radius: 5px;
-  margin-bottom: 10px;
-  width: 800px;
-  gap: 50px;
+  font-size: 20px;
 }
 
-.header {
+.add-btn {
+  color: #d4ff00;
   background-color: rgb(37, 37, 36);
+  border: 0.5px solid #d4ff00;
+}
+
+.add-btn:hover {
+  background-color: transparent;
   box-shadow: 0px 0px 10px rgba(199, 193, 20, 0.6);
-  border: 1px solid rgba(197, 193, 68, 0.6);
+  color: #defb50;
+}
+
+/* List */
+.grid-list {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-row-gap: 10px;
+  max-width: 1100px;
+  margin: 5px 0px;
 }
 
 .item {
-  background-color: rgb(94, 94, 92);
-  box-shadow: 0px 0px 2px rgba(199, 193, 20, 0.9);
+  background-color: #1fa3d7;
+  padding: 1rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid black;
 }
 
-.absence-id {
-  width: 10px;
+.header {
+  background-color: rgb(38, 44, 44);
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.absence-num {
+  max-width: 40px;
+}
+
+.item-start {
+  border-radius: 10px 0px 0px 10px;
+}
+
+.item-end {
+  border-radius: 0px 10px 10px 0px;
 }
 
 .absence-name,
 .absence-type,
 .absence-date {
-  width: 120px;
+  max-width: 265px;
 }
 
-span {
-  margin: 5px;
-  color: white;
-}
+@media screen and (max-width: 768px) {
+  .item {
+    font-size: 10px;
+    padding: 0px;
+    max-width: 90px;
+  }
 
-.add-button {
-  color: #d4ff00;
-  background-color: rgb(37, 37, 36);
-  border: 0.5px solid #d4ff00;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  font-size: 20px;
-}
+  .container {
+    padding: 5px;
+  }
 
-.add-button:hover {
-  background-color: transparent;
-  box-shadow: 0px 0px 10px rgba(199, 193, 20, 0.6);
-  color: #defb50;
+  .item-start {
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  .item-end {
+    border-radius: 0px 5px 5px 0px;
+  }
 }

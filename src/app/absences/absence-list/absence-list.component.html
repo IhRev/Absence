@@ -1,30 +1,29 @@
 <div class="container">
-  <div class="buttons">
-    <button class="add-button" (click)="openForm()">
+  <div class="btns">
+    <button class="add-btn" (click)="openForm()">
       <i class="fa-solid fa-plus"></i>
     </button>
   </div>
-  <div class="header">
-    <span class="absence-id">#</span>
-    <span class="absence-name">Name</span>
-    <span class="absence-type">Type</span>
-    <span class="absence-date">Start Date</span>
-    <span class="absence-date">End Date</span>
-  </div>
-  <div *ngFor="let absence of absences">
-    <div class="item">
-      <span class="absence-id">{{ absence.id }}</span>
-      <span class="absence-name">{{ absence.name }}</span>
-      <span class="absence-type">{{ absence.type }}</span>
-      <span class="absence-date">{{
-        absence.startDate | date : "d MMMM, y"
-      }}</span>
-      <span class="absence-date">{{
-        absence.endDate | date : "d MMMM, y"
-      }}</span>
-    </div>
+  <div class="grid-list">
+    <span class="item absence-num item-start header">#</span>
+    <span class="item absence-name header">Name</span>
+    <span class="item absence-type header">Type</span>
+    <span class="item absence-date header">Start Date</span>
+    <span class="item absence-date item-end header">End Date</span>
+    @for (absence of absences; track absence) {
+    <span class="item absence-num item-start">{{ absence.id }}</span>
+    <span class="item absence-name">{{ absence.name }}</span>
+    <span class="item absence-type">{{ absence.type }}</span>
+    <span class="item absence-date">{{
+      absence.startDate | date : "d MMMM, y"
+    }}</span>
+    <span class="item absence-date item-end">{{
+      absence.endDate | date : "d MMMM, y"
+    }}</span>
+    }
   </div>
 </div>
+
 <app-absence-form
   (closeModal)="closeForm()"
   (submitModal)="submitForm($event)"
