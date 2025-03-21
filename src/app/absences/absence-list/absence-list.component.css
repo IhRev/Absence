@@ -3,9 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 100px 3rem;
-  width: 100%;
-  max-width: 1100px;
+  padding: 90px 5px 5px 5px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -14,8 +13,9 @@
   display: flex;
   justify-content: end;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin-bottom: 1rem;
+  padding-right: 5px;
 }
 
 .btns button {
@@ -23,19 +23,18 @@
   height: 30px;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 20px;
-}
-
-.add-btn {
-  color: #d4ff00;
+  padding-top: 2px;
+  font-size: 18px;
+  color: #fff;
   background-color: rgb(37, 37, 36);
-  border: 0.5px solid #d4ff00;
+  border: 0.5px solid #fff;
+  transition: all 0.2s ease;
 }
 
 .add-btn:hover {
   background-color: transparent;
-  box-shadow: 0px 0px 10px rgba(199, 193, 20, 0.6);
-  color: #defb50;
+  box-shadow: 0px 0px 10px rgba(65, 184, 29, 0.9);
+  color: #5cf03f !important;
 }
 
 /* List */
@@ -43,53 +42,60 @@
   display: grid;
   grid-template-columns: repeat(5, auto);
   grid-row-gap: 10px;
-  max-width: 1100px;
-  margin: 5px 0px;
+  max-width: 1200px;
+  width: 100%;
+  margin-top: 5px;
 }
 
 .item {
-  background-color: #1fa3d7;
-  padding: 1rem;
+  background-color: #1c86af;
+  padding: 5px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border: 1px solid black;
+  border-top: 2px solid rgb(103, 133, 253);
+  border-bottom: 2px solid rgb(103, 133, 253);
 }
 
 .header {
   background-color: rgb(38, 44, 44);
   font-weight: bold;
   font-size: 18px;
-}
-
-.absence-num {
-  max-width: 40px;
+  border-color: transparent !important;
 }
 
 .item-start {
   border-radius: 10px 0px 0px 10px;
+  border-left: 2px solid rgb(103, 133, 253);
 }
 
 .item-end {
   border-radius: 0px 10px 10px 0px;
+  border-right: 2px solid rgb(103, 133, 253);
 }
 
-.absence-name,
-.absence-type,
-.absence-date {
-  max-width: 265px;
-}
-
-@media screen and (max-width: 768px) {
-  .item {
-    font-size: 10px;
-    padding: 0px;
-    max-width: 90px;
+@media screen and (max-width: 576px) {
+  /* General */
+  .container {
+    padding-top: 55px;
   }
 
-  .container {
-    padding: 5px;
+  /* Buttons */
+  .btns button {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+    padding-top: 0px;
+  }
+
+  .btns {
+    margin-bottom: 5px;
+  }
+
+  /* List */
+  .item {
+    font-size: 10px;
   }
 
   .item-start {

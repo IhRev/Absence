@@ -1,35 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { Absence } from '../absence-list/absence-list.models';
 
 @Component({
   selector: 'app-absence-form',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
-  imports: [
-    NgIf,
-    NgFor,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatIconModule,
-  ],
+  imports: [NgIf, NgFor, FormsModule],
   templateUrl: './absence-form.component.html',
   styleUrl: './absence-form.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AbsenceFormComponent {
   @Input() isVisible = false;
@@ -38,8 +17,8 @@ export class AbsenceFormComponent {
   types: string[] = ['Option 1', 'Option 2', 'Option 3'];
   name: string = 'Absence';
   selectedType: string = this.types[0];
-  startDate: string = '';
-  endDate: string = '';
+  startDate: Date = new Date();
+  endDate: Date = new Date();
 
   close() {
     this.closeModal.emit();
@@ -51,8 +30,8 @@ export class AbsenceFormComponent {
         0,
         this.name,
         this.selectedType,
-        new Date(this.startDate),
-        new Date(this.endDate),
+        this.startDate,
+        this.endDate,
         1
       )
     );

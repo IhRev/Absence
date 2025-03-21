@@ -14,37 +14,7 @@ export class AbsenceListComponent implements OnInit {
   public absences: Absence[] = [];
   isFormOpened: boolean = false;
 
-  ngOnInit(): void {
-    this.absences.push(
-      new Absence(
-        1,
-        'Item1dddddddddddddddddddddddddddddddddddddddddddd',
-        'Type1',
-        new Date(),
-        new Date(),
-        1
-      )
-    );
-    this.absences.push(
-      new Absence(
-        2,
-        'Item2',
-        'Typddddddddddddddddddddde2',
-        new Date(),
-        new Date(),
-        1
-      )
-    );
-    this.absences.push(
-      new Absence(3, 'Item3', 'Type3', new Date(), new Date(), 1)
-    );
-    this.absences.push(
-      new Absence(4, 'Item4', 'Type1', new Date(), new Date(), 1)
-    );
-    this.absences.push(
-      new Absence(5, 'Item5', 'Type4', new Date(), new Date(), 1)
-    );
-  }
+  ngOnInit(): void {}
 
   openForm() {
     this.isFormOpened = true;

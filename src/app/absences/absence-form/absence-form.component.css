@@ -1,3 +1,4 @@
+/* Container */
 .modal-container {
   width: 100%;
   height: 100%;
@@ -14,18 +15,16 @@
 .modal-dialog {
   background: rgb(37, 34, 34);
   border-radius: 5px;
-  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 25px rgba(46, 131, 211, 0.5);
   min-width: 300px;
   height: auto;
   padding: 0px 5px 10px 5px;
   text-align: center;
+  overflow-y: auto;
+  max-height: 98vh;
 }
 
-.header-label {
-  margin-top: -2px;
-  color: white;
-}
-
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -33,6 +32,11 @@
   margin: 7px 10px 5px 10px;
 }
 
+.header-label {
+  color: white;
+}
+
+/* Form */
 .input-item {
   padding: 10px;
   display: flex;
@@ -51,7 +55,7 @@ label {
 
 input,
 select {
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid white;
   outline: none;
   transition: 0.4s;
   border-radius: 5px;
@@ -59,62 +63,20 @@ select {
   background-color: transparent;
   color: white;
   height: 25px;
+  margin-top: 2px;
+  padding-left: 5px;
 }
-
-.mat-label-color {
-  color: white;
-}
-
-::ng-deep .mat-datepicker-toggle-default-icon {
-  color: white;
-}
-
-.aaa {
-  color: #e8e8e8 !important;
-}
-
-/* ::ng-deep .mat-form-field-outline {
-  border-color: #d9ccc8 !important; 
-}
-
-::ng-deep .mat-form-field-label {
-  color: #e8e8e8 !important; 
-}
-
-::ng-deep .mat-input-element {
-  color: #e2e2e2 !important; 
-}
-
-::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-input-element {
-  background-color: #e8f5e9 !important; 
-  color: #388e3c !important; 
-  border-radius: 4px; 
-}
-
-::ng-deep .mat-datepicker-content {
-  background-color: #f1e7e7 !important;
-}
-
-::ng-deep .mat-calendar-body-cell-content {
-  color: #fffb22 !important; 
-}
-
-::ng-deep .mat-calendar-body-selected {
-  background-color: #1dce23 !important; 
-  color: white !important;
-}
-
-::ng-deep .mat-calendar-body-today {
-  border: 2px solid #ffffff !important; 
-} */
 
 select option {
   background-color: black;
 }
 
-input[type="text"],
-input[type="date"] {
+input[type="text"] {
   padding: 2px 5px;
+}
+
+input[type="date"] {
+  color-scheme: dark;
 }
 
 input:focus,
@@ -123,10 +85,30 @@ select:focus {
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
 }
 
+/* Buttons */
 button {
   background-color: transparent;
   outline: none;
   border: none;
+  transition: all 0.3s ease;
+}
+
+.close-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  font-size: 18px;
+  color: white;
+}
+
+.close-button:hover {
+  border-color: rgb(241, 9, 9);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.794);
+}
+
+.close-button:active {
+  background-color: rgba(241, 9, 9, 0.5);
+  color: white;
 }
 
 .submit-button {
@@ -148,33 +130,5 @@ button {
   box-shadow: 0 0 10px rgba(16, 216, 2, 0.4);
 }
 
-.close-button {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  font-size: 16px;
-  padding-top: 1px;
-  color: white;
-}
-
-.close-button:hover {
-  background-color: rgb(241, 9, 9);
-}
-
-.close-button:active {
-  background-color: rgba(241, 9, 9, 0.5);
-  color: white;
-}
-
-@media screen and (max-width: 576px) {
-  .input-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5;
-  }
-
-  .modal-dialog {
-    height: 100vh;
-    width: 100vh;
-  }
+@media screen and (max-height: 300px) {
 }

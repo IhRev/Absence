@@ -5,19 +5,17 @@
     </button>
   </div>
   <div class="grid-list">
-    <span class="item absence-num item-start header">#</span>
-    <span class="item absence-name header">Name</span>
-    <span class="item absence-type header">Type</span>
-    <span class="item absence-date header">Start Date</span>
-    <span class="item absence-date item-end header">End Date</span>
+    <span class="header item item-start">#</span>
+    <span class="header item">Name</span>
+    <span class="header item">Type</span>
+    <span class="header item">Start Date</span>
+    <span class="header item item-end">End Date</span>
     @for (absence of absences; track absence) {
-    <span class="item absence-num item-start">{{ absence.id }}</span>
-    <span class="item absence-name">{{ absence.name }}</span>
-    <span class="item absence-type">{{ absence.type }}</span>
-    <span class="item absence-date">{{
-      absence.startDate | date : "d MMMM, y"
-    }}</span>
-    <span class="item absence-date item-end">{{
+    <span class="item item-start">{{ absence.id }}</span>
+    <span class="item">{{ absence.name }}</span>
+    <span class="item">{{ absence.type }}</span>
+    <span class="item">{{ absence.startDate | date : "d MMMM, y" }}</span>
+    <span class="item item-end">{{
       absence.endDate | date : "d MMMM, y"
     }}</span>
     }
