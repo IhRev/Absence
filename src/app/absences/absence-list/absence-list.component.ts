@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Absence } from './absence-list.models';
+import { AbsenceDTO } from './absence-list.models';
 import { AbsenceFormComponent } from '../absence-form/absence-form.component';
 import { DatePipe } from '@angular/common';
+import { AbsenceService } from './absence.service';
 
 @Component({
   selector: 'absence-list',
@@ -11,21 +12,38 @@ import { DatePipe } from '@angular/common';
   styleUrl: './absence-list.component.css',
 })
 export class AbsenceListComponent implements OnInit {
-  public absences: Absence[] = [];
-  isFormOpened: boolean = false;
+  private readonly absenceService: AbsenceService;
 
-  ngOnInit(): void {}
+  public absences: AbsenceDTO[] = [];
+  public isFormOpened: boolean = false;
 
-  openForm() {
+  public constructor(absenceService: AbsenceService) {
+    this.absenceService = absenceService;
+  }
+
+  public ngOnInit(): void {
+    this.absenceService.getAbsences().subscribe({
+      next: (data) => (this.absences = data),
+      error: (e) => console.error(e),
+    });
+  }
+
+  public openForm(): void {
     this.isFormOpened = true;
   }
 
-  closeForm() {
+  public closeForm(): void {
     this.isFormOpened = false;
   }
 
-  submitForm(absence: Absence) {
-    this.absences.push(absence);
+  public submitForm(absence: AbsenceDTO): void {
+    this.absenceService.addAbsence(absence).subscribe({
+      next: (data) => {
+        absence.id = data;
+        this.absences.push(absence);
+      },
+      error: (e) => console.error(e),
+    });
     this.closeForm();
   }
 }

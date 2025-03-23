@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Absence, AbsenceTypeDTO } from '../absence-list/absence-list.models';
+import {
+  AbsenceDTO,
+  AbsenceTypeDTO,
+} from '../absence-list/absence-list.models';
 import { AbsenceTypeService } from './absence-type.service';
 
 @Component({
@@ -12,37 +15,39 @@ import { AbsenceTypeService } from './absence-type.service';
   styleUrl: './absence-form.component.css',
 })
 export class AbsenceFormComponent implements OnInit {
-  @Input() isVisible = false;
-  @Output() closeModal = new EventEmitter<Absence>();
-  @Output() submitModal = new EventEmitter();
+  private readonly absenceTypeService: AbsenceTypeService;
+
+  @Input() public isVisible = false;
+  @Output() public closeModal = new EventEmitter<AbsenceDTO>();
+  @Output() public submitModal = new EventEmitter();
+
   public types: AbsenceTypeDTO[] = [];
   public name: string = 'Absence';
   public selectedType!: AbsenceTypeDTO;
   public startDate: Date = new Date();
   public endDate: Date = new Date();
-  private absenceTypeService: AbsenceTypeService;
 
-  constructor(absenceTypeService: AbsenceTypeService) {
+  public constructor(absenceTypeService: AbsenceTypeService) {
     this.absenceTypeService = absenceTypeService;
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.absenceTypeService.getTypes().subscribe({
       next: (data) => {
         this.types = data;
         this.selectedType = data[0];
       },
-      error: (e) => console.log(e),
+      error: (e) => console.error(e),
     });
   }
 
-  close() {
+  public close(): void {
     this.closeModal.emit();
   }
 
-  submit() {
+  public submit(): void {
     this.submitModal.emit(
-      new Absence(
+      new AbsenceDTO(
         0,
         this.name,
         this.selectedType,
