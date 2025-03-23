@@ -9,23 +9,23 @@
     <hr />
     <div>
       <div class="input-item">
-        <label for="name" id="name">Name</label>
-        <input required type="text" name="name" [(ngModel)]="name" />
+        <label for="name">Name</label>
+        <input required type="text" id="name" [(ngModel)]="name" />
       </div>
       <div class="input-item">
-        <label for="type" id="type">Type</label>
-        <select required name="type" [(ngModel)]="selectedType">
-          <option name *ngFor="let type of types" [value]="type">
-            {{ type }}
+        <label for="type">Type</label>
+        <select required id="type" [(ngModel)]="selectedType">
+          <option *ngFor="let type of types" [ngValue]="type">
+            {{ type.name }}
           </option>
         </select>
       </div>
       <div class="input-item">
-        <label for="startDate" id="startDate">Start Date</label>
+        <label for="startDate">Start Date</label>
         <input required type="date" id="startDate" [(ngModel)]="startDate" />
       </div>
       <div class="input-item">
-        <label for="endDate" id="endDate">End Date</label>
+        <label for="endDate">End Date</label>
         <input required type="date" id="endDate" [(ngModel)]="endDate" />
       </div>
       <button (click)="submit()" class="submit-button">Submit</button>

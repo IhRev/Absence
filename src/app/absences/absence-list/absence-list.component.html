@@ -13,7 +13,7 @@
     @for (absence of absences; track absence) {
     <span class="item item-start">{{ absence.id }}</span>
     <span class="item">{{ absence.name }}</span>
-    <span class="item">{{ absence.type }}</span>
+    <span class="item">{{ absence.type.name }}</span>
     <span class="item">{{ absence.startDate | date : "d MMMM, y" }}</span>
     <span class="item item-end">{{
       absence.endDate | date : "d MMMM, y"
