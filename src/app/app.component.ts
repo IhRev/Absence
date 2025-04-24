@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { AbsenceListComponent } from './absences/absence-list/absence-list.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [AbsenceListComponent, NavBarComponent],
+  imports: [NavBarComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

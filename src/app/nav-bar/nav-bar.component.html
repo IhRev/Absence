@@ -1,7 +1,23 @@
 <nav class="nav-bar">
   <div class="container nav-bar-flex">
-    <div class="main-menu">
-      <img src="assets/logo.png" alt="Absence.com" class="logo" />
+    <div class="logo-container">
+      <a href="#" class="link logo-link">
+        <img src="assets/logo.png" alt="Absence.com" class="logo" />
+      </a>
+    </div>
+    <div class="menu-container">
+      <a routerLink="/" class="link home-link">Home</a>
+      <a routerLink="/about" class="link about-link">About</a>
+      <a routerLink="/holidays" class="link holidays-link">Holidays</a>
+      <a routerLink="/absences" class="link absences-link">Absences</a>
+      <div class="">
+        <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
+          <a class="link absences-link" routerLink="/login">Login</a>
+        </ng-container>
+        <ng-template #loggedInTemplate>
+          <span class="">Hello, {{ userFullName }}</span>
+        </ng-template>
+      </div>
     </div>
   </div>
 </nav>

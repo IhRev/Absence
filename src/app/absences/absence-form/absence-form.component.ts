@@ -50,10 +50,9 @@ export class AbsenceFormComponent implements OnInit {
       new AbsenceDTO(
         0,
         this.name,
-        this.selectedType,
+        this.selectedType.id,
         this.startDate,
-        this.endDate,
-        1
+        this.endDate
       )
     );
   }
