@@ -25,11 +25,11 @@ export class AuthService {
     return this.client.get<UserDetails>(`${this.baseUri}/users/details`);
   }
 
-  public login(): Observable<boolean> {
+  public login(userName: string, password: string): Observable<boolean> {
     return this.client
       .post<AuthResponse>(`${this.baseUri}/auth/login`, {
-        email: 'user@example.com',
-        password: 'string12',
+        email: userName,
+        password: password,
       })
       .pipe(
         tap((res) => {

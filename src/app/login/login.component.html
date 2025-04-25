@@ -1,9 +1,11 @@
-<p>login works!</p>
-<p>login works!</p>
-<p>login works!</p>
-<p>login works!</p>
-<p>login works!</p>
-<p>login works!</p>
-<p>login works!</p>
-<p>login works!</p>
-<p>login works!</p>
+<div class="form">
+  <div class="input-item">
+    <label for="userName">User Name </label>
+    <input required type="text" id="userName" [(ngModel)]="userName" />
+  </div>
+  <div class="input-item">
+    <label for="password">Password </label>
+    <input required type="password" id="password" [(ngModel)]="password" />
+  </div>
+  <button (click)="login()" class="submit-button">Sign In</button>
+</div>

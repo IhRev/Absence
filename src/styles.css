@@ -10,3 +10,7 @@ body {
   color: #fff;
   line-height: 1.6;
 }
+
+main {
+  padding-top: 60px;
+}
