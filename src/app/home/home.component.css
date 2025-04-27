@@ -1,0 +1,16 @@
+.container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.img-wrapper {
+  width: 100%;
+  margin: 5px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
+}

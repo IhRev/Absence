@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AbsenceTypeDTO } from '../absence-list/absence-list.models';
+import { AbsenceTypeDTO } from '../models/absence-list.models';
 import { Observable } from 'rxjs';
 
 @Injectable({

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, mapTo, Observable, tap } from 'rxjs';
-import { UserDetails } from './auth.models';
+import { BehaviorSubject, flatMap, map, mapTo, Observable, tap } from 'rxjs';
+import { UserDetails } from '../models/auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +36,7 @@ export class AuthService {
           if (res.isSuccess) {
             localStorage.setItem('accessToken', res.accessToken as string);
             localStorage.setItem('refreshToken', res.refreshToken as string);
+            this.loggedIn.next(true);
           } else {
             console.error(res.message);
           }
@@ -73,6 +74,12 @@ export class AuthService {
         credentials: { email: 'ihor.reva@mail.com', password: 'password' },
       })
       .pipe(map((res) => true));
+  }
+
+  public logout(): void {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    this.loggedIn.next(false);
   }
 }
 

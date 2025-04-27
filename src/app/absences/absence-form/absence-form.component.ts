@@ -1,11 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  AbsenceDTO,
-  AbsenceTypeDTO,
-} from '../absence-list/absence-list.models';
-import { AbsenceTypeService } from './absence-type.service';
+import { AbsenceDTO, AbsenceTypeDTO } from '../models/absence-list.models';
+import { AbsenceTypeService } from '../services/absence-type.service';
 
 @Component({
   selector: 'app-absence-form',

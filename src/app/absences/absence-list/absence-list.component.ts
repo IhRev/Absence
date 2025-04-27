@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AbsenceDTO } from './absence-list.models';
+import { AbsenceDTO } from '../models/absence-list.models';
 import { AbsenceFormComponent } from '../absence-form/absence-form.component';
 import { DatePipe } from '@angular/common';
-import { AbsenceService } from './absence.service';
+import { AbsenceService } from '../services/absence.service';
 
 @Component({
   selector: 'absence-list',
