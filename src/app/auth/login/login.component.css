@@ -50,6 +50,7 @@ button {
   border-radius: 5px;
   width: 100px;
   color: white;
+  display: block;
 }
 
 .submit-button:hover {
@@ -60,4 +61,14 @@ button {
 .submit-button:active {
   border-color: #0d900d;
   box-shadow: 0 0 10px rgba(16, 216, 2, 0.4);
+}
+
+.register-link {
+  text-decoration: none;
+  color: rgb(31, 31, 248);
+  font-size: 12px;
+}
+
+.register-link:hover {
+  color: rgb(88, 88, 247);
 }

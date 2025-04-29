@@ -4,6 +4,7 @@ import { AbsenceListComponent } from './absences/absence-list/absence-list.compo
 import { HomeComponent } from './home/home.component';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
 import { AboutComponent } from './about/about.component';
+import { RegisterComponent } from './auth/register/register.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -12,4 +13,5 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'profile', component: UserProfileComponent },
+  { path: 'register', component: RegisterComponent },
 ];

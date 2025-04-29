@@ -1,1 +1,24 @@
-<p>register works!</p>
+<div class="container">
+  <div class="register-form">
+    <div class="form-header">
+      <h2 class="header">Sign Up</h2>
+    </div>
+    <div class="input-item">
+      <label for="firstName">First Name</label>
+      <input required type="text" id="firstName" [(ngModel)]="firstName" />
+    </div>
+    <div class="input-item">
+      <label for="lastName">Last Name</label>
+      <input required type="text" id="lastName" [(ngModel)]="lastName" />
+    </div>
+    <div class="input-item">
+      <label for="email">Email</label>
+      <input required type="text" id="email" [(ngModel)]="email" />
+    </div>
+    <div class="input-item">
+      <label for="password">Password</label>
+      <input required type="password" id="password" [(ngModel)]="password" />
+    </div>
+    <button (click)="submit()" class="submit-button">Submit</button>
+  </div>
+</div>

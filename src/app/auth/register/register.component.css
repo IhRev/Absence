@@ -1,0 +1,68 @@
+.register-form {
+  margin: 30px auto 0 auto;
+  border-radius: 15px;
+  border: 2px rgb(35, 33, 33) solid;
+  width: 300px;
+  padding: 10px;
+}
+
+.input-item {
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-header {
+  text-align: center;
+}
+
+label {
+  font-size: 14px;
+  display: block;
+  color: white;
+}
+
+input {
+  border: 1px solid white;
+  outline: none;
+  transition: 0.4s;
+  border-radius: 5px;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  height: 25px;
+  padding: 2px 5px;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+}
+
+button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.submit-button {
+  display: block;
+  margin: 10px auto 0 auto;
+  border: 1px solid rgb(0, 0, 0);
+  padding: 2px;
+  border-radius: 5px;
+  width: 100px;
+  color: white;
+}
+
+.submit-button:hover {
+  border-color: #35c435;
+  box-shadow: 0 0 10px rgba(17, 255, 0, 0.4);
+}
+
+.submit-button:active {
+  border-color: #0d900d;
+  box-shadow: 0 0 10px rgba(16, 216, 2, 0.4);
+}

@@ -1,7 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, flatMap, map, mapTo, Observable, tap } from 'rxjs';
-import { UserDetails } from '../models/auth.models';
+import {
+  RegisterDTO,
+  UserCredentials,
+  UserDetails,
+} from '../models/auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -25,12 +29,9 @@ export class AuthService {
     return this.client.get<UserDetails>(`${this.baseUri}/users/details`);
   }
 
-  public login(userName: string, password: string): Observable<boolean> {
+  public login(credentials: UserCredentials): Observable<boolean> {
     return this.client
-      .post<AuthResponse>(`${this.baseUri}/auth/login`, {
-        email: userName,
-        password: password,
-      })
+      .post<AuthResponse>(`${this.baseUri}/auth/login`, credentials)
       .pipe(
         tap((res) => {
           if (res.isSuccess) {
@@ -66,13 +67,9 @@ export class AuthService {
       );
   }
 
-  public register(): Observable<boolean> {
+  public register(registerDTO: RegisterDTO): Observable<boolean> {
     return this.client
-      .post(`${this.baseUri}/auth/register`, {
-        firstName: 'Ihor',
-        lastName: 'Reva',
-        credentials: { email: 'ihor.reva@mail.com', password: 'password' },
-      })
+      .post(`${this.baseUri}/auth/register`, registerDTO)
       .pipe(map((res) => true));
   }
 

@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { UserCredentials } from '../models/auth.models';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -23,15 +24,17 @@ export class LoginComponent {
   }
 
   public login(): void {
-    this.authService.login(this.userName, this.password).subscribe({
-      next: (isSuccess) => {
-        if (isSuccess) {
-          this.router.navigate(['/home']);
-        } else {
-          this.message = 'Invalid login or password';
-        }
-      },
-      error: (e) => (this.message = 'Unexpected error'),
-    });
+    this.authService
+      .login(new UserCredentials(this.userName, this.password))
+      .subscribe({
+        next: (isSuccess) => {
+          if (isSuccess) {
+            this.router.navigate(['/home']);
+          } else {
+            this.message = 'Invalid login or password';
+          }
+        },
+        error: (e) => (this.message = 'Unexpected error'),
+      });
   }
 }
