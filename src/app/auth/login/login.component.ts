@@ -16,7 +16,6 @@ export class LoginComponent {
   private readonly router: Router;
   public userName: string = '';
   public password: string = '';
-  public message: string = '';
 
   public constructor(authService: AuthService, router: Router) {
     this.authService = authService;
@@ -30,11 +29,8 @@ export class LoginComponent {
         next: (isSuccess) => {
           if (isSuccess) {
             this.router.navigate(['/home']);
-          } else {
-            this.message = 'Invalid login or password';
           }
         },
-        error: (e) => (this.message = 'Unexpected error'),
       });
   }
 }

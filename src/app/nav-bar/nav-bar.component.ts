@@ -13,7 +13,6 @@ import { NgIf } from '@angular/common';
 export class NavBarComponent implements OnInit {
   private authService: AuthService;
   public isLoggedIn = false;
-  public userFullName: string | null = null;
 
   public constructor(authService: AuthService) {
     this.authService = authService;
@@ -21,16 +20,6 @@ export class NavBarComponent implements OnInit {
 
   public ngOnInit(): void {
     this.authService.loggedIn$.subscribe((status) => {
-      if (status) {
-        this.authService.getUserDetails().subscribe({
-          next: (data) => {
-            this.userFullName = `${data.firstName} ${data.lastName}`;
-          },
-          error: (e) => console.error(e),
-        });
-      } else {
-        this.userFullName = null;
-      }
       this.isLoggedIn = status;
     });
   }

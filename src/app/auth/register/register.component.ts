@@ -19,7 +19,7 @@ export class RegisterComponent {
   public email: string = '';
   public password: string = '';
 
-  constructor(authService: AuthService, router: Router) {
+  public constructor(authService: AuthService, router: Router) {
     this.authService = authService;
     this.router = router;
   }
@@ -36,13 +36,8 @@ export class RegisterComponent {
       .subscribe({
         next: (isSuccess) => {
           if (isSuccess) {
-            this.router.navigate(['/profile']);
-          } else {
-            console.error('Something went wrong');
+            this.router.navigate(['/login']);
           }
-        },
-        error: (e) => {
-          console.error(e);
         },
       });
   }

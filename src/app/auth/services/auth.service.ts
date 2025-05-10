@@ -1,7 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, flatMap, map, mapTo, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import {
+  AuthResponse,
+  ChangePasswordRequest,
+  DeleteUserRequest,
   RegisterDTO,
   UserCredentials,
   UserDetails,
@@ -25,24 +28,110 @@ export class AuthService {
     return !!localStorage.getItem('accessToken');
   }
 
-  public getUserDetails(): Observable<UserDetails> {
-    return this.client.get<UserDetails>(`${this.baseUri}/users/details`);
+  // user
+  public getUserDetails(): Observable<UserDetails | null> {
+    return this.client
+      .get<UserDetails>(`${this.baseUri}/users/details`, {
+        observe: 'response',
+      })
+      .pipe(
+        map((res: HttpResponse<any>) => {
+          if (res.status === 200) {
+            return res.body;
+          }
+          return null;
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(null);
+        })
+      );
   }
 
+  public updateUserDetails(userDetails: UserDetails): Observable<boolean> {
+    return this.client
+      .put(`${this.baseUri}/users/details`, userDetails, {
+        observe: 'response',
+      })
+      .pipe(
+        map((res: HttpResponse<any>) => {
+          if (res.status === 200) {
+            return true;
+          }
+          return false;
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(false);
+        })
+      );
+  }
+
+  public changePassword(request: ChangePasswordRequest): Observable<boolean> {
+    return this.client
+      .put(`${this.baseUri}/users/change_password`, request, {
+        observe: 'response',
+      })
+      .pipe(
+        map((res: HttpResponse<any>) => {
+          if (res.status === 200) {
+            this.userLogedOut();
+            return true;
+          }
+          return false;
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(false);
+        })
+      );
+  }
+
+  public deleteProfile(password: string): Observable<boolean> {
+    return this.client
+      .delete(`${this.baseUri}/users`, {
+        body: new DeleteUserRequest(password),
+        observe: 'response',
+      })
+      .pipe(
+        map((res: HttpResponse<any>) => {
+          if (res.status === 200) {
+            this.userLogedOut();
+            return true;
+          }
+          return false;
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(false);
+        })
+      );
+  }
+
+  // auth
   public login(credentials: UserCredentials): Observable<boolean> {
     return this.client
-      .post<AuthResponse>(`${this.baseUri}/auth/login`, credentials)
+      .post<AuthResponse>(`${this.baseUri}/auth/login`, credentials, {
+        observe: 'response',
+      })
       .pipe(
-        tap((res) => {
-          if (res.isSuccess) {
-            localStorage.setItem('accessToken', res.accessToken as string);
-            localStorage.setItem('refreshToken', res.refreshToken as string);
-            this.loggedIn.next(true);
-          } else {
-            console.error(res.message);
+        map((res) => {
+          if (res.status == 200) {
+            const body = res.body!;
+            if (body.isSuccess) {
+              localStorage.setItem('accessToken', res.accessToken as string);
+              localStorage.setItem('refreshToken', res.refreshToken as string);
+              this.loggedIn.next(true);
+              return true;
+            }
+            console.error(body.message);
           }
+          return false;
         }),
-        map((res) => res.isSuccess)
+        catchError((error) => {
+          console.error(error);
+          return of(false);
+        })
       );
   }
 
@@ -50,39 +139,77 @@ export class AuthService {
     const refreshToken = localStorage.getItem('refreshToken');
     const accessToken = localStorage.getItem('accessToken');
     return this.client
-      .post<AuthResponse>(`${this.baseUri}/auth/refresh_token`, {
-        refreshToken: refreshToken,
-        accessToken: accessToken,
-      })
+      .post<AuthResponse>(
+        `${this.baseUri}/auth/refresh_token`,
+        {
+          refreshToken: refreshToken,
+          accessToken: accessToken,
+        },
+        { observe: 'response' }
+      )
       .pipe(
-        tap((res) => {
-          if (res.isSuccess) {
-            localStorage.setItem('accessToken', res.accessToken as string);
-            localStorage.setItem('refreshToken', res.refreshToken as string);
-          } else {
-            console.error(res.message);
+        map((res) => {
+          if (res.status == 200) {
+            const body = res.body!;
+            if (body.isSuccess) {
+              localStorage.setItem('accessToken', body.accessToken!);
+              localStorage.setItem('refreshToken', body.refreshToken!);
+              return true;
+            }
+            console.error(body.message);
           }
+          return false;
         }),
-        map((res) => res.isSuccess)
+        catchError((error) => {
+          console.error(error);
+          return of(false);
+        })
       );
   }
 
   public register(registerDTO: RegisterDTO): Observable<boolean> {
     return this.client
-      .post(`${this.baseUri}/auth/register`, registerDTO)
-      .pipe(map((res) => true));
+      .post<any>(`${this.baseUri}/auth/register`, registerDTO, {
+        observe: 'response',
+      })
+      .pipe(
+        map((res: HttpResponse<any>) => {
+          return res.status === 200;
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(false);
+        })
+      );
   }
 
-  public logout(): void {
+  public logout(): Observable<boolean> {
+    return this.client
+      .post(
+        `${this.baseUri}/auth/logout`,
+        {},
+        {
+          observe: 'response',
+        }
+      )
+      .pipe(
+        map((res: HttpResponse<any>) => {
+          if (res.status === 200) {
+            this.userLogedOut();
+            return true;
+          }
+          return false;
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(false);
+        })
+      );
+  }
+
+  private userLogedOut(): void {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     this.loggedIn.next(false);
   }
-}
-
-export interface AuthResponse {
-  isSuccess: boolean;
-  message: string | null;
-  accessToken: string | null;
-  refreshToken: string | null;
 }

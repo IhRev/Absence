@@ -19,7 +19,22 @@ export class UserProfileComponent {
   }
 
   public logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/home']);
+    this.authService.logout().subscribe({
+      next: (isSuccess) => {
+        if (isSuccess) {
+          this.router.navigate(['/home']);
+        }
+      },
+    });
+  }
+
+  public delete(): void {
+    this.authService.deleteProfile('').subscribe({
+      next: (isSuccess) => {
+        if (isSuccess) {
+          this.router.navigate(['/home']);
+        }
+      },
+    });
   }
 }

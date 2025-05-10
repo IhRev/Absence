@@ -1,0 +1,41 @@
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  padding: 2px;
+  border-radius: 5px;
+  width: 100px;
+  color: white;
+}
+
+.submit-button {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.submit-button:hover {
+  border-color: #35c435;
+  box-shadow: 0 0 10px rgba(17, 255, 0, 0.4);
+}
+
+.submit-button:active {
+  border-color: #0d900d;
+  box-shadow: 0 0 10px rgba(16, 216, 2, 0.4);
+}
+
+.delete-button {
+  background-color: red;
+}
+
+.delete-button:hover {
+  background-color: rgba(248, 8, 8, 0.6);
+}
+
+.delete-button:active {
+  background-color: rgba(248, 8, 8, 0.4);
+}
