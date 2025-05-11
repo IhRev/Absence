@@ -1,14 +1,19 @@
-<div class="form">
-  <div class="input-item">
-    <label for="userName">User Name </label>
-    <input required type="text" id="userName" [(ngModel)]="userName" />
+<div class="container">
+  <div class="login-form">
+    <div class="form-header">
+      <h2 class="header">Log In</h2>
+    </div>
+    <div class="input-item">
+      <label for="userName">Email </label>
+      <input required type="text" id="userName" [(ngModel)]="userName" />
+    </div>
+    <div class="input-item">
+      <label for="password">Password </label>
+      <input required type="password" id="password" [(ngModel)]="password" />
+    </div>
+    <button (click)="login()" class="submit-button">Log In</button>
+    <a routerLink="/register" class="register-link"
+      >Don't have account yet? Sign Up.</a
+    >
   </div>
-  <div class="input-item">
-    <label for="password">Password </label>
-    <input required type="password" id="password" [(ngModel)]="password" />
-  </div>
-  <button (click)="login()" class="submit-button">Sign In</button>
-  <a routerLink="/register" class="register-link"
-    >Don't have account yet? Sign Up.</a
-  >
 </div>

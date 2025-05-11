@@ -1,16 +1,24 @@
+.login-form {
+  margin: 30px auto 0 auto;
+  border-radius: 15px;
+  border: 2px rgb(35, 33, 33) solid;
+  width: 300px;
+  padding: 10px;
+}
+
 .input-item {
   padding: 10px;
-  display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+}
+
+.form-header {
+  text-align: center;
 }
 
 label {
   font-size: 14px;
-  width: 65px;
-  display: inline-block;
-  text-align: left;
+  display: block;
   color: white;
 }
 
@@ -19,15 +27,10 @@ input {
   outline: none;
   transition: 0.4s;
   border-radius: 5px;
-  width: 150px;
+  width: 100%;
   background-color: transparent;
   color: white;
   height: 25px;
-  margin-top: 2px;
-  padding-left: 5px;
-}
-
-input[type="text"] {
   padding: 2px 5px;
 }
 
@@ -44,13 +47,13 @@ button {
 }
 
 .submit-button {
-  margin-top: 10px;
+  display: block;
+  margin: 10px auto 0 auto;
   border: 1px solid rgb(0, 0, 0);
   padding: 2px;
   border-radius: 5px;
   width: 100px;
   color: white;
-  display: block;
 }
 
 .submit-button:hover {
@@ -65,10 +68,15 @@ button {
 
 .register-link {
   text-decoration: none;
-  color: rgb(31, 31, 248);
+  color: white;
   font-size: 12px;
+  transition: 0.4s;
+  margin-top: 5px;
+  width: 100%;
+  display: block;
+  text-align: center;
 }
 
 .register-link:hover {
-  color: rgb(88, 88, 247);
+  color: rgb(72, 72, 237);
 }
