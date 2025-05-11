@@ -119,8 +119,8 @@ export class AuthService {
           if (res.status == 200) {
             const body = res.body!;
             if (body.isSuccess) {
-              localStorage.setItem('accessToken', res.accessToken as string);
-              localStorage.setItem('refreshToken', res.refreshToken as string);
+              localStorage.setItem('accessToken', body.accessToken as string);
+              localStorage.setItem('refreshToken', body.refreshToken as string);
               this.loggedIn.next(true);
               return true;
             }
