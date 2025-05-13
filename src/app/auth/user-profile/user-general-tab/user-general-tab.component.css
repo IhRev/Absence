@@ -1,0 +1,80 @@
+.profile-form {
+  width: 400px;
+}
+
+.input-item {
+  padding: 10px 0px;
+  align-items: left;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+label {
+  font-size: 16px;
+  display: block;
+  color: white;
+}
+
+input {
+  font-size: 16px;
+  border: 1px solid white;
+  outline: none;
+  transition: 0.4s;
+  border-radius: 5px;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  height: 30px;
+  padding: 2px 5px;
+  margin-top: 5px;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+button {
+  background-color: rgb(38, 44, 44);
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  width: 110px;
+  height: 30px;
+  color: white;
+}
+
+.edit-button {
+  border: 1px solid rgb(8, 202, 8);
+}
+
+.edit-button:hover {
+  border-color: rgb(6, 138, 6);
+  box-shadow: 0 0 10px rgb(6, 138, 6);
+}
+
+.logout-button {
+  border: 1px solid rgb(214, 214, 3);
+}
+
+.logout-button:hover {
+  border-color: rgb(179, 179, 0);
+  box-shadow: 0 0 10px rgb(179, 179, 0);
+}
+
+.delete-button {
+  border: 1px solid red;
+}
+
+.delete-button:hover {
+  border-color: rgb(186, 4, 4);
+  box-shadow: 0 0 10px rgb(186, 4, 4);
+}

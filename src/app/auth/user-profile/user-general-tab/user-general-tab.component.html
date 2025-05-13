@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="profile-form">
+    <div class="form-fields">
+      <div class="input-item">
+        <label for="Email">Email </label>
+        <input readonly type="text" id="email" [(ngModel)]="details.email" />
+      </div>
+      <div class="input-item">
+        <label for="firstName">First Name </label>
+        <input
+          required
+          type="text"
+          id="firstName"
+          [(ngModel)]="details.firstName"
+        />
+      </div>
+      <div class="input-item">
+        <label for="lastName">Last Name </label>
+        <input
+          required
+          type="text"
+          id="lastName"
+          [(ngModel)]="details.lastName"
+        />
+      </div>
+    </div>
+    <div class="buttons">
+      <button (click)="edit()" class="edit-button">Edit</button>
+      <button (click)="logout()" class="logout-button">Logout</button>
+      <button (click)="confirmationOpened = true" class="delete-button">
+        Delete Profile
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-password-confirmation
+  [isVisible]="confirmationOpened"
+  (closed)="confirmationOpened = false"
+  (submitted)="confirmationSubmitted($event)"
+/>
