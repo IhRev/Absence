@@ -34,13 +34,6 @@ input:focus {
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
 }
 
-.buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 10px;
-}
-
 button {
   background-color: rgb(38, 44, 44);
   outline: none;
@@ -54,27 +47,12 @@ button {
 
 .edit-button {
   border: 1px solid rgb(8, 202, 8);
+  display: block;
+  margin-left: auto;
+  margin-top: 10px;
 }
 
 .edit-button:hover {
   border-color: rgb(6, 138, 6);
   box-shadow: 0 0 10px rgb(6, 138, 6);
-}
-
-.logout-button {
-  border: 1px solid rgb(214, 214, 3);
-}
-
-.logout-button:hover {
-  border-color: rgb(179, 179, 0);
-  box-shadow: 0 0 10px rgb(179, 179, 0);
-}
-
-.delete-button {
-  border: 1px solid red;
-}
-
-.delete-button:hover {
-  border-color: rgb(186, 4, 4);
-  box-shadow: 0 0 10px rgb(186, 4, 4);
 }

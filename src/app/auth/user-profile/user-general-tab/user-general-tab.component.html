@@ -24,18 +24,6 @@
         />
       </div>
     </div>
-    <div class="buttons">
-      <button (click)="edit()" class="edit-button">Edit</button>
-      <button (click)="logout()" class="logout-button">Logout</button>
-      <button (click)="confirmationOpened = true" class="delete-button">
-        Delete Profile
-      </button>
-    </div>
+    <button (click)="edit()" class="edit-button">Edit</button>
   </div>
 </div>
-
-<app-password-confirmation
-  [isVisible]="confirmationOpened"
-  (closed)="confirmationOpened = false"
-  (submitted)="confirmationSubmitted($event)"
-/>

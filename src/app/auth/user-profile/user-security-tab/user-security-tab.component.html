@@ -1,1 +1,39 @@
-<p>user-security-tab works!</p>
+<div class="container">
+  <div class="form">
+    <h2 class="header">Password</h2>
+    <div class="input-item">
+      <label for="oldPassword">Old Password </label>
+      <input
+        required
+        type="password"
+        id="oldPassword"
+        [(ngModel)]="oldPassword"
+      />
+    </div>
+    <div class="input-item">
+      <label for="newPassword">New Password </label>
+      <input
+        required
+        type="password"
+        id="newPassword"
+        [(ngModel)]="newPassword"
+      />
+    </div>
+    <button (click)="submit()" class="submit-button">Change</button>
+  </div>
+  <div class="management">
+    <h2 class="header">Management</h2>
+    <div class="buttons">
+      <button (click)="logout()" class="logout-button">Sign Out</button>
+      <button (click)="confirmationOpened = true" class="delete-button">
+        Delete Profile
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-password-confirmation
+  [isVisible]="confirmationOpened"
+  (closed)="confirmationOpened = false"
+  (submitted)="confirmationSubmitted($event)"
+/>
