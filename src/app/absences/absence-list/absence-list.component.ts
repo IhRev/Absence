@@ -23,8 +23,11 @@ export class AbsenceListComponent implements OnInit {
 
   public ngOnInit(): void {
     this.absenceService.getAbsences().subscribe({
-      next: (data) => (this.absences = data),
-      error: (e) => console.error(e),
+      next: (data) => {
+        if (data) {
+          this.absences = data;
+        }
+      },
     });
   }
 
@@ -39,11 +42,22 @@ export class AbsenceListComponent implements OnInit {
   public submitForm(absence: AbsenceDTO): void {
     this.absenceService.addAbsence(absence).subscribe({
       next: (data) => {
-        absence.id = data;
-        this.absences.push(absence);
+        if (data) {
+          absence.id = data;
+          this.absences.push(absence);
+        }
       },
-      error: (e) => console.error(e),
     });
     this.closeForm();
+  }
+
+  public delete(id: number): void {
+    this.absenceService.deleteAbsence(id).subscribe({
+      next: (data) => {
+        if (data) {
+          this.absences = this.absences.filter((a) => a.id !== id);
+        }
+      },
+    });
   }
 }

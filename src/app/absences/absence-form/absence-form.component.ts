@@ -31,10 +31,11 @@ export class AbsenceFormComponent implements OnInit {
   public ngOnInit(): void {
     this.absenceTypeService.getTypes().subscribe({
       next: (data) => {
-        this.types = data;
-        this.selectedType = data[0];
+        if (data) {
+          this.types = data;
+          this.selectedType = data[0];
+        }
       },
-      error: (e) => console.error(e),
     });
   }
 
