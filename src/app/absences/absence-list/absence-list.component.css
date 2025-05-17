@@ -40,7 +40,7 @@
 /* List */
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(5, auto);
+  grid-template-columns: repeat(6, auto);
   grid-row-gap: 10px;
   max-width: 1200px;
   width: 100%;
@@ -48,14 +48,14 @@
 }
 
 .item {
-  background-color: #1c86af;
+  background-color: transparent;
   padding: 5px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-top: 2px solid rgb(103, 133, 253);
-  border-bottom: 2px solid rgb(103, 133, 253);
+  border-top: 2px solid rgb(38, 44, 44);
+  border-bottom: 2px solid rgb(38, 44, 44);
 }
 
 .header {
@@ -67,12 +67,28 @@
 
 .item-start {
   border-radius: 10px 0px 0px 10px;
-  border-left: 2px solid rgb(103, 133, 253);
+  border-left: 2px solid rgb(38, 44, 44);
 }
 
 .item-end {
   border-radius: 0px 10px 10px 0px;
-  border-right: 2px solid rgb(103, 133, 253);
+  border-right: 2px solid rgb(38, 44, 44);
+}
+
+.delete-button {
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(212, 35, 35);
+  height: 100%;
+  width: 30px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: rgb(227, 8, 8);
 }
 
 @media screen and (max-width: 576px) {

@@ -9,15 +9,19 @@
     <span class="header item">Name</span>
     <span class="header item">Type</span>
     <span class="header item">Start Date</span>
-    <span class="header item item-end">End Date</span>
+    <span class="header item">End Date</span>
+    <span class="header item item-end">Actions</span>
     @for (absence of absences; track absence) {
     <span class="item item-start">{{ absence.id }}</span>
     <span class="item">{{ absence.name }}</span>
     <span class="item">{{ absence.type }}</span>
     <span class="item">{{ absence.startDate | date : "d MMMM, y" }}</span>
-    <span class="item item-end">{{
-      absence.endDate | date : "d MMMM, y"
-    }}</span>
+    <span class="item">{{ absence.endDate | date : "d MMMM, y" }}</span>
+    <span class="item item-end">
+      <button class="delete-button" (click)="delete(absence.id)">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </span>
     }
   </div>
 </div>
