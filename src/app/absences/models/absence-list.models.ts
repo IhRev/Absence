@@ -8,6 +8,17 @@ export class AbsenceDTO {
   ) {}
 }
 
+export class Absence {
+  constructor(
+    public num: number,
+    public id: number,
+    public name: string,
+    public type: AbsenceTypeDTO,
+    public startDate: Date,
+    public endDate: Date
+  ) {}
+}
+
 export class CreateAbsenceDTO {
   constructor(
     public name: string,

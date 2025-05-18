@@ -9,7 +9,7 @@ import {
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  AbsenceDTO,
+  Absence,
   AbsenceTypeDTO,
   CreateAbsenceDTO,
   EditAbsenceDTO,
@@ -27,7 +27,7 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
   private readonly absenceTypeService: AbsenceTypeService;
 
   @Input() public isVisible = false;
-  @Input() public absence: AbsenceDTO | null = null;
+  @Input() public absence: Absence | null = null;
   @Output() public closeModal = new EventEmitter();
   @Output() public submitCreate = new EventEmitter<CreateAbsenceDTO>();
   @Output() public submitEdit = new EventEmitter<EditAbsenceDTO>();
@@ -47,23 +47,30 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
       next: (data) => {
         if (data) {
           this.types = data;
-          this.selectedType = data[0];
         }
       },
     });
   }
 
   public ngOnChanges(): void {
-    if (this.absence) {
-      this.name = this.absence.name;
-      this.selectedType = this.types.find((t) => t.id === this.absence!.type)!;
-      this.startDate = this.absence.startDate.toISOString().split('T')[0];
-      this.endDate = this.absence.endDate.toISOString().split('T')[0];
-    } else {
-      this.name = 'Absence';
-      this.selectedType = this.types[0];
-      this.startDate = new Date().toISOString().split('T')[0];
-      this.endDate = new Date().toISOString().split('T')[0];
+    if (this.isVisible) {
+      if (this.absence) {
+        this.name = this.absence.name;
+        this.selectedType = this.types.find(
+          (t) => t.id == this.absence?.type.id
+        )!;
+        this.startDate = new Date(this.absence.startDate)
+          .toISOString()
+          .split('T')[0];
+        this.endDate = new Date(this.absence.endDate)
+          .toISOString()
+          .split('T')[0];
+      } else {
+        this.name = 'Absence';
+        this.selectedType = this.types[0];
+        this.startDate = new Date().toISOString().split('T')[0];
+        this.endDate = new Date().toISOString().split('T')[0];
+      }
     }
   }
 
