@@ -18,9 +18,14 @@
     <span class="item">{{ absence.startDate | date : "d MMMM, y" }}</span>
     <span class="item">{{ absence.endDate | date : "d MMMM, y" }}</span>
     <span class="item item-end">
-      <button class="delete-button" (click)="delete(absence.id)">
-        <i class="fa-solid fa-trash"></i>
-      </button>
+      <div class="action-buttons">
+        <button class="delete-button" (click)="delete(absence.id)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+        <button class="edit-button" (click)="openForm(absence)">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+      </div>
     </span>
     }
   </div>
@@ -28,6 +33,8 @@
 
 <app-absence-form
   (closeModal)="closeForm()"
-  (submitModal)="submitForm($event)"
+  (submitCreate)="create($event)"
+  (submitEdit)="edit($event)"
   [isVisible]="isFormOpened"
+  [absence]="selectedAbsence"
 />

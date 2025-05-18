@@ -75,20 +75,36 @@
   border-right: 2px solid rgb(38, 44, 44);
 }
 
-.delete-button {
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  height: 100%;
+  justify-content: center;
+}
+
+.action-buttons button {
+  width: 30px;
+  font-size: 16px;
+  color: white;
   outline: none;
   border: none;
   border-radius: 5px;
+}
+
+.delete-button {
   background-color: rgb(212, 35, 35);
-  height: 100%;
-  width: 30px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  color: white;
 }
 
 .delete-button:hover {
-  background-color: rgb(227, 8, 8);
+  background-color: rgb(177, 0, 0);
+}
+
+.edit-button {
+  background-color: rgb(165, 182, 37);
+}
+
+.edit-button:hover {
+  background-color: rgb(202, 228, 4);
 }
 
 @media screen and (max-width: 576px) {

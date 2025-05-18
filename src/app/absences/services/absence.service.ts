@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { AbsenceDTO, EditAbsenceDTO } from '../models/absence-list.models';
+import {
+  AbsenceDTO,
+  CreateAbsenceDTO,
+  EditAbsenceDTO,
+} from '../models/absence-list.models';
 import { catchError, map, Observable, of } from 'rxjs';
 
 @Injectable({
@@ -32,7 +36,7 @@ export class AbsenceService {
       );
   }
 
-  public addAbsence(absence: AbsenceDTO): Observable<number | null> {
+  public addAbsence(absence: CreateAbsenceDTO): Observable<number | null> {
     return this.client
       .post<number>('http://192.168.0.179:5081/absences', absence, {
         observe: 'response',
