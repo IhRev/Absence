@@ -1,1 +1,38 @@
-<p>holidays works!</p>
+<div class="container">
+  <div class="btns">
+    <button class="add-btn" (click)="openForm()">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+  </div>
+  <div class="grid-list">
+    <span class="header item item-start">#</span>
+    <span class="header item">Name</span>
+    <span class="header item">Start Date</span>
+    <span class="header item">End Date</span>
+    <span class="header item item-end">Actions</span>
+    @for (holiday of holidays; track holiday) {
+    <span class="item item-start">{{ holiday.id }}</span>
+    <span class="item">{{ holiday.name }}</span>
+    <span class="item">{{ holiday.startDate | date : "d MMMM, y" }}</span>
+    <span class="item">{{ holiday.endDate | date : "d MMMM, y" }}</span>
+    <span class="item item-end">
+      <div class="action-buttons">
+        <button class="delete-button" (click)="delete(holiday.id)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+        <button class="edit-button" (click)="openForm(holiday)">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+      </div>
+    </span>
+    }
+  </div>
+</div>
+
+<app-holiday-form
+  (closeModal)="closeForm()"
+  (submitCreate)="create($event)"
+  (submitEdit)="edit($event)"
+  [isVisible]="isFormOpened"
+  [holiday]="selectedHoliday"
+/>
