@@ -13,7 +13,7 @@ import {
   AbsenceTypeDTO,
   CreateAbsenceDTO,
   EditAbsenceDTO,
-} from '../models/absence-list.models';
+} from '../models/absence.models';
 import { AbsenceTypeService } from '../services/absence-type.service';
 
 @Component({
@@ -37,6 +37,7 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
   public selectedType!: AbsenceTypeDTO;
   public startDate!: string;
   public endDate!: string;
+  public message?: string;
 
   public constructor(absenceTypeService: AbsenceTypeService) {
     this.absenceTypeService = absenceTypeService;
@@ -44,9 +45,11 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
 
   public ngOnInit(): void {
     this.absenceTypeService.getTypes().subscribe({
-      next: (data) => {
-        if (data) {
-          this.types = data;
+      next: (result) => {
+        if (result.isSuccess) {
+          this.types = result.data!;
+        } else {
+          this.message = result.message;
         }
       },
     });
@@ -59,17 +62,14 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
         this.selectedType = this.types.find(
           (t) => t.id == this.absence?.type.id
         )!;
-        this.startDate = new Date(this.absence.startDate)
-          .toISOString()
-          .split('T')[0];
-        this.endDate = new Date(this.absence.endDate)
-          .toISOString()
-          .split('T')[0];
+        this.startDate = this.getDateOnlyString(
+          new Date(this.absence.startDate)
+        );
+        this.endDate = this.getDateOnlyString(new Date(this.absence.endDate));
       } else {
         this.name = 'Absence';
         this.selectedType = this.types[0];
-        this.startDate = new Date().toISOString().split('T')[0];
-        this.endDate = new Date().toISOString().split('T')[0];
+        this.startDate = this.endDate = this.getDateOnlyString(new Date());
       }
     }
   }
@@ -100,4 +100,7 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
       );
     }
   }
+
+  private getDateOnlyString = (date: Date): string =>
+    date.toISOString().split('T')[0];
 }

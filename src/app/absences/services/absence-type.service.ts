@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { AbsenceTypeDTO } from '../models/absence-list.models';
-import { catchError, map, Observable, of, ReplaySubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { AbsenceDTO, AbsenceTypeDTO } from '../models/absence.models';
+import { map, Observable, of, ReplaySubject } from 'rxjs';
+import { DataResult } from '../../common/models/result.models';
 
 @Injectable({
   providedIn: 'root',
@@ -15,18 +16,14 @@ export class AbsenceTypeService {
     this.client = client;
   }
 
-  public getTypes(): Observable<AbsenceTypeDTO[] | null> {
+  public getTypes(): Observable<DataResult<AbsenceTypeDTO[]>> {
     if (!this.loaded) {
       this.client
-        .get<AbsenceTypeDTO[]>('http://192.168.0.179:5081/absence_types', {
-          observe: 'response',
-        })
+        .get<AbsenceTypeDTO[]>('http://192.168.0.179:5081/absence_types')
         .subscribe({
-          next: (res) => {
-            if (res.status == 200) {
-              this.types.next(res.body);
-              this.loaded = true;
-            }
+          next: (res: AbsenceTypeDTO[]) => {
+            this.types.next(res);
+            this.loaded = true;
           },
           error: (e) => {
             console.error(e);
@@ -35,6 +32,12 @@ export class AbsenceTypeService {
         });
     }
 
-    return this.types.asObservable();
+    return this.types.pipe(
+      map((value) => {
+        return value !== null
+          ? DataResult.success<AbsenceTypeDTO[]>(value)
+          : DataResult.fail<AbsenceDTO[]>('Loading types failed');
+      })
+    );
   }
 }

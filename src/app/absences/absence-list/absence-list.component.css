@@ -8,14 +8,36 @@
   margin: 0 auto;
 }
 
-/* Buttons */
-.btns {
+.manage-panel {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   width: 100%;
   max-width: 1200px;
   margin-bottom: 1rem;
-  padding-right: 5px;
+  padding: 0 5px;
+}
+
+.msg {
+  flex: 1 1 auto;
+  padding-left: 10px;
+  font-size: 18px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.msg-success {
+  background-color: #6be6528d;
+}
+
+.msg-error {
+  background-color: #e652528d;
+}
+
+/* Buttons */
+.btns {
+  display: flex;
+  gap: 10px;
+  flex: 0 0 auto;
 }
 
 .btns button {
@@ -35,6 +57,12 @@
   background-color: transparent;
   box-shadow: 0px 0px 10px rgba(65, 184, 29, 0.9);
   color: #5cf03f !important;
+}
+
+.filter-btn:hover {
+  background-color: transparent;
+  box-shadow: 0px 0px 10px rgba(174, 184, 29, 0.9);
+  color: #edf03f !important;
 }
 
 /* List */
@@ -77,7 +105,7 @@
 
 .action-buttons {
   display: flex;
-  gap: 5px;
+  gap: 10px;
   height: 100%;
   justify-content: center;
 }
@@ -92,7 +120,7 @@
 }
 
 .delete-button {
-  background-color: rgb(212, 35, 35);
+  background-color: rgb(245, 11, 11);
 }
 
 .delete-button:hover {
@@ -100,11 +128,11 @@
 }
 
 .edit-button {
-  background-color: rgb(165, 182, 37);
+  background-color: rgb(189, 213, 10);
 }
 
 .edit-button:hover {
-  background-color: rgb(202, 228, 4);
+  background-color: rgb(165, 182, 37);
 }
 
 @media screen and (max-width: 576px) {

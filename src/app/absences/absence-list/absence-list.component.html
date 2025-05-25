@@ -1,8 +1,22 @@
 <div class="container">
-  <div class="btns">
-    <button class="add-btn" (click)="openForm()">
-      <i class="fa-solid fa-plus"></i>
-    </button>
+  <div class="manage-panel">
+    <p
+      class="msg"
+      [ngClass]="{
+        'msg-success': isSuccess && message,
+        'msg-error': !isSuccess && message
+      }"
+    >
+      {{ message }}
+    </p>
+    <div class="btns">
+      <button class="filter-btn" (click)="showFilters()">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+      <button class="add-btn" (click)="openForm()">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
   </div>
   <div class="grid-list">
     <span class="header item item-start">#</span>
@@ -37,4 +51,10 @@
   (submitEdit)="edit($event)"
   [isVisible]="isFormOpened"
   [absence]="selectedAbsence"
+/>
+
+<app-absence-filters
+  (closeModal)="closeFilters()"
+  (submitModal)="applyFilters($event)"
+  [isVisible]="filtersOpened"
 />
