@@ -34,8 +34,8 @@ export class RegisterComponent {
         )
       )
       .subscribe({
-        next: (isSuccess) => {
-          if (isSuccess) {
+        next: (res) => {
+          if (res.isSuccess) {
             this.router.navigate(['/login']);
           }
         },

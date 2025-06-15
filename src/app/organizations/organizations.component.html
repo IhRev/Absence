@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="list-box">
+    <ul class="list">
+      <li
+        *ngFor="let organization of organizations"
+        class="item"
+        (click)="selectOrganization(organization)"
+        [class.active-item]="selectedOrganization === organization"
+      >
+        {{ organization.name }}
+      </li>
+    </ul>
+  </div>
+  <div class="buttons">
+    <button class="add-button" (click)="add()">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+  </div>
+</div>

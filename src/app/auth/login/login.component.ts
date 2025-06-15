@@ -26,8 +26,8 @@ export class LoginComponent {
     this.authService
       .login(new UserCredentials(this.userName, this.password))
       .subscribe({
-        next: (isSuccess) => {
-          if (isSuccess) {
+        next: (res) => {
+          if (res.isSuccess) {
             this.router.navigate(['/home']);
           }
         },

@@ -6,6 +6,7 @@ import { UserProfileComponent } from './auth/user-profile/user-profile.component
 import { AboutComponent } from './about/about.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { HolidaysComponent } from './holidays/holidays.component';
+import { OrganizationsComponent } from './organizations/organizations.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,4 +17,11 @@ export const routes: Routes = [
   { path: 'profile', component: UserProfileComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'holidays', component: HolidaysComponent },
+  {
+    path: 'organizations',
+    loadComponent: () =>
+      import('./organizations/organizations.component').then(
+        (m) => m.OrganizationsComponent
+      ),
+  },
 ];

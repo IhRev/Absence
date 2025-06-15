@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HolidaysDTO } from '../models/holidays.models';
+import {
+  CreateHolidayDTO,
+  EditHolidayDTO,
+  HolidayDTO,
+} from '../models/holidays.models';
 
 @Component({
   selector: 'app-holiday-form',
@@ -10,8 +14,8 @@ import { HolidaysDTO } from '../models/holidays.models';
 })
 export class HolidayFormComponent {
   @Input() public isVisible = false;
-  @Input() public holiday: HolidaysDTO | null = null;
+  @Input() public holiday: HolidayDTO | null = null;
   @Output() public closeModal = new EventEmitter();
-  @Output() public submitCreate = new EventEmitter<HolidaysDTO>();
-  @Output() public submitEdit = new EventEmitter<HolidaysDTO>();
+  @Output() public submitCreate = new EventEmitter<CreateHolidayDTO>();
+  @Output() public submitEdit = new EventEmitter<EditHolidayDTO>();
 }

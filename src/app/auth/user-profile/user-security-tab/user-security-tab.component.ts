@@ -30,8 +30,8 @@ export class UserSecurityTabComponent {
         new ChangePasswordRequest(this.oldPassword, this.newPassword)
       )
       .subscribe({
-        next: (isSuccess) => {
-          if (isSuccess) {
+        next: (res) => {
+          if (res.isSuccess) {
             this.router.navigate(['/login']);
           }
         },
@@ -41,8 +41,8 @@ export class UserSecurityTabComponent {
   public confirmationSubmitted(password: string): void {
     this.confirmationOpened = false;
     this.authService.deleteProfile(password).subscribe({
-      next: (isSuccess) => {
-        if (isSuccess) {
+      next: (res) => {
+        if (res.isSuccess) {
           this.router.navigate(['/home']);
         }
       },
@@ -51,8 +51,8 @@ export class UserSecurityTabComponent {
 
   public logout(): void {
     this.authService.logout().subscribe({
-      next: (isSuccess) => {
-        if (isSuccess) {
+      next: (res) => {
+        if (res.isSuccess) {
           this.router.navigate(['/home']);
         }
       },

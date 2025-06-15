@@ -17,21 +17,21 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((err: HttpErrorResponse) => {
       if (err.status === 401) {
         if (req.url.includes('/refresh')) {
-          authService.logout();
+          authService.logoutLocally();
           router.navigate(['/login']);
           return throwError(() => err);
         }
 
         return authService.refreshToken().pipe(
-          switchMap((isSuccess) => {
-            if (isSuccess) {
+          switchMap((result) => {
+            if (result.isSuccess) {
               const newToken = localStorage.getItem('accessToken');
               const retryReq = req.clone({
                 setHeaders: { Authorization: `Bearer ${newToken}` },
               });
               return next(retryReq);
             }
-            authService.logout();
+            authService.logoutLocally();
             router.navigate(['/login']);
             return throwError(() => err);
           })

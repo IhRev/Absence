@@ -1,7 +1,12 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HolidaysDTO } from '../models/holidays.models';
+import {
+  CreateHolidayDTO,
+  EditHolidayDTO,
+  HolidayDTO,
+} from '../models/holidays.models';
 import { catchError, map, Observable, of } from 'rxjs';
+import { DataResult, Result } from '../../common/models/result.models';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,79 +17,59 @@ export class HolidaysService {
     this.client = client;
   }
 
-  public getHolidays(): Observable<HolidaysDTO[] | null> {
+  public getHolidays(
+    organizationId: number
+  ): Observable<DataResult<HolidayDTO[]>> {
     return this.client
-      .get<HolidaysDTO[]>('http://192.168.0.179:5081/holidays', {
-        observe: 'response',
-      })
+      .get<HolidayDTO[]>(
+        `http://192.168.0.179:5081/organizations/${organizationId}/holidays`
+      )
       .pipe(
-        map((res: HttpResponse<HolidaysDTO[]>) => {
-          if (res.status == 200) {
-            return res.body;
-          }
-          return null;
+        map((res: HolidayDTO[]) => {
+          return DataResult.success<HolidayDTO[]>(res);
         }),
         catchError((error) => {
           console.error(error);
-          return of(null);
+          return of(DataResult.fail<HolidayDTO[]>(error));
         })
       );
   }
 
-  public addHoliday(holiday: HolidaysDTO): Observable<number | null> {
+  public addHoliday(holiday: CreateHolidayDTO): Observable<DataResult<number>> {
     return this.client
-      .post<number>('http://192.168.0.179:5081/holidays', holiday, {
-        observe: 'response',
-      })
+      .post<number>('http://192.168.0.179:5081/holidays', holiday)
       .pipe(
-        map((res: HttpResponse<number>) => {
-          if (res.status == 200) {
-            return res.body;
-          }
-          return null;
+        map((res: number) => {
+          return DataResult.success<number>(res);
         }),
         catchError((error) => {
           console.error(error);
-          return of(null);
+          return of(DataResult.fail<number>(error));
         })
       );
   }
 
-  public editHoliday(holiday: HolidaysDTO): Observable<boolean> {
-    return this.client
-      .put('http://192.168.0.179:5081/holidays', holiday, {
-        observe: 'response',
+  public editHoliday(holiday: EditHolidayDTO): Observable<Result> {
+    return this.client.put('http://192.168.0.179:5081/holidays', holiday).pipe(
+      map((res: any) => {
+        return Result.success();
+      }),
+      catchError((error) => {
+        console.error(error);
+        return of(Result.fail(error));
       })
-      .pipe(
-        map((res: HttpResponse<any>) => {
-          if (res.status == 200) {
-            return true;
-          }
-          return false;
-        }),
-        catchError((error) => {
-          console.error(error);
-          return of(false);
-        })
-      );
+    );
   }
 
-  public deleteHoliday(id: number): Observable<boolean> {
-    return this.client
-      .delete(`http://192.168.0.179:5081/holidays/${id}`, {
-        observe: 'response',
+  public deleteHoliday(id: number): Observable<Result> {
+    return this.client.delete(`http://192.168.0.179:5081/holidays/${id}`).pipe(
+      map((res: any) => {
+        return Result.success();
+      }),
+      catchError((error) => {
+        console.error(error);
+        return of(Result.fail(error));
       })
-      .pipe(
-        map((res: HttpResponse<any>) => {
-          if (res.status == 200) {
-            return true;
-          }
-          return false;
-        }),
-        catchError((error) => {
-          console.error(error);
-          return of(false);
-        })
-      );
+    );
   }
 }

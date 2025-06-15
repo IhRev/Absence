@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpParams,
-  HttpResponse,
-} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   AbsenceDTO,
   CreateAbsenceDTO,
   EditAbsenceDTO,
 } from '../models/absence.models';
 import { catchError, map, Observable, of } from 'rxjs';
-import { DataResult, Result } from '../../common/models/result.models';
-import { AbsenceFilters } from '../models/filters.models';
+import { DataResult } from '../../common/models/result.models';
 
 @Injectable({
   providedIn: 'root',
@@ -24,12 +18,17 @@ export class AbsenceService {
     this.client = client;
   }
 
-  public getAbsences = (
+  public getAbsences(
     startDate: Date,
-    endDate: Date
-  ): Observable<DataResult<AbsenceDTO[]>> =>
-    this.client
-      .get<AbsenceDTO[]>('http://192.168.0.179:5081/absences', {
+    endDate: Date,
+    userId: number | null = null
+  ): Observable<DataResult<AbsenceDTO[]>> {
+    var organizationId = localStorage.getItem('organization');
+    var url: string = userId
+      ? `http://192.168.0.179:5081/organizations/${organizationId}/users/${userId}/absences`
+      : `http://192.168.0.179:5081/organizations/${organizationId}/absences`;
+    return this.client
+      .get<AbsenceDTO[]>(url, {
         params: new HttpParams()
           .set('startDate', startDate.toISOString())
           .set('endDate', endDate.toISOString()),
@@ -43,35 +42,40 @@ export class AbsenceService {
           return of(DataResult.fail<AbsenceDTO[]>(error));
         })
       );
+  }
 
   public addAbsence = (
     absence: CreateAbsenceDTO
-  ): Observable<DataResult<number>> =>
-    this.client
-      .post<number>('http://192.168.0.179:5081/absences', absence)
-      .pipe(
-        map((res: number) => DataResult.success<number>(res)),
+  ): Observable<DataResult<number | string>> =>
+    this.client.post<any>('http://192.168.0.179:5081/absences', absence).pipe(
+      map(
+        (res) => {
+          return DataResult.success<number | string>(res);
+        },
         catchError((error) => {
           console.error(error);
-          return of(DataResult.fail<number>(error));
+          return of(DataResult.fail<number | string>(error));
         })
-      );
+      )
+    );
 
-  public editAbsence = (absence: EditAbsenceDTO): Observable<Result> =>
-    this.client.put('http://192.168.0.179:5081/absences', absence).pipe(
-      map(() => Result.success()),
+  public editAbsence = (
+    absence: EditAbsenceDTO
+  ): Observable<DataResult<string>> =>
+    this.client.put<string>('http://192.168.0.179:5081/absences', absence).pipe(
+      map((res) => DataResult.success<string>(res)),
       catchError((error) => {
         console.error(error);
-        return of(Result.fail(error));
+        return of(DataResult.fail<string>(error));
       })
     );
 
-  public deleteAbsence = (id: number): Observable<Result> =>
-    this.client.delete(`http://192.168.0.179:5081/absences/${id}`).pipe(
-      map(() => Result.success()),
+  public deleteAbsence = (id: number): Observable<DataResult<string>> =>
+    this.client.delete<string>(`http://192.168.0.179:5081/absences/${id}`).pipe(
+      map((res) => DataResult.success<string>(res)),
       catchError((error) => {
         console.error(error);
-        return of(Result.fail(error));
+        return of(DataResult.fail<string>(error));
       })
     );
 }

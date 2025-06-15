@@ -74,15 +74,17 @@ export class AbsenceListComponent implements OnInit {
     this.absenceService.addAbsence(absence).subscribe({
       next: (result) => {
         if (result.isSuccess) {
-          var newAbsence = new Absence(
-            ++AbsenceListComponent.num,
-            result.data!,
-            absence.name,
-            this.types.find((t) => t.id === absence.type)!,
-            absence.startDate,
-            absence.endDate
-          );
-          this.absences.push(newAbsence);
+          if (typeof result.data === 'number') {
+            var newAbsence = new Absence(
+              ++AbsenceListComponent.num,
+              result.data!,
+              absence.name,
+              this.types.find((t) => t.id === absence.type)!,
+              absence.startDate,
+              absence.endDate
+            );
+            this.absences.push(newAbsence);
+          }
           this.isSuccess = true;
         } else {
           this.isSuccess = false;

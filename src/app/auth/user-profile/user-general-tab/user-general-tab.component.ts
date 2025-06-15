@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserDetails } from '../../models/auth.models';
 import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-user-general-tab',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf],
   templateUrl: './user-general-tab.component.html',
   styleUrl: './user-general-tab.component.css',
 })
@@ -20,9 +21,9 @@ export class UserGeneralTabComponent implements OnInit {
 
   public ngOnInit(): void {
     this.authService.getUserDetails().subscribe({
-      next: (details) => {
-        if (details) {
-          this.details = details;
+      next: (res) => {
+        if (res.isSuccess) {
+          this.details = res.data!;
         }
       },
     });
@@ -30,8 +31,8 @@ export class UserGeneralTabComponent implements OnInit {
 
   public edit(): void {
     this.authService.updateUserDetails(this.details).subscribe({
-      next: (isSuccess) => {
-        if (isSuccess) {
+      next: (res) => {
+        if (res.isSuccess) {
         }
       },
     });
