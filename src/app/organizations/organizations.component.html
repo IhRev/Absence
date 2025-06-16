@@ -1,6 +1,12 @@
 <div class="container">
-  <div class="list-box">
-    <ul class="list">
+  <div class="list-block">
+    <div class="header">
+      <h1 class="label">Organizations</h1>
+      <button class="add-btn" (click)="openForm()">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
+    <ul class="list-box">
       <li
         *ngFor="let organization of organizations"
         class="item"
@@ -11,9 +17,29 @@
       </li>
     </ul>
   </div>
-  <div class="buttons">
-    <button class="add-button" (click)="add()">
-      <i class="fa-solid fa-plus"></i>
-    </button>
+
+  <div class="list-block" *ngIf="selectedOrganization">
+    <div class="header">
+      <h1 class="label">Members</h1>
+      <button class="add-btn" (click)="openForm()">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
+    <ul class="list-box">
+      <li
+        *ngFor="let member of members"
+        class="item"
+        (click)="selectMember(member)"
+        [class.active-item]="selectedMember === member"
+      >
+        {{ member.fullName }}
+      </li>
+    </ul>
   </div>
 </div>
+
+<app-organization-form
+  (closeModal)="closeForm()"
+  (submitModal)="add($event)"
+  [isVisible]="isFormOpened"
+/>

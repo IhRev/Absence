@@ -47,10 +47,11 @@ export class OrganizationsService {
       );
   }
 
-  public add(name: string): Observable<DataResult<number>> {
-    var dto = new CreateOrganizationDTO(name);
+  public add(
+    organization: CreateOrganizationDTO
+  ): Observable<DataResult<number>> {
     return this.client
-      .post<number>('http://192.168.0.179:5081/organizations', dto)
+      .post<number>('http://192.168.0.179:5081/organizations', organization)
       .pipe(
         map((res: number) => {
           return DataResult.success<number>(res);
