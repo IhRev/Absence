@@ -7,18 +7,34 @@
     </div>
     <div class="menu-container">
       <a routerLink="/" class="link home-link">Home</a>
-      <a routerLink="/about" class="link about-link">About</a>
-      <a routerLink="/organizations" class="link organizations-link"
+      <a *ngIf="!isLoggedIn" routerLink="/about" class="link about-link"
+        >About</a
+      >
+      <a
+        *ngIf="isLoggedIn"
+        routerLink="/organizations"
+        class="link organizations-link"
         >Organizations
       </a>
-      <a routerLink="/holidays" class="link holidays-link">Holidays</a>
-      <a routerLink="/absences" class="link absences-link">Absences</a>
+      <a *ngIf="organization" routerLink="/holidays" class="link holidays-link"
+        >Holidays</a
+      >
+      <a *ngIf="organization" routerLink="/absences" class="link absences-link"
+        >Absences</a
+      >
       <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
         <a routerLink="/login" class="link login-link">Login</a>
       </ng-container>
       <ng-template #loggedInTemplate>
         <a routerLink="/profile" class="link profile-link">My Profile</a>
       </ng-template>
+    </div>
+  </div>
+  <div class="sub-nav">
+    <div class="container">
+      <p class="organization" *ngIf="organization">
+        Organization: {{ organization.name }}
+      </p>
     </div>
   </div>
 </nav>

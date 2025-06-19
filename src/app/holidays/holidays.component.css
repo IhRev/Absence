@@ -40,7 +40,7 @@
 /* List */
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(5, auto);
+  grid-template-columns: repeat(4, auto);
   grid-row-gap: 10px;
   max-width: 1200px;
   width: 100%;

@@ -159,8 +159,7 @@ export class AuthService {
   }
 
   public logoutLocally(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.clear();
     this.loggedIn.next(false);
   }
 }

@@ -15,15 +15,18 @@ import { DataResult } from '../../common/models/result.models';
 export class OrganizationsService {
   private readonly client: HttpClient;
   private selectedOrganization = new BehaviorSubject<Organization | null>(null);
+  private organizations = new BehaviorSubject<OrganizationDTO[] | null>(null);
 
   public selectedOrganization$ = this.selectedOrganization.asObservable();
+  public organizations$ = this.organizations.asObservable();
 
   public constructor(client: HttpClient) {
     this.client = client;
+    this.load();
   }
 
-  public get(): Observable<DataResult<Organization[]>> {
-    return this.client
+  private load(): void {
+    this.client
       .get<OrganizationDTO[]>('http://192.168.0.179:5081/organizations')
       .pipe(
         map((res: OrganizationDTO[]) => {
@@ -31,20 +34,28 @@ export class OrganizationsService {
             (dto) =>
               new Organization(dto.id, dto.name, dto.isAdmin, dto.isOwner)
           );
-          var organizationId = localStorage.getItem('organization');
-          if (organizationId) {
-            const organization = organizations.find(
-              (o) => o.id === Number(organizationId)
-            )!;
-            this.selectedOrganization.next(organization);
-          }
           return DataResult.success<Organization[]>(organizations);
         }),
         catchError((e) => {
           console.error(e);
           return of(DataResult.fail<Organization[]>(e));
         })
-      );
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.organizations.next(res.data!);
+
+            var organizationId = localStorage.getItem('organization');
+            if (organizationId) {
+              const organization = res.data!.find(
+                (o) => o.id === Number(organizationId)
+              )!;
+              this.selectedOrganization.next(organization);
+            }
+          }
+        },
+      });
   }
 
   public add(

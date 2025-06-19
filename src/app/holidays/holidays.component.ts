@@ -43,12 +43,7 @@ export class HolidaysComponent implements OnInit {
       next: (data) => {
         if (data.isSuccess) {
           this.holidays.push(
-            new HolidayDTO(
-              data.data!,
-              holiday.name,
-              holiday.startDate,
-              holiday.endDate
-            )
+            new HolidayDTO(data.data!, holiday.name, holiday.date)
           );
         }
       },
@@ -61,8 +56,7 @@ export class HolidaysComponent implements OnInit {
       next: (data) => {
         if (data.isSuccess) {
           this.selectedHoliday!.name = holiday.name;
-          this.selectedHoliday!.startDate = holiday.startDate;
-          this.selectedHoliday!.endDate = holiday.endDate;
+          this.selectedHoliday!.date = holiday.date;
         }
       },
     });

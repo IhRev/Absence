@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../auth/services/auth.service';
 import { NgIf } from '@angular/common';
+import { OrganizationsService } from '../organizations/services/organizations.service';
+import { Organization } from '../organizations/models/organizations.models';
 
 @Component({
   selector: 'nav-bar',
@@ -12,15 +14,26 @@ import { NgIf } from '@angular/common';
 })
 export class NavBarComponent implements OnInit {
   private authService: AuthService;
+  private organizationService: OrganizationsService;
+  public organization: Organization = null!;
   public isLoggedIn = false;
 
-  public constructor(authService: AuthService) {
+  public constructor(
+    authService: AuthService,
+    organizationService: OrganizationsService
+  ) {
     this.authService = authService;
+    this.organizationService = organizationService;
   }
 
   public ngOnInit(): void {
     this.authService.loggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
+    });
+    this.organizationService.selectedOrganization$.subscribe((value) => {
+      if (value) {
+        this.organization = value;
+      }
     });
   }
 }

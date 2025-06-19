@@ -7,14 +7,12 @@
   <div class="grid-list">
     <span class="header item item-start">#</span>
     <span class="header item">Name</span>
-    <span class="header item">Start Date</span>
-    <span class="header item">End Date</span>
+    <span class="header item">Date</span>
     <span class="header item item-end">Actions</span>
     @for (holiday of holidays; track holiday) {
     <span class="item item-start">{{ holiday.id }}</span>
     <span class="item">{{ holiday.name }}</span>
-    <span class="item">{{ holiday.startDate | date : "d MMMM, y" }}</span>
-    <span class="item">{{ holiday.endDate | date : "d MMMM, y" }}</span>
+    <span class="item">{{ holiday.date | date : "d MMMM, y" }}</span>
     <span class="item item-end">
       <div class="action-buttons">
         <button class="delete-button" (click)="delete(holiday.id)">

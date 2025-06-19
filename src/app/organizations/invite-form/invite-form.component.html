@@ -1,7 +1,7 @@
 <div class="modal-container" *ngIf="isVisible">
   <div class="modal-dialog">
     <div class="header">
-      <p class="header-label">Holiday Form</p>
+      <p class="header-label">Invite</p>
       <button class="close-button" (click)="close()">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -9,12 +9,8 @@
     <hr />
     <div>
       <div class="input-item">
-        <label for="name">Name</label>
-        <input required type="text" id="name" [(ngModel)]="name" />
-      </div>
-      <div class="input-item">
-        <label for="startDate">Date</label>
-        <input required type="date" id="startDate" [(ngModel)]="date" />
+        <label for="email">Email</label>
+        <input required type="text" id="email" [(ngModel)]="email" />
       </div>
       <button (click)="submit()" class="submit-button">Submit</button>
     </div>

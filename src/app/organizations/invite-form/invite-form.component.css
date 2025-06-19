@@ -70,10 +70,6 @@ input[type="text"] {
   padding: 2px 5px;
 }
 
-input[type="date"] {
-  color-scheme: dark;
-}
-
 input:focus {
   border-color: #007bff;
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);

@@ -21,4 +21,6 @@ export class Organization {
 export interface MemberDTO {
   id: number;
   fullName: string;
+  isAdmin: boolean;
+  isOwner: boolean;
 }

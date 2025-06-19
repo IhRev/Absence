@@ -2,7 +2,18 @@
   width: 100%;
   position: fixed;
   background-color: rgb(38, 44, 44);
-  height: 60px;
+  height: 90px;
+}
+
+.sub-nav {
+  background-color: rgba(0, 217, 255, 0.459);
+  height: 30px;
+}
+
+.organization {
+  font-size: 20px;
+  color: #000;
+  margin-left: 20px;
 }
 
 .logo-container {
@@ -38,6 +49,7 @@
 .nav-bar-flex {
   display: flex;
   justify-content: space-between;
+  height: 60px;
 }
 
 .menu-container {
@@ -68,6 +80,12 @@
 
   .menu-container {
     margin-right: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .organization {
+    margin-left: 0;
   }
 }
 
