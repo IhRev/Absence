@@ -20,11 +20,20 @@
           Security
         </button>
       </li>
+      <li>
+        <button
+          (click)="activeTab = 'invitations'"
+          [class.active]="activeTab === 'invitations'"
+        >
+          Invitations
+        </button>
+      </li>
     </ul>
     <hr />
     <div class="tab">
       <app-user-general-tab *ngIf="activeTab === 'general'" />
       <app-user-security-tab *ngIf="activeTab === 'security'" />
+      <app-user-invitations-tab *ngIf="activeTab === 'invitations'" />
     </div>
   </div>
 </div>

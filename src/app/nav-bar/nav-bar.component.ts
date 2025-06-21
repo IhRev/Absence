@@ -15,7 +15,7 @@ import { Organization } from '../organizations/models/organizations.models';
 export class NavBarComponent implements OnInit {
   private authService: AuthService;
   private organizationService: OrganizationsService;
-  public organization: Organization = null!;
+  public organization: Organization | null = null;
   public isLoggedIn = false;
 
   public constructor(
@@ -33,6 +33,8 @@ export class NavBarComponent implements OnInit {
     this.organizationService.selectedOrganization$.subscribe((value) => {
       if (value) {
         this.organization = value;
+      } else {
+        this.organization = null;
       }
     });
   }

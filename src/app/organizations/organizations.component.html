@@ -1,5 +1,15 @@
-<div class="container">
-  <div class="list-block">
+<div
+  class="empty-container"
+  *ngIf="organizations && organizations.length === 0"
+>
+  <h2>You have no organizations yet. Add your first organization!</h2>
+  <button class="first-org-btn" (click)="openForm()">
+    <i class="fa-solid fa-plus"></i> Add
+  </button>
+</div>
+
+<div class="container" *ngIf="organizations">
+  <div class="list-block" *ngIf="organizations.length > 0">
     <div class="header">
       <h1 class="label">Your organizations</h1>
       <button class="add-btn" (click)="openForm()">
@@ -18,37 +28,47 @@
     </ul>
   </div>
 
-  <hr *ngIf="selectedOrganization" />
+  <hr *ngIf="members" />
 
-  <div class="list-block" *ngIf="selectedOrganization">
-    <div class="header">
-      <h1 class="label">{{ selectedOrganization.name }} members</h1>
-      <button class="add-btn" (click)="openInviteForm()">
-        <i class="fa-solid fa-plus"></i>
-      </button>
+  <div class="organization-block" *ngIf="members">
+    <h1>{{ selectedOrganization!.name }}</h1>
+    <div class="org-details">
+      <button class="del-btn" (click)="delete()">Delete organization</button>
     </div>
-    <ul class="list-box">
-      <li
-        *ngFor="let member of members"
-        class="item"
-        (click)="selectMember(member)"
-        [class.active-item]="selectedMember === member"
-      >
-        {{ member.fullName }}
-      </li>
-    </ul>
+    <div class="list-block">
+      <div class="header">
+        <h2 class="label">Members</h2>
+        <button class="add-btn" (click)="openInviteForm()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      <ul class="list-box">
+        <li
+          *ngFor="let member of members"
+          class="item"
+          (click)="selectMember(member)"
+          [class.active-item]="selectedMember === member"
+        >
+          {{ member.fullName }}
+          <span *ngIf="member.isOwner" class="owner">owner</span>
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <div class="member">
-    <h1 *ngIf="selectedMember" class="label">{{ selectedMember.fullName }}</h1>
+  <hr *ngIf="selectedMember" />
+
+  <div class="member" *ngIf="selectedMember">
+    <h1 class="label">{{ selectedMember.fullName }}</h1>
     <div class="member-details">
       <button
-        *ngIf="!selectedMember?.isAdmin"
+        *ngIf="!selectedMember.isAdmin"
         class="access-btn"
         (click)="giveAccess()"
       >
         Give Admin access
       </button>
+      <button class="del-btn" (click)="delete()">Delete user</button>
     </div>
   </div>
 </div>

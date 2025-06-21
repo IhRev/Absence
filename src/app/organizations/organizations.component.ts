@@ -18,8 +18,8 @@ import { InvitationsService } from './services/invitations.service';
   styleUrl: './organizations.component.css',
 })
 export class OrganizationsComponent implements OnInit {
-  public organizations: Organization[] = [];
-  public members: MemberDTO[] = [];
+  public organizations: Organization[] | null = null;
+  public members: MemberDTO[] | null = null;
   public selectedOrganization: Organization | null = null;
   public selectedMember: MemberDTO | null = null;
   public isFormOpened: boolean = false;
@@ -32,23 +32,27 @@ export class OrganizationsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.organizationService.organizations$.subscribe((value) => {
+      this.organizations = value;
+    });
+    this.organizationService.selectedOrganization$.subscribe((value) => {
       if (value) {
-        this.organizations = value;
-        var organizationId = localStorage.getItem('organization');
-        if (organizationId) {
-          this.selectedOrganization = this.organizations.find(
-            (o) => o.id === Number(organizationId)
-          )!;
-          this.loadMembers();
-        }
+        this.selectedOrganization = value;
+        this.selectedMember = null;
+        this.loadMembers();
+      } else {
+        this.selectedOrganization = null;
+        this.selectedMember = null;
+        this.members = null;
       }
     });
   }
 
   public selectOrganization(selected: Organization): void {
-    this.organizationService.selectOrganization(selected);
-    this.selectedOrganization = selected;
-    this.loadMembers();
+    if (selected === this.selectedOrganization) {
+      this.organizationService.unselectOrganization();
+    } else {
+      this.organizationService.selectOrganization(selected);
+    }
   }
 
   public selectMember(selected: MemberDTO): void {
@@ -59,9 +63,6 @@ export class OrganizationsComponent implements OnInit {
     this.organizationService.add(organization).subscribe({
       next: (res) => {
         if (res.isSuccess) {
-          this.organizations.push(
-            new Organization(res.data!, organization.name, true, true)
-          );
         }
         this.isFormOpened = false;
       },
@@ -74,16 +75,6 @@ export class OrganizationsComponent implements OnInit {
 
   public closeForm(): void {
     this.isFormOpened = false;
-  }
-
-  private loadMembers(): void {
-    this.organizationService.getMembers().subscribe({
-      next: (res) => {
-        if (res.isSuccess) {
-          this.members = res.data!;
-        }
-      },
-    });
   }
 
   public openInviteForm(): void {
@@ -99,9 +90,21 @@ export class OrganizationsComponent implements OnInit {
       next: (res) => {
         if (res.isSuccess) {
         }
+        this.isInviteFormOpened = false;
       },
     });
   }
 
   public giveAccess(): void {}
+  public delete(): void {}
+
+  private loadMembers(): void {
+    this.organizationService.getMembers().subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.members = res.data!;
+        }
+      },
+    });
+  }
 }

@@ -8,6 +8,7 @@ import {
 } from '../models/organizations.models';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { DataResult } from '../../common/models/result.models';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +21,23 @@ export class OrganizationsService {
   public selectedOrganization$ = this.selectedOrganization.asObservable();
   public organizations$ = this.organizations.asObservable();
 
-  public constructor(client: HttpClient) {
+  public constructor(
+    client: HttpClient,
+    private readonly authService: AuthService
+  ) {
     this.client = client;
-    this.load();
+    this.authService.loggedIn$.subscribe((status) => {
+      if (status) {
+        this.load();
+      } else {
+        this.unload();
+      }
+    });
+  }
+
+  private unload(): void {
+    this.selectedOrganization.next(null);
+    this.organizations.next(null);
   }
 
   private load(): void {
@@ -65,6 +80,11 @@ export class OrganizationsService {
       .post<number>('http://192.168.0.179:5081/organizations', organization)
       .pipe(
         map((res: number) => {
+          var organizations = [
+            ...this.organizations.value!,
+            new Organization(res, organization.name, true, true),
+          ];
+          this.organizations.next(organizations);
           return DataResult.success<number>(res);
         }),
         catchError((error) => {
@@ -93,5 +113,10 @@ export class OrganizationsService {
   public selectOrganization(organization: Organization) {
     localStorage.setItem('organization', organization.id.toString());
     this.selectedOrganization.next(organization);
+  }
+
+  public unselectOrganization() {
+    localStorage.removeItem('organization');
+    this.selectedOrganization.next(null);
   }
 }

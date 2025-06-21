@@ -76,7 +76,8 @@ export class AuthService {
       })
       .pipe(
         map((res) => {
-          this.logoutLocally();
+          localStorage.clear();
+          this.loggedIn.next(false);
           return Result.success();
         }),
         catchError((error) => {
@@ -159,7 +160,8 @@ export class AuthService {
   }
 
   public logoutLocally(): void {
-    localStorage.clear();
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     this.loggedIn.next(false);
   }
 }
