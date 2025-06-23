@@ -17,6 +17,7 @@ export class NavBarComponent implements OnInit {
   private organizationService: OrganizationsService;
   public organization: Organization | null = null;
   public isLoggedIn = false;
+  public isMenuOpen: boolean = false;
 
   public constructor(
     authService: AuthService,
@@ -37,5 +38,11 @@ export class NavBarComponent implements OnInit {
         this.organization = null;
       }
     });
+  }
+
+  public closeMenu(): void {
+    if (this.isMenuOpen) {
+      this.isMenuOpen = false;
+    }
   }
 }

@@ -33,6 +33,8 @@
   <div class="organization-block" *ngIf="members">
     <h1>{{ selectedOrganization!.name }}</h1>
     <div class="org-details">
+      <button class="edit-btn" (click)="delete()">Edit organization</button>
+      <button class="invite-btn" (click)="delete()">Invite user</button>
       <button class="del-btn" (click)="delete()">Delete organization</button>
     </div>
     <div class="list-block">
@@ -64,9 +66,9 @@
       <button
         *ngIf="!selectedMember.isAdmin"
         class="access-btn"
-        (click)="giveAccess()"
+        (click)="changeAccess()"
       >
-        Give Admin access
+        Change access
       </button>
       <button class="del-btn" (click)="delete()">Delete user</button>
     </div>

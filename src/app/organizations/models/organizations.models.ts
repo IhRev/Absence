@@ -9,6 +9,10 @@ export class CreateOrganizationDTO {
   public constructor(public name: string) {}
 }
 
+export class EditOrganizationDTO {
+  public constructor(public id: number, public name: string) {}
+}
+
 export class Organization {
   public constructor(
     public id: number,

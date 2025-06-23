@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import {
   CreateOrganizationDTO,
+  EditOrganizationDTO,
   MemberDTO,
   Organization,
   OrganizationDTO,
 } from '../models/organizations.models';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
-import { DataResult } from '../../common/models/result.models';
+import { DataResult, Result } from '../../common/models/result.models';
 import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
@@ -110,13 +111,57 @@ export class OrganizationsService {
       );
   }
 
-  public selectOrganization(organization: Organization) {
+  public selectOrganization(organization: Organization): void {
     localStorage.setItem('organization', organization.id.toString());
     this.selectedOrganization.next(organization);
   }
 
-  public unselectOrganization() {
+  public unselectOrganization(): void {
     localStorage.removeItem('organization');
     this.selectedOrganization.next(null);
+  }
+
+  public edit(organization: EditOrganizationDTO): Observable<Result> {
+    return this.client
+      .put<any>('http://192.168.0.179:5081/organizations', organization)
+      .pipe(
+        map((res) => {
+          var edited = new Organization(
+            organization.id,
+            organization.name,
+            true,
+            true
+          );
+          this.organizations.next(
+            this.organizations.value!.map((u) =>
+              u.id === organization.id ? edited : u
+            )
+          );
+          this.selectedOrganization.next(edited);
+          return Result.success();
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(Result.fail(error));
+        })
+      );
+  }
+
+  public delete(id: number): Observable<Result> {
+    return this.client
+      .delete<any>(`http://192.168.0.179:5081/organizations/${id}`)
+      .pipe(
+        map((res) => {
+          this.organizations.next(
+            this.organizations.value!.filter((u) => u.id != id)
+          );
+          this.selectedOrganization.next(null);
+          return Result.success();
+        }),
+        catchError((error) => {
+          console.error(error);
+          return of(Result.fail(error));
+        })
+      );
   }
 }

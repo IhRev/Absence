@@ -1,32 +1,54 @@
-<nav class="nav-bar">
+<nav class="nav-bar" [class.mobile-nav-bar]="isMenuOpen">
   <div class="container nav-bar-flex">
     <div class="logo-container">
       <a href="#" class="logo-link">
         <img src="assets/logo.png" alt="Absence.com" class="logo" />
       </a>
     </div>
-    <div class="menu-container">
-      <a routerLink="/" class="link home-link">Home</a>
-      <a *ngIf="!isLoggedIn" routerLink="/about" class="link about-link"
+
+    <div class="menu-toggle" (click)="isMenuOpen = !isMenuOpen">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <div class="menu-container" [class.mobile-menu]="isMenuOpen">
+      <a (click)="closeMenu()" routerLink="/" class="link home-link">Home</a>
+      <a
+        (click)="closeMenu()"
+        *ngIf="!isLoggedIn"
+        routerLink="/about"
+        class="link about-link"
         >About</a
       >
       <a
+        (click)="closeMenu()"
         *ngIf="isLoggedIn"
         routerLink="/organizations"
         class="link organizations-link"
         >Organizations
       </a>
-      <a *ngIf="organization" routerLink="/holidays" class="link holidays-link"
+      <a
+        (click)="closeMenu()"
+        *ngIf="organization"
+        routerLink="/holidays"
+        class="link holidays-link"
         >Holidays</a
       >
-      <a *ngIf="organization" routerLink="/absences" class="link absences-link"
+      <a
+        (click)="closeMenu()"
+        *ngIf="organization"
+        routerLink="/absences"
+        class="link absences-link"
         >Absences</a
       >
       <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
-        <a routerLink="/login" class="link login-link">Login</a>
+        <a (click)="closeMenu()" routerLink="/login" class="link login-link"
+          >Login</a
+        >
       </ng-container>
       <ng-template #loggedInTemplate>
-        <a routerLink="/profile" class="link profile-link">My Profile</a>
+        <a (click)="closeMenu()" routerLink="/profile" class="link profile-link"
+          >My Profile</a
+        >
       </ng-template>
     </div>
   </div>

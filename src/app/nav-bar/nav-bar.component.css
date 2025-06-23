@@ -73,6 +73,14 @@
   background-color: rgba(64, 68, 71, 0.543);
 }
 
+.mobile-nav-bar {
+  position: static;
+}
+
+.mobile-menu {
+  display: flex !important;
+}
+
 @media screen and (min-width: 768px) {
   .logo-container {
     margin-left: 20px;
@@ -83,17 +91,51 @@
   }
 }
 
+.menu-toggle {
+  margin-right: 10px;
+  font-size: 25px;
+  display: none;
+}
+
+.menu-toggle :hover {
+  background-color: rgba(64, 68, 71, 0.543);
+}
+
 @media screen and (max-width: 768px) {
   .organization {
     margin-left: 0;
   }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .menu-container {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    top: 90px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(38, 44, 44);
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+    z-index: 1000;
+  }
+
+  .link {
+    width: 100%;
+    border: 0;
+    text-align: center;
+    height: 50px;
+    padding: 10px;
+    border-bottom: 1px solid rgb(72, 68, 68);
+  }
 }
 
 @media screen and (max-width: 576px) {
-  .nav-bar {
-    height: 45px;
-  }
-
   .logo {
     object-position: 50% 32%;
   }

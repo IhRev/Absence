@@ -2,6 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   CreateOrganizationDTO,
+  EditOrganizationDTO,
   MemberDTO,
   Organization,
 } from './models/organizations.models';
@@ -95,8 +96,26 @@ export class OrganizationsComponent implements OnInit {
     });
   }
 
-  public giveAccess(): void {}
-  public delete(): void {}
+  public changeAccess(): void {}
+  public delete(): void {
+    this.organizationService.delete(this.selectedOrganization!.id).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+        }
+        this.isFormOpened = false;
+      },
+    });
+  }
+
+  public edit(organization: EditOrganizationDTO): void {
+    this.organizationService.edit(organization).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+        }
+        this.isFormOpened = false;
+      },
+    });
+  }
 
   private loadMembers(): void {
     this.organizationService.getMembers().subscribe({
