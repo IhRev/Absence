@@ -44,12 +44,10 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit(): void {
-    this.absenceTypeService.getTypes().subscribe({
-      next: (result) => {
-        if (result.isSuccess) {
-          this.types = result.data!;
-        } else {
-          this.message = result.message;
+    this.absenceTypeService.types$.subscribe({
+      next: (value) => {
+        if (value) {
+          this.types = value;
         }
       },
     });
@@ -95,7 +93,8 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
           this.name,
           this.selectedType.id,
           new Date(this.startDate),
-          new Date(this.endDate)
+          new Date(this.endDate),
+          Number(localStorage.getItem('organization'))
         )
       );
     }

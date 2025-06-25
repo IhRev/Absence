@@ -24,7 +24,8 @@ export class CreateAbsenceDTO {
     public name: string,
     public type: number,
     public startDate: Date,
-    public endDate: Date
+    public endDate: Date,
+    public organization: number
   ) {}
 }
 

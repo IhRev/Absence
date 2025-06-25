@@ -27,7 +27,7 @@
   padding: 20px 5px 5px 5px;
   max-width: 1200px;
   margin: 10px auto;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .empty-container {
@@ -97,32 +97,69 @@
 }
 
 .access-btn {
-  cursor: pointer;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 18px;
-  color: #fff;
-  background-color: rgb(37, 37, 36);
-  border: 0.5px solid #fff;
-  transition: all 0.2s ease;
+  background-color: rgb(70, 221, 24);
+  width: 140px !important;
 }
 
 .access-btn:hover {
-  background-color: transparent;
-  box-shadow: 0px 0px 10px rgba(65, 184, 29, 0.9);
+  background-color: rgb(51, 172, 15);
+}
+
+.org-details button,
+.member-details button {
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 10px 0px;
+  font-size: 18px;
+  color: #fff;
+  border: 0px;
+  transition: all 0.2s ease;
+  width: 110px;
+  height: 45px;
 }
 
 .del-btn {
-  cursor: pointer;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 18px;
-  color: #fff;
   background-color: rgb(235, 12, 12);
-  border: 0px;
-  transition: all 0.2s ease;
 }
 
 .del-btn:hover {
   background-color: rgb(174, 11, 11);
+}
+
+.invite-btn {
+  background-color: rgb(70, 221, 24);
+}
+
+.invite-btn:hover {
+  background-color: rgb(51, 172, 15);
+}
+
+.edit-btn {
+  background-color: rgb(243, 247, 32);
+}
+
+.edit-btn:hover {
+  background-color: rgb(214, 217, 25);
+}
+
+.org-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.member-details {
+  display: flex;
+  gap: 10px;
+}
+
+.organization-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.member {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

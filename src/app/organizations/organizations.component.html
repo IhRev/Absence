@@ -33,16 +33,13 @@
   <div class="organization-block" *ngIf="members">
     <h1>{{ selectedOrganization!.name }}</h1>
     <div class="org-details">
-      <button class="edit-btn" (click)="delete()">Edit organization</button>
-      <button class="invite-btn" (click)="delete()">Invite user</button>
-      <button class="del-btn" (click)="delete()">Delete organization</button>
+      <button class="invite-btn" (click)="openInviteForm()">Invite user</button>
+      <button class="edit-btn" (click)="openForm()">Edit</button>
+      <button class="del-btn" (click)="delete()">Delete</button>
     </div>
     <div class="list-block">
       <div class="header">
         <h2 class="label">Members</h2>
-        <button class="add-btn" (click)="openInviteForm()">
-          <i class="fa-solid fa-plus"></i>
-        </button>
       </div>
       <ul class="list-box">
         <li
@@ -70,7 +67,7 @@
       >
         Change access
       </button>
-      <button class="del-btn" (click)="delete()">Delete user</button>
+      <button class="del-btn" (click)="deleteUser()">Delete user</button>
     </div>
   </div>
 </div>

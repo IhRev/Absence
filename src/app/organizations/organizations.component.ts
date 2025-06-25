@@ -97,6 +97,8 @@ export class OrganizationsComponent implements OnInit {
   }
 
   public changeAccess(): void {}
+  public deleteUser(): void {}
+
   public delete(): void {
     this.organizationService.delete(this.selectedOrganization!.id).subscribe({
       next: (res) => {

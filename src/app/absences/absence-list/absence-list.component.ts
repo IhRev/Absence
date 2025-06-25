@@ -24,7 +24,7 @@ export class AbsenceListComponent implements OnInit {
   private static num = 0;
   private readonly absenceService: AbsenceService;
   private readonly absenceTypeService: AbsenceTypeService;
-  private types: AbsenceTypeDTO[] = [];
+  private types: AbsenceTypeDTO[] | null = null;
 
   public message?: string;
   public absences: Absence[] = [];
@@ -42,28 +42,25 @@ export class AbsenceListComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.absenceTypeService.getTypes().subscribe({
-      next: (result) => {
-        if (result.isSuccess) {
-          this.types = result.data!;
-          this.isSuccess = true;
-        } else {
-          this.isSuccess = false;
+    this.absenceTypeService.types$.subscribe({
+      next: (value) => {
+        if (value) {
+          this.types = value;
+          const currentYear = new Date().getFullYear();
+          this.loadAbsences(
+            new Date(currentYear, 0, 1),
+            new Date(currentYear, 11, 31)
+          );
         }
-        this.message = result.message;
-
-        const currentYear = new Date().getFullYear();
-        this.loadAbsences(
-          new Date(currentYear, 0, 1),
-          new Date(currentYear, 11, 31)
-        );
       },
     });
   }
 
   public openForm(absence?: Absence): void {
-    this.selectedAbsence = absence ? absence : null;
-    this.isFormOpened = true;
+    if (this.types) {
+      this.selectedAbsence = absence ? absence : null;
+      this.isFormOpened = true;
+    }
   }
 
   public closeForm(): void {
@@ -71,28 +68,30 @@ export class AbsenceListComponent implements OnInit {
   }
 
   public create(absence: CreateAbsenceDTO): void {
-    this.absenceService.addAbsence(absence).subscribe({
-      next: (result) => {
-        if (result.isSuccess) {
-          if (typeof result.data === 'number') {
-            var newAbsence = new Absence(
-              ++AbsenceListComponent.num,
-              result.data!,
-              absence.name,
-              this.types.find((t) => t.id === absence.type)!,
-              absence.startDate,
-              absence.endDate
-            );
-            this.absences.push(newAbsence);
+    if (this.types) {
+      this.absenceService.addAbsence(absence).subscribe({
+        next: (result) => {
+          if (result.isSuccess) {
+            if (typeof result.data === 'number') {
+              var newAbsence = new Absence(
+                ++AbsenceListComponent.num,
+                result.data!,
+                absence.name,
+                this.types!.find((t) => t.id === absence.type)!,
+                absence.startDate,
+                absence.endDate
+              );
+              this.absences.push(newAbsence);
+            }
+            this.isSuccess = true;
+          } else {
+            this.isSuccess = false;
           }
-          this.isSuccess = true;
-        } else {
-          this.isSuccess = false;
-        }
-        this.message = result.message;
-      },
-    });
-    this.closeForm();
+          this.message = result.message;
+        },
+      });
+      this.closeForm();
+    }
   }
 
   public edit(absence: EditAbsenceDTO): void {
@@ -100,7 +99,7 @@ export class AbsenceListComponent implements OnInit {
       next: (result) => {
         if (result.isSuccess) {
           this.selectedAbsence!.name = absence.name;
-          this.selectedAbsence!.type = this.types.find(
+          this.selectedAbsence!.type = this.types!.find(
             (t) => t.id === absence.type
           )!;
           this.selectedAbsence!.startDate = absence.startDate;
@@ -119,7 +118,9 @@ export class AbsenceListComponent implements OnInit {
     this.absenceService.deleteAbsence(id).subscribe({
       next: (result) => {
         if (result.isSuccess) {
+          AbsenceListComponent.num = 0;
           this.absences = this.absences.filter((a) => a.id !== id);
+          this.absences.forEach((a) => (a.num = ++AbsenceListComponent.num));
           this.isSuccess = true;
         } else {
           this.isSuccess = false;
@@ -130,7 +131,9 @@ export class AbsenceListComponent implements OnInit {
   }
 
   public showFilters(): void {
-    this.filtersOpened = true;
+    if (this.types) {
+      this.filtersOpened = true;
+    }
   }
 
   public closeFilters(): void {
@@ -138,22 +141,25 @@ export class AbsenceListComponent implements OnInit {
   }
 
   public applyFilters(filters: AbsenceFilters): void {
-    this.loadAbsences(filters.startDate, filters.endDate);
-    this.filtersOpened = false;
+    if (this.types) {
+      this.loadAbsences(filters.startDate, filters.endDate);
+      this.filtersOpened = false;
+    }
   }
 
-  public loadAbsences(startDate: Date, endDate: Date): void {
+  private loadAbsences(startDate: Date, endDate: Date): void {
     this.absences = [];
     this.absenceService.getAbsences(startDate, endDate).subscribe({
       next: (result) => {
         if (result.isSuccess) {
+          AbsenceListComponent.num = 0;
           result.data!.forEach((a) => {
             this.absences.push(
               new Absence(
                 ++AbsenceListComponent.num,
                 a.id,
                 a.name,
-                this.types.find((t) => t.id === a.type)!,
+                this.types!.find((t) => t.id === a.type)!,
                 a.startDate,
                 a.endDate
               )
