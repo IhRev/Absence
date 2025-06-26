@@ -10,19 +10,20 @@ import { FormsModule } from '@angular/forms';
 import {
   CreateHolidayDTO,
   EditHolidayDTO,
+  Holiday,
   HolidayDTO,
 } from '../models/holidays.models';
 
 @Component({
   selector: 'app-holiday-form',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule],
+  imports: [NgIf, FormsModule],
   templateUrl: './holiday-form.component.html',
   styleUrl: './holiday-form.component.css',
 })
 export class HolidayFormComponent implements OnChanges {
   @Input() public isVisible = false;
-  @Input() public holiday: HolidayDTO | null = null;
+  @Input() public holiday: Holiday | null = null;
   @Output() public closeModal = new EventEmitter();
   @Output() public submitCreate = new EventEmitter<CreateHolidayDTO>();
   @Output() public submitEdit = new EventEmitter<EditHolidayDTO>();

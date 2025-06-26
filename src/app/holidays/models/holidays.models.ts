@@ -21,3 +21,12 @@ export class EditHolidayDTO {
     public date: Date
   ) {}
 }
+
+export class Holiday {
+  public constructor(
+    public num: number,
+    public id: number,
+    public name: string,
+    public date: Date
+  ) {}
+}

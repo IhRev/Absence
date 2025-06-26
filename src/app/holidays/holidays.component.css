@@ -40,11 +40,15 @@
 /* List */
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(3, auto);
   grid-row-gap: 10px;
   max-width: 1200px;
   width: 100%;
   margin-top: 5px;
+}
+
+.admin-grid {
+  grid-template-columns: repeat(4, auto) !important;
 }
 
 .item {

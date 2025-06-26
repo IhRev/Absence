@@ -1,19 +1,23 @@
-<div class="container">
-  <div class="btns">
+<div class="container" *ngIf="organization">
+  <div class="btns" *ngIf="organization.isAdmin">
     <button class="add-btn" (click)="openForm()">
       <i class="fa-solid fa-plus"></i>
     </button>
   </div>
-  <div class="grid-list">
+  <div class="grid-list" [class.admin-grid]="organization.isAdmin">
     <span class="header item item-start">#</span>
     <span class="header item">Name</span>
     <span class="header item">Date</span>
-    <span class="header item item-end">Actions</span>
+    <span *ngIf="organization.isAdmin" class="header item item-end"
+      >Actions</span
+    >
     @for (holiday of holidays; track holiday) {
-    <span class="item item-start">{{ holiday.id }}</span>
+    <span class="item item-start">{{ holiday.num }}</span>
     <span class="item">{{ holiday.name }}</span>
-    <span class="item">{{ holiday.date | date : "d MMMM, y" }}</span>
-    <span class="item item-end">
+    <span class="item" [class.item-end]="!organization.isAdmin">{{
+      holiday.date | date : "d MMMM, y"
+    }}</span>
+    <span class="item item-end" *ngIf="organization.isAdmin">
       <div class="action-buttons">
         <button class="delete-button" (click)="delete(holiday.id)">
           <i class="fa-solid fa-trash"></i>

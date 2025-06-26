@@ -1,37 +1,69 @@
 import { Component, OnInit } from '@angular/core';
 import { HolidayFormComponent } from './holiday-form/holiday-form.component';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { HolidaysService } from './services/holidays.service';
 import {
   CreateHolidayDTO,
   EditHolidayDTO,
-  HolidayDTO,
+  Holiday,
 } from './models/holidays.models';
+import { OrganizationsService } from '../organizations/services/organizations.service';
+import { Organization } from '../organizations/models/organizations.models';
 
 @Component({
   selector: 'app-holidays',
   standalone: true,
-  imports: [DatePipe, HolidayFormComponent],
+  imports: [DatePipe, HolidayFormComponent, NgIf],
   templateUrl: './holidays.component.html',
   styleUrl: './holidays.component.css',
 })
 export class HolidaysComponent implements OnInit {
   private static num = 0;
   private readonly holidaysService: HolidaysService;
+  private readonly organizationService: OrganizationsService;
+  public organization: Organization | null = null;
 
-  public holidays: HolidayDTO[] = [];
+  public holidays: Holiday[] = [];
   public isFormOpened: boolean = false;
-  public selectedHoliday: HolidayDTO | null = null;
+  public selectedHoliday: Holiday | null = null;
 
-  public constructor(holidaysService: HolidaysService) {
+  public constructor(
+    holidaysService: HolidaysService,
+    organizationService: OrganizationsService
+  ) {
     this.holidaysService = holidaysService;
+    this.organizationService = organizationService;
   }
 
-  public ngOnInit(): void {}
+  public ngOnInit(): void {
+    this.organizationService.selectedOrganization$.subscribe((value) => {
+      if (value) {
+        this.organization = value;
+        this.loadHolidays();
+      }
+    });
+  }
 
-  public openForm(holiday?: HolidayDTO): void {
-    this.selectedHoliday = holiday ? holiday : null;
-    this.isFormOpened = true;
+  private loadHolidays(): void {
+    if (this.organization) {
+      this.holidaysService.getHolidays(this.organization!.id).subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            HolidaysComponent.num = 0;
+            this.holidays = res.data!.map(
+              (h) => new Holiday(++HolidaysComponent.num, h.id, h.name, h.date)
+            );
+          }
+        },
+      });
+    }
+  }
+
+  public openForm(holiday?: Holiday): void {
+    if (this.organization) {
+      this.selectedHoliday = holiday ? holiday : null;
+      this.isFormOpened = true;
+    }
   }
 
   public closeForm(): void {
@@ -39,16 +71,23 @@ export class HolidaysComponent implements OnInit {
   }
 
   public create(holiday: CreateHolidayDTO): void {
-    this.holidaysService.addHoliday(holiday).subscribe({
-      next: (data) => {
-        if (data.isSuccess) {
-          this.holidays.push(
-            new HolidayDTO(data.data!, holiday.name, holiday.date)
-          );
-        }
-      },
-    });
-    this.closeForm();
+    if (this.organization) {
+      this.holidaysService.addHoliday(holiday).subscribe({
+        next: (data) => {
+          if (data.isSuccess) {
+            this.holidays.push(
+              new Holiday(
+                ++HolidaysComponent.num,
+                data.data!,
+                holiday.name,
+                holiday.date
+              )
+            );
+          }
+        },
+      });
+      this.closeForm();
+    }
   }
 
   public edit(holiday: EditHolidayDTO): void {
@@ -67,7 +106,9 @@ export class HolidaysComponent implements OnInit {
     this.holidaysService.deleteHoliday(id).subscribe({
       next: (data) => {
         if (data.isSuccess) {
+          HolidaysComponent.num = 0;
           this.holidays = this.holidays.filter((a) => a.id !== id);
+          this.holidays.forEach((h) => (h.num = ++HolidaysComponent.num));
         }
       },
     });
