@@ -21,6 +21,13 @@
       >
       <a
         (click)="closeMenu()"
+        *ngIf="organization && organization.isAdmin"
+        routerLink="/admin"
+        class="link admin-link"
+        >Admin</a
+      >
+      <a
+        (click)="closeMenu()"
         *ngIf="isLoggedIn"
         routerLink="/organizations"
         class="link organizations-link"

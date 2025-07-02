@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AbsenceDTO, AbsenceTypeDTO } from '../models/absence.models';
-import { BehaviorSubject, map, Observable, of, ReplaySubject } from 'rxjs';
-import { DataResult } from '../../common/models/result.models';
+import { AbsenceTypeDTO } from '../models/absence.models';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

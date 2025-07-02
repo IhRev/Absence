@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 90px 5px 5px 5px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.link {
+  text-decoration: none;
+  background-color: lightblue;
+  color: black;
+  font-size: 18px;
+  border-radius: 5px;
+  padding: 10px 15px;
+  width: 85px;
+}
+
+.link:hover {
+  background-color: rgba(173, 216, 230, 0.8);
+}
