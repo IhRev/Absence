@@ -1,1 +1,43 @@
-<p>events works!</p>
+<div class="container" *ngIf="events">
+  <h3 *ngIf="events.length === 0">No events!</h3>
+
+  <div class="table-form" *ngIf="events.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Event Type</th>
+          <th>Absence Type</th>
+          <th>Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Accept/Reject</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (event of events; track $index) {
+        <tr class="item">
+          <td>{{ event.num }}</td>
+          <td>{{ event.user }}</td>
+          <td>{{ event.type }}</td>
+          <td>{{ event.absenceType }}</td>
+          <td>{{ event.name }}</td>
+          <td>{{ event.startDate }}</td>
+          <td>{{ event.endDate }}</td>
+          <td>
+            <div class="btns">
+              <button class="accept-btn" (click)="respond(event.id, true)">
+                <i class="fa-solid fa-check"></i>
+              </button>
+              <button class="reject-btn" (click)="respond(event.id, false)">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

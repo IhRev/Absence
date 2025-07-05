@@ -5,11 +5,23 @@ export interface EventTypeDTO {
 
 export interface EventDTO {
   id: number;
-  absenceId: number | null;
-  name: string | null;
-  startDate: Date | null;
-  endDate: Date | null;
-  absenceType: number | null;
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  absenceType: number;
   userId: number;
   absenceEventType: number;
+}
+
+export class Event {
+  public constructor(
+    public num: number,
+    public id: number,
+    public name: string,
+    public startDate: Date,
+    public endDate: Date,
+    public absenceType: string,
+    public user: string,
+    public type: string
+  ) {}
 }

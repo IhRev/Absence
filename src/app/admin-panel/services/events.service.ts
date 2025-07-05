@@ -29,7 +29,7 @@ export class EventsService {
 
   public respond(eventId: number, accepted: boolean): Observable<Result> {
     return this.client
-      .post<any>(`http://192.168.0.179:5081/events/${eventId}`, null, {
+      .post<any>(`http://192.168.0.179:5081/absences/events/${eventId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
       .pipe(
