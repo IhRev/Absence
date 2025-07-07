@@ -1,12 +1,17 @@
 .nav-bar {
   width: 100%;
   position: fixed;
-  background-color: rgb(38, 44, 44);
+  background-color: rgb(45, 45, 45);
   height: 90px;
+  z-index: 1000;
 }
 
 .sub-nav {
-  background-color: rgba(0, 217, 255, 0.459);
+  background: linear-gradient(
+    to bottom,
+    rgb(173, 216, 230),
+    rgb(135, 206, 250)
+  );
   height: 30px;
 }
 
