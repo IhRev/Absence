@@ -5,10 +5,10 @@
   flex-direction: column;
   justify-content: center;
   max-width: 1200px;
-  margin: 20px auto;
+  margin: 50px auto;
 }
 
-.welcome-header {
+.container h1 {
   text-align: center;
   font-size: 58px;
   font-weight: 700;
@@ -16,7 +16,7 @@
   margin-bottom: 32px;
 }
 
-.short-description {
+.container h2 {
   text-align: center;
   font-size: 30px;
   font-weight: 400;
@@ -25,7 +25,15 @@
   max-width: 1000px;
 }
 
-.welcome-header span {
+.container h3 {
+  display: block;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 450;
+  margin-bottom: 40px;
+}
+
+.container h1 span {
   color: lightblue;
 }
 
@@ -33,12 +41,14 @@
   opacity: 1 !important;
 }
 
-h1.show,
-h2.show {
+.container h1.show,
+.container h2.show,
+.container h3.show {
   transform: translateY(0) !important;
 }
 
-.short-description.show {
+.container h2.show,
+.container h3.show {
   transition-delay: 400ms;
 }
 
@@ -47,13 +57,14 @@ h2.show {
   transition: transform 1s ease-in-out, opacity 1s ease-in-out;
 }
 
-h1.hidden,
-h2.hidden {
+.container h1.hidden,
+.container h2.hidden,
+.container h3.hidden {
   transform: translateY(-20px);
 }
 
 .btns {
-  margin-bottom: 100px;
+  margin-bottom: 150px;
 }
 
 .btns button {
@@ -74,7 +85,7 @@ h2.hidden {
 }
 
 .btns button.hidden {
-  transform: translateX(-50px);
+  transform: translateX(-100px);
 }
 
 .btns button.show {
@@ -82,15 +93,20 @@ h2.hidden {
   transition-delay: 400ms;
 }
 
-.full-description {
+.points {
   display: flex;
   flex-direction: row;
   width: 100%;
   gap: 20px;
 }
 
-.points {
+.points ul {
   flex: 1;
+}
+
+.points ul.hidden {
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
 }
 
 .points li {
@@ -99,43 +115,58 @@ h2.hidden {
   text-align: left;
   padding-left: 20px;
   opacity: 0;
-  transform: translateX(-30px);
-  animation: slideInPoint 0.5s forwards;
 }
 
-.points li:nth-child(1) {
-  animation-delay: 0.6s;
-}
-.points li:nth-child(2) {
-  animation-delay: 0.8s;
-}
-.points li:nth-child(3) {
-  animation-delay: 1s;
+.first-point {
+  margin-top: 15px;
 }
 
-@keyframes slideInPoint {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.points .hidden li {
+  transform: translateX(-100px);
+  opacity: 0 !important;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+.points .show li {
+  transform: translateX(0);
+  opacity: 1 !important;
+}
+
+.points .show li:nth-child(1) {
+  transition-delay: 600ms;
+}
+.points .show li:nth-child(2) {
+  transition-delay: 800ms;
+}
+.points .show li:nth-child(3) {
+  transition-delay: 1s;
+}
+.points .show li:nth-child(4) {
+  transition-delay: 1.2s;
+}
+.points .show li:nth-child(5) {
+  transition-delay: 1.4s;
+}
+.points .show li:nth-child(6) {
+  transition-delay: 1.6s;
+}
+.points .show li:nth-child(7) {
+  transition-delay: 1.8s;
 }
 
 .img-wrapper {
   flex: 1;
 }
 
-.image {
+.img-wrapper img {
   display: block;
   width: 100%;
   object-fit: cover;
   height: 100%;
   overflow: hidden;
-  animation-delay: 600ms;
-  animation: slideInImg 1.5s forwards;
+  opacity: 0;
 }
 
-@keyframes slideInImg {
-  to {
-    opacity: 1;
-  }
+.img-wrapper img.show {
+  transition-delay: 1s;
 }
