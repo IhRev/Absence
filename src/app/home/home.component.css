@@ -80,8 +80,9 @@
 
 .btns button:hover {
   background-color: rgb(115, 193, 219);
-  transition: background-color 0.3s ease 0s !important;
   box-shadow: 10px 10px 20px black;
+  transition: all 0.3s ease;
+  transition-delay: 0s !important;
 }
 
 .btns button.hidden {

@@ -8,7 +8,7 @@ import { AfterViewInit, Component } from '@angular/core';
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements AfterViewInit {
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     const animationObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
