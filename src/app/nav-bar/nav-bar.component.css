@@ -6,6 +6,16 @@
   z-index: 1000;
 }
 
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.main-nav {
+  justify-content: space-between;
+  height: 60px;
+}
+
 .sub-nav {
   background: linear-gradient(
     to bottom,
@@ -15,13 +25,22 @@
   height: 30px;
 }
 
-.organization {
-  font-size: 20px;
-  color: #000;
-  margin-left: 20px;
+.sub-nav-info {
+  justify-content: center;
 }
 
-.logo-container {
+.sub-nav-info p {
+  color: #000;
+  margin-left: 20px;
+  font-size: 20px;
+  font-family: "Tektur", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+.logo {
   width: 120px;
   height: 100%;
   overflow: hidden;
@@ -30,31 +49,16 @@
   justify-content: center;
 }
 
-.logo {
+.logo a {
+  height: 100%;
+  width: 100%;
+}
+
+.logo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 50% 35%;
-}
-
-.logo-link {
-  color: #000;
-  height: 100%;
-  width: 100%;
-}
-
-.container {
-  height: 100%;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-}
-
-.nav-bar-flex {
-  display: flex;
-  justify-content: space-between;
-  height: 60px;
 }
 
 .menu-container {
@@ -63,7 +67,7 @@
   align-items: center;
 }
 
-.link {
+.menu-container a {
   text-decoration: none;
   color: white;
   height: 100%;
@@ -72,10 +76,12 @@
   border-top: 0;
   border-bottom: 0;
   padding: 0px 20px;
+  font-size: 18px;
 }
 
-.link:hover {
+.menu-container a:hover {
   background-color: rgba(64, 68, 71, 0.543);
+  transition: background-color 0.3s;
 }
 
 .mobile-nav-bar {
@@ -84,6 +90,17 @@
 
 .mobile-menu {
   display: flex !important;
+}
+
+.menu-toggle {
+  margin-right: 10px;
+  font-size: 25px;
+  display: none;
+  cursor: pointer;
+}
+
+.menu-toggle :hover {
+  background-color: rgba(64, 68, 71, 0.543);
 }
 
 @media screen and (min-width: 768px) {
@@ -96,21 +113,7 @@
   }
 }
 
-.menu-toggle {
-  margin-right: 10px;
-  font-size: 25px;
-  display: none;
-}
-
-.menu-toggle :hover {
-  background-color: rgba(64, 68, 71, 0.543);
-}
-
 @media screen and (max-width: 768px) {
-  .organization {
-    margin-left: 0;
-  }
-
   .menu-toggle {
     display: block;
   }
@@ -130,7 +133,7 @@
     z-index: 1000;
   }
 
-  .link {
+  .menu-container a {
     width: 100%;
     border: 0;
     text-align: center;
