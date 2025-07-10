@@ -11,28 +11,62 @@
     </div>
 
     <div class="menu-container" [class.mobile-menu]="isMenuOpen">
-      <a (click)="closeMenu()" routerLink="/">Home</a>
-      <a (click)="closeMenu()" *ngIf="!isLoggedIn" routerLink="/about">About</a>
       <a
-        (click)="closeMenu()"
+        (click)="linkClicked('home')"
+        [class.active]="tabName === 'home'"
+        routerLink="/"
+        >Home</a
+      >
+      <a
+        (click)="linkClicked('about')"
+        [class.active]="tabName === 'about'"
+        *ngIf="!isLoggedIn"
+        routerLink="/about"
+        >About</a
+      >
+      <a
+        (click)="linkClicked('admin')"
+        [class.active]="tabName === 'admin'"
         *ngIf="organization && organization.isAdmin"
         routerLink="/admin"
         >Admin</a
       >
-      <a (click)="closeMenu()" *ngIf="isLoggedIn" routerLink="/organizations"
+      <a
+        (click)="linkClicked('organizations')"
+        [class.active]="tabName === 'organizations'"
+        *ngIf="isLoggedIn"
+        routerLink="/organizations"
         >Organizations
       </a>
-      <a (click)="closeMenu()" *ngIf="organization" routerLink="/holidays"
+      <a
+        (click)="linkClicked('holidays')"
+        [class.active]="tabName === 'holidays'"
+        *ngIf="organization"
+        routerLink="/holidays"
         >Holidays</a
       >
-      <a (click)="closeMenu()" *ngIf="organization" routerLink="/absences"
+      <a
+        (click)="linkClicked('absences')"
+        [class.active]="tabName === 'absences'"
+        *ngIf="organization"
+        routerLink="/absences"
         >Absences</a
       >
       <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
-        <a (click)="closeMenu()" routerLink="/login">Login</a>
+        <a
+          (click)="linkClicked('login')"
+          [class.active]="tabName === 'login'"
+          routerLink="/login"
+          >Login</a
+        >
       </ng-container>
       <ng-template #loggedInTemplate>
-        <a (click)="closeMenu()" routerLink="/profile">My Profile</a>
+        <a
+          (click)="linkClicked('profile')"
+          [class.active]="tabName === 'profile'"
+          routerLink="/profile"
+          >My Profile</a
+        >
       </ng-template>
     </div>
   </div>

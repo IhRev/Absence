@@ -18,6 +18,7 @@ export class NavBarComponent implements OnInit {
   public organization: Organization | null = null;
   public isLoggedIn = false;
   public isMenuOpen: boolean = false;
+  public tabName: string = 'home';
 
   public constructor(
     authService: AuthService,
@@ -40,7 +41,8 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  public closeMenu(): void {
+  public linkClicked(tabName: string): void {
+    this.tabName = tabName;
     if (this.isMenuOpen) {
       this.isMenuOpen = false;
     }
