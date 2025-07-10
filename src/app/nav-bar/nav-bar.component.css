@@ -17,11 +17,7 @@
 }
 
 .sub-nav {
-  background: linear-gradient(
-    to bottom,
-    rgb(173, 216, 230),
-    rgb(135, 206, 250)
-  );
+  background: var(--main-color-2);
   height: 30px;
 }
 

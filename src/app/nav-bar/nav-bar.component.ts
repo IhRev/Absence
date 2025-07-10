@@ -13,20 +13,15 @@ import { Organization } from '../organizations/models/organizations.models';
   styleUrl: './nav-bar.component.css',
 })
 export class NavBarComponent implements OnInit {
-  private authService: AuthService;
-  private organizationService: OrganizationsService;
   public organization: Organization | null = null;
   public isLoggedIn = false;
   public isMenuOpen: boolean = false;
   public tabName: string = 'home';
 
   public constructor(
-    authService: AuthService,
-    organizationService: OrganizationsService
-  ) {
-    this.authService = authService;
-    this.organizationService = organizationService;
-  }
+    private readonly authService: AuthService,
+    private readonly organizationService: OrganizationsService
+  ) {}
 
   public ngOnInit(): void {
     this.authService.loggedIn$.subscribe((status) => {

@@ -12,15 +12,13 @@ import { UserCredentials } from '../models/auth.models';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  private readonly authService: AuthService;
-  private readonly router: Router;
   public userName: string = '';
   public password: string = '';
 
-  public constructor(authService: AuthService, router: Router) {
-    this.authService = authService;
-    this.router = router;
-  }
+  public constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {}
 
   public login(): void {
     this.authService

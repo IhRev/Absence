@@ -42,3 +42,11 @@ main {
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
+
+:root {
+  --main-color-2: linear-gradient(
+    to bottom,
+    rgb(173, 216, 230),
+    rgb(135, 206, 250)
+  );
+}

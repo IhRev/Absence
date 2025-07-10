@@ -16,14 +16,11 @@ import { DataResult, Result } from '../../common/models/result.models';
 })
 export class AuthService {
   private readonly baseUri: string = 'http://192.168.0.179:5081';
-  private readonly client: HttpClient;
   private loggedIn = new BehaviorSubject<boolean>(this.tokenExists());
 
   public loggedIn$ = this.loggedIn.asObservable();
 
-  public constructor(client: HttpClient) {
-    this.client = client;
-  }
+  public constructor(private readonly client: HttpClient) {}
 
   private tokenExists(): boolean {
     return !!localStorage.getItem('accessToken');
