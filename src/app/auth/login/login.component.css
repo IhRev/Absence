@@ -77,3 +77,9 @@
 .register-link:hover {
   color: rgb(69, 155, 184);
 }
+
+.error-msg {
+  margin-top: 5px;
+  color: rgb(249, 36, 36);
+  font-size: 16px;
+}

@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import {
@@ -10,6 +10,7 @@ import {
   UserDetails,
 } from '../models/auth.models';
 import { DataResult, Result } from '../../common/models/result.models';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,10 @@ export class AuthService {
 
   public loggedIn$ = this.loggedIn.asObservable();
 
-  public constructor(private readonly client: HttpClient) {}
+  public constructor(
+    private readonly client: HttpClient,
+    private readonly router: Router
+  ) {}
 
   private tokenExists(): boolean {
     return !!localStorage.getItem('accessToken');
@@ -98,9 +102,13 @@ export class AuthService {
           }
           return Result.fail(res.message!);
         }),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          if (error.status === 401) {
+            return of(Result.fail('Incorrect password or email'));
+          }
+          this.router.navigate(['/error', { queryParams: { status: 500 } }]);
+          return of(Result.fail('Something went wrong'));
         })
       );
   }

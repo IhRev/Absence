@@ -8,10 +8,12 @@ import { RegisterComponent } from './auth/register/register.component';
 import { HolidaysComponent } from './holidays/holidays.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { EventsComponent } from './admin-panel/events/events.component';
+import { ErrorPageComponent } from './common/error-page/error-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'error', component: ErrorPageComponent },
   { path: 'absences', component: AbsenceListComponent },
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
