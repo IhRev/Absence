@@ -1,0 +1,31 @@
+.container {
+  text-align: center;
+}
+
+h1 .status {
+  color: red;
+}
+
+h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.home-btn {
+  text-decoration: none;
+  background: rgb(110, 178, 201);
+  border: none;
+  display: block;
+  margin: 0 auto 15px auto;
+  border: 0;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  transition: all 0.3s !important;
+}
+
+.home-btn:hover {
+  background: rgb(70, 165, 196);
+  transition: all 0.5s ease;
+}

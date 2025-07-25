@@ -107,7 +107,7 @@ export class AuthService {
           if (error.status === 401) {
             return of(Result.fail('Incorrect password or email'));
           }
-          this.router.navigate(['/error', { queryParams: { status: 500 } }]);
+          this.router.navigate(['/error'], { queryParams: { status: 500 } });
           return of(Result.fail('Something went wrong'));
         })
       );
