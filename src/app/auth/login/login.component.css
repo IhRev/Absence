@@ -1,16 +1,9 @@
 .login-form {
-  margin-top: 30px;
   border-radius: 15px;
   border: 2px rgb(35, 33, 33) solid;
   width: 400px;
   padding: 30px;
-}
-
-.login-form h2 {
-  text-align: center;
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 15px;
+  margin: 30px auto;
 }
 
 .input-item {
@@ -18,6 +11,13 @@
   flex-direction: column;
   gap: 5px;
   margin-bottom: 30px;
+}
+
+.login-form h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 15px;
 }
 
 .input-item label {

@@ -2,27 +2,29 @@
   margin: 30px auto 0 auto;
   border-radius: 15px;
   border: 2px rgb(35, 33, 33) solid;
-  width: 300px;
-  padding: 10px;
+  width: 400px;
+  padding: 30px;
 }
 
 .input-item {
-  padding: 10px;
-  align-items: center;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 30px;
 }
 
-.form-header {
+.register-form h2 {
   text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 15px;
 }
 
-label {
-  font-size: 14px;
-  display: block;
-  color: white;
+.input-item label {
+  font-size: 20px;
 }
 
-input {
+.input-item input {
   border: 1px solid white;
   outline: none;
   transition: 0.4s;
@@ -30,38 +32,33 @@ input {
   width: 100%;
   background-color: transparent;
   color: white;
-  height: 25px;
-  padding: 2px 5px;
+  height: 30px;
+  padding: 5px;
+  font-size: 20px;
 }
 
-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+.input-item input:focus {
+  border-color: lightblue;
+  box-shadow: 0px 0px 7px rgba(0, 123, 255, 0.4);
 }
 
-button {
-  background-color: transparent;
-  outline: none;
+.submit-btn {
+  background: rgb(110, 178, 201);
   border: none;
-  transition: all 0.3s ease;
-}
-
-.submit-button {
   display: block;
-  margin: 10px auto 0 auto;
-  border: 1px solid rgb(0, 0, 0);
-  padding: 2px;
+  margin: 0 auto 0px auto;
+  border: 0;
+  padding: 10px 20px;
   border-radius: 5px;
-  width: 100px;
-  color: white;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  transition: all 0.3s !important;
 }
 
-.submit-button:hover {
-  border-color: #35c435;
-  box-shadow: 0 0 10px rgba(17, 255, 0, 0.4);
+.submit-btn:hover {
+  background: rgb(70, 165, 196);
 }
 
-.submit-button:active {
-  border-color: #0d900d;
-  box-shadow: 0 0 10px rgba(16, 216, 2, 0.4);
+.submit-btn:active {
+  background: rgb(47, 140, 171);
 }

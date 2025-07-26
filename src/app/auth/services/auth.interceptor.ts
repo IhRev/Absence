@@ -15,7 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(cloned).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401 && req.url.includes('/login')) {
+      if (err.status === 401) {
         if (req.url.includes('/refresh')) {
           authService.logoutLocally();
           router.navigate(['/login']);
