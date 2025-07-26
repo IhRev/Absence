@@ -1,25 +1,45 @@
 <div class="container">
-  <form class="register-form" (submit)="submit()">
+  <form class="register-form" [formGroup]="form" (submit)="submit()">
     <h2>Sign Up</h2>
 
     <div class="input-item">
       <label for="firstName">First Name</label>
-      <input type="text" id="firstName" [(ngModel)]="firstName" />
+      <input type="text" id="firstName" formControlName="firstName" />
+      <div *ngIf="firstNameIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('firstName')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
+      </div>
     </div>
 
     <div class="input-item">
       <label for="lastName">Last Name</label>
-      <input type="text" id="lastName" [(ngModel)]="lastName" />
+      <input type="text" id="lastName" formControlName="lastName" />
+      <div *ngIf="firstNameIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('lastName')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
+      </div>
     </div>
 
     <div class="input-item">
       <label for="email">Email</label>
-      <input type="text" id="email" [(ngModel)]="email" />
+      <input type="text" id="email" formControlName="email" />
+      <div *ngIf="firstNameIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('email')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
+      </div>
     </div>
 
     <div class="input-item">
       <label for="password">Password</label>
-      <input type="password" id="password" [(ngModel)]="password" />
+      <input type="password" id="password" formControlName="password" />
+      <div *ngIf="firstNameIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('password')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
+      </div>
     </div>
 
     <button class="submit-btn">Submit</button>
