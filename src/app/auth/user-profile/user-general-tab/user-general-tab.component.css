@@ -3,20 +3,17 @@
 }
 
 .input-item {
-  padding: 10px 0px;
-  align-items: left;
-  gap: 10px;
-  flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 20px;
 }
 
-label {
-  font-size: 16px;
-  display: block;
-  color: white;
+.input-item label {
+  font-size: 20px;
 }
 
-input {
-  font-size: 16px;
+.input-item input {
   border: 1px solid white;
   outline: none;
   transition: 0.4s;
@@ -25,34 +22,90 @@ input {
   background-color: transparent;
   color: white;
   height: 30px;
-  padding: 2px 5px;
-  margin-top: 5px;
+  padding: 5px;
+  font-size: 20px;
 }
 
-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+.input-item input:focus:not([readonly]) {
+  border-color: lightblue;
+  box-shadow: 0px 0px 7px rgba(0, 123, 255, 0.4);
 }
 
-button {
-  background-color: rgb(38, 44, 44);
-  outline: none;
+.input-item input:read-only {
+  color: rgb(176, 170, 170);
+}
+
+.submit-btn {
+  background: rgb(110, 178, 201);
   border: none;
-  transition: all 0.3s ease;
-  border-radius: 5px;
-  width: 110px;
-  height: 30px;
-  color: white;
-}
-
-.edit-button {
-  border: 1px solid rgb(8, 202, 8);
   display: block;
   margin-left: auto;
-  margin-top: 10px;
+  border: 0;
+  padding: 10px 30px;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  transition: all 0.3s !important;
 }
 
-.edit-button:hover {
-  border-color: rgb(6, 138, 6);
-  box-shadow: 0 0 10px rgb(6, 138, 6);
+.submit-btn:hover {
+  background: rgb(70, 165, 196);
+}
+
+.submit-btn:active {
+  background: rgb(47, 140, 171);
+}
+
+.text-denger {
+  color: rgb(249, 36, 36);
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.load-icon {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 30px;
+  width: 100px;
+}
+
+.msg-box {
+  padding: 0 5px;
+  border-radius: 5px;
+  font-size: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  height: 36px;
+  align-items: center;
+}
+
+.msg-box.success-msg {
+  background-color: rgba(43, 184, 43, 0.438);
+}
+
+.msg-box.error-msg {
+  background-color: rgba(184, 43, 43, 0.438);
+}
+
+.msg-box .msg {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.msg-box .close-btn {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 24px;
+  height: 24px;
+  padding-top: 1px;
+  padding-right: 1px;
+}
+
+.msg-box .close-btn:hover {
+  border-radius: 50px;
+  background-color: rgba(0, 0, 0, 0.153);
+  transition: all 0.2s;
 }

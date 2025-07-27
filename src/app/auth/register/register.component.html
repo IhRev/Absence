@@ -15,7 +15,7 @@
     <div class="input-item">
       <label for="lastName">Last Name</label>
       <input type="text" id="lastName" formControlName="lastName" />
-      <div *ngIf="firstNameIsInvalid">
+      <div *ngIf="lastNameIsInvalid">
         <p class="text-denger" *ngFor="let error of getErrors('lastName')">
           *{{ getErrorMessage(error.key, error.value) }}
         </p>
@@ -25,7 +25,7 @@
     <div class="input-item">
       <label for="email">Email</label>
       <input type="text" id="email" formControlName="email" />
-      <div *ngIf="firstNameIsInvalid">
+      <div *ngIf="emailIsInvalid">
         <p class="text-denger" *ngFor="let error of getErrors('email')">
           *{{ getErrorMessage(error.key, error.value) }}
         </p>
@@ -35,7 +35,7 @@
     <div class="input-item">
       <label for="password">Password</label>
       <input type="password" id="password" formControlName="password" />
-      <div *ngIf="firstNameIsInvalid">
+      <div *ngIf="passwordIsInvalid">
         <p class="text-denger" *ngFor="let error of getErrors('password')">
           *{{ getErrorMessage(error.key, error.value) }}
         </p>

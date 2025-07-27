@@ -9,6 +9,10 @@ import { AuthService } from '../services/auth.service';
 import { RegisterDTO, UserCredentials } from '../models/auth.models';
 import { Router } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
+import {
+  getErrorMessage,
+  getErrors,
+} from '../../common/services/error-utilities';
 
 @Component({
   selector: 'app-register',
@@ -58,14 +62,6 @@ export class RegisterComponent {
     this.router = router;
   }
 
-  getErrors(controlName: string): { key: string; value: any }[] {
-    const control = this.form.get(controlName);
-    const errors = control?.errors;
-    return errors
-      ? Object.entries(errors).map(([key, value]) => ({ key, value }))
-      : [];
-  }
-
   public submit(): void {
     if (this.form.invalid) {
       return;
@@ -88,18 +84,9 @@ export class RegisterComponent {
       });
   }
 
-  public getErrorMessage(errorKey: string, errorValue: any): string {
-    switch (errorKey) {
-      case 'required':
-        return 'This field is required.';
-      case 'email':
-        return 'Please enter a valid email address.';
-      case 'minlength':
-        return `Minimum length is ${errorValue.requiredLength}.`;
-      case 'maxlength':
-        return `Maximum length is ${errorValue.requiredLength}.`;
-      default:
-        return 'Invalid field.';
-    }
+  public getErrorMessage = getErrorMessage;
+
+  public getErrors(columnName: string) {
+    return getErrors(this.form, columnName);
   }
 }

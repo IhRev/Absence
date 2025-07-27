@@ -38,7 +38,7 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error(error);
-        return of(DataResult.fail<UserDetails>(error));
+        return of(DataResult.fail<UserDetails>());
       })
     );
   }

@@ -5,13 +5,19 @@
   gap: 20px;
 }
 
-.header {
+.container h1 {
   margin-left: 10px;
+  font-size: 32px;
+  font-weight: 700;
 }
 
 .body {
   display: flex;
   gap: 30px;
+}
+
+.tabs {
+  list-style-type: none;
 }
 
 li {
@@ -24,15 +30,15 @@ li button {
   outline: none;
   border: none;
   transition: all 0.3s ease;
-  width: 100px;
+  width: 110px;
   height: 50px;
   color: white;
-  font-size: 17px;
+  font-size: 20px;
   text-align: start;
 }
 
 li button:hover {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
 }
 
@@ -42,11 +48,7 @@ li button:active {
 
 .active {
   border-left: 1px solid white !important;
-  font-size: 20px !important;
+  font-size: 24px !important;
   font-weight: bold !important;
   text-shadow: 5px 5px 5px black !important;
-}
-
-.tabs {
-  list-style-type: none;
 }

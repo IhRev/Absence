@@ -1,29 +1,48 @@
 <div class="container">
-  <div class="profile-form">
-    <div class="form-fields" *ngIf="details">
-      <div class="input-item">
-        <label for="Email">Email </label>
-        <input readonly type="text" id="email" [(ngModel)]="details.email" />
-      </div>
-      <div class="input-item">
-        <label for="firstName">First Name </label>
-        <input
-          required
-          type="text"
-          id="firstName"
-          [(ngModel)]="details.firstName"
-        />
-      </div>
-      <div class="input-item">
-        <label for="lastName">Last Name </label>
-        <input
-          required
-          type="text"
-          id="lastName"
-          [(ngModel)]="details.lastName"
-        />
+  <div
+    [ngClass]="{ 'success-msg':isSuccess, 'error-msg':!isSuccess, }"
+    class="msg-box"
+    *ngIf="message"
+  >
+    <span class="msg">{{ message }}</span>
+    <button (click)="closeMessage()" class="close-btn">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <form
+    (submit)="edit()"
+    [formGroup]="form"
+    class="profile-form"
+    *ngIf="!isProcessing && loaded"
+  >
+    <div class="input-item">
+      <label for="Email">Email </label>
+      <input type="text" id="email" formControlName="email" readonly />
+    </div>
+
+    <div class="input-item">
+      <label for="firstName">First Name </label>
+      <input type="text" id="firstName" formControlName="firstName" />
+      <div *ngIf="firstNameIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('firstName')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
       </div>
     </div>
-    <button (click)="edit()" class="edit-button">Edit</button>
-  </div>
+
+    <div class="input-item">
+      <label for="lastName">Last Name </label>
+      <input type="text" id="lastName" formControlName="lastName" />
+      <div *ngIf="lastNameIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('lastName')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
+      </div>
+    </div>
+
+    <button class="submit-btn">Edit</button>
+  </form>
+
+  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
 </div>
