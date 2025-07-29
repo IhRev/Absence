@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { InvitationsService } from '../../../organizations/services/invitations.service';
 import { InvitationDTO } from '../../../organizations/models/invitations.models';
 import { NgIf } from '@angular/common';
+import { Message } from '../../models/user-profile.models';
 
 @Component({
   selector: 'app-user-invitations-tab',
@@ -12,7 +13,7 @@ import { NgIf } from '@angular/common';
 })
 export class UserInvitationsTabComponent implements OnInit {
   public invitations: InvitationDTO[] | null = null;
-
+  @Output() displayMessage = new EventEmitter<Message>();
   public constructor(private readonly invitationsService: InvitationsService) {}
 
   public ngOnInit(): void {
@@ -43,5 +44,9 @@ export class UserInvitationsTabComponent implements OnInit {
         }
       },
     });
+  }
+
+  private displayMsg(isSuccess: boolean, message: string | null): void {
+    this.displayMessage.emit(new Message(isSuccess, message));
   }
 }

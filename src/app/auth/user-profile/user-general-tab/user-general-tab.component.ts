@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserDetails } from '../../models/auth.models';
 import {
@@ -13,11 +13,12 @@ import {
   getErrorMessage,
   getErrors,
 } from '../../../common/services/error-utilities';
+import { Message } from '../../models/user-profile.models';
 
 @Component({
   selector: 'app-user-general-tab',
   standalone: true,
-  imports: [FormsModule, NgIf, ReactiveFormsModule, NgFor, NgClass],
+  imports: [FormsModule, NgIf, ReactiveFormsModule, NgFor],
   templateUrl: './user-general-tab.component.html',
   styleUrl: './user-general-tab.component.css',
 })
@@ -29,8 +30,7 @@ export class UserGeneralTabComponent implements OnInit {
   });
   public loaded: boolean = false;
   public isProcessing: boolean = false;
-  public message: string | null = null;
-  public isSuccess: boolean = false;
+  @Output() displayMessage = new EventEmitter<Message>();
 
   public get firstNameIsInvalid(): boolean {
     return (
@@ -54,7 +54,7 @@ export class UserGeneralTabComponent implements OnInit {
         if (res.isSuccess) {
           this.form.setValue(res.data!);
         } else {
-          this.message = res.message!;
+          this.displayMsg(res.isSuccess, res.message);
         }
         this.loaded = res.isSuccess;
         this.isProcessing = false;
@@ -79,8 +79,7 @@ export class UserGeneralTabComponent implements OnInit {
       )
       .subscribe({
         next: (res) => {
-          this.message = res.message!;
-          this.isSuccess = res.isSuccess!;
+          this.displayMsg(res.isSuccess, res.message);
           this.isProcessing = false;
         },
       });
@@ -92,7 +91,7 @@ export class UserGeneralTabComponent implements OnInit {
     return getErrors(this.form, columnName);
   }
 
-  public closeMessage(): void {
-    this.message = null;
+  private displayMsg(isSuccess: boolean, message: string | null): void {
+    this.displayMessage.emit(new Message(isSuccess, message));
   }
 }

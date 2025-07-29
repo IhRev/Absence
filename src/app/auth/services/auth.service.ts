@@ -63,9 +63,12 @@ export class AuthService {
           this.logoutLocally();
           return Result.success();
         }),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          if (error.status === 400) {
+            return of(Result.fail(error.error));
+          }
+          return of(Result.fail());
         })
       );
   }

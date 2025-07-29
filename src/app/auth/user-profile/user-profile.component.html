@@ -4,7 +4,7 @@
     <ul class="tabs">
       <li>
         <button
-          (click)="activeTab = 'general'"
+          (click)="switchTab('general')"
           [class.active]="activeTab === 'general'"
         >
           General
@@ -12,7 +12,7 @@
       </li>
       <li>
         <button
-          (click)="activeTab = 'security'"
+          (click)="switchTab('security')"
           [class.active]="activeTab === 'security'"
         >
           Security
@@ -20,7 +20,7 @@
       </li>
       <li>
         <button
-          (click)="activeTab = 'invitations'"
+          (click)="switchTab('invitations')"
           [class.active]="activeTab === 'invitations'"
         >
           Invitations
@@ -29,9 +29,28 @@
     </ul>
     <hr />
     <div class="tab">
-      <app-user-general-tab *ngIf="activeTab === 'general'" />
-      <app-user-security-tab *ngIf="activeTab === 'security'" />
-      <app-user-invitations-tab *ngIf="activeTab === 'invitations'" />
+      <div
+        *ngIf="message"
+        [ngClass]="{ 'success-msg':message.isSuccess, 'error-msg':!message.isSuccess, }"
+        class="msg-box"
+      >
+        <span class="msg">{{ message.text }}</span>
+        <button (click)="closeMessage()" class="close-btn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <app-user-general-tab
+        (displayMessage)="displayMessage($event)"
+        *ngIf="activeTab === 'general'"
+      />
+      <app-user-security-tab
+        (displayMessage)="displayMessage($event)"
+        *ngIf="activeTab === 'security'"
+      />
+      <app-user-invitations-tab
+        (displayMessage)="displayMessage($event)"
+        *ngIf="activeTab === 'invitations'"
+      />
     </div>
   </div>
 </div>

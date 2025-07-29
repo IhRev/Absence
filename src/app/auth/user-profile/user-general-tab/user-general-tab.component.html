@@ -1,15 +1,4 @@
 <div class="container">
-  <div
-    [ngClass]="{ 'success-msg':isSuccess, 'error-msg':!isSuccess, }"
-    class="msg-box"
-    *ngIf="message"
-  >
-    <span class="msg">{{ message }}</span>
-    <button (click)="closeMessage()" class="close-btn">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-
   <form
     (submit)="edit()"
     [formGroup]="form"

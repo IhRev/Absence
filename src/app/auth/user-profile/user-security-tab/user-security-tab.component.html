@@ -1,31 +1,36 @@
 <div class="container">
-  <div class="form">
+  <form [formGroup]="form" (submit)="submit()" class="change-password-form">
     <h2 class="header">Password</h2>
+
     <div class="input-item">
       <label for="oldPassword">Old Password </label>
-      <input
-        required
-        type="password"
-        id="oldPassword"
-        [(ngModel)]="oldPassword"
-      />
+      <input type="password" id="oldPassword" formControlName="oldPassword" />
+      <div *ngIf="oldPasswordIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('oldPassword')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
+      </div>
     </div>
+
     <div class="input-item">
       <label for="newPassword">New Password </label>
-      <input
-        required
-        type="password"
-        id="newPassword"
-        [(ngModel)]="newPassword"
-      />
+      <input type="password" id="newPassword" formControlName="newPassword" />
+      <div *ngIf="newPasswordIsInvalid">
+        <p class="text-denger" *ngFor="let error of getErrors('newPassword')">
+          *{{ getErrorMessage(error.key, error.value) }}
+        </p>
+      </div>
     </div>
-    <button (click)="submit()" class="submit-button">Change</button>
-  </div>
+
+    <button class="submit-btn">Submit</button>
+  </form>
+
   <div class="management">
     <h2 class="header">Management</h2>
+
     <div class="buttons">
-      <button (click)="logout()" class="logout-button">Sign Out</button>
-      <button (click)="confirmationOpened = true" class="delete-button">
+      <button (click)="logout()" class="logout-btn">Sign Out</button>
+      <button (click)="confirmationOpened = true" class="delete-btn">
         Delete Profile
       </button>
     </div>
