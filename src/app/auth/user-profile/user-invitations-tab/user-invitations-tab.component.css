@@ -1,11 +1,12 @@
 button {
   width: 40px;
   height: 30px;
-  font-size: 20px;
+  font-size: 24px;
   color: white;
   outline: none;
   border: none;
   border-radius: 5px;
+  transition: 0.3s;
 }
 
 .reject-btn {
@@ -21,13 +22,14 @@ button {
 }
 
 .accept-btn:hover {
-  background-color: rgb(37, 182, 54);
+  background-color: rgb(3, 151, 0);
 }
 
 .btns {
   display: flex;
   width: 100%;
-  justify-content: space-around;
+  gap: 15px;
+  justify-content: center;
 }
 
 table {
@@ -40,4 +42,5 @@ table td {
   padding: 10px;
   text-align: center;
   border: 0px;
+  font-size: 20px;
 }
