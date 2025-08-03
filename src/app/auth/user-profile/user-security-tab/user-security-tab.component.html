@@ -1,5 +1,10 @@
 <div class="container">
-  <form [formGroup]="form" (submit)="submit()" class="change-password-form">
+  <form
+    [formGroup]="form"
+    (submit)="submit()"
+    class="change-password-form"
+    *ngIf="!isProcessing"
+  >
     <h2 class="header">Password</h2>
 
     <div class="input-item">
@@ -25,7 +30,7 @@
     <button class="submit-btn">Submit</button>
   </form>
 
-  <div class="management">
+  <div class="management" *ngIf="!isProcessing">
     <h2 class="header">Management</h2>
 
     <div class="buttons">
@@ -35,6 +40,8 @@
       </button>
     </div>
   </div>
+
+  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
 </div>
 
 <app-password-confirmation
