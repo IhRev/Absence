@@ -1,4 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 export function getErrorMessage(errorKey: string, errorValue: any): string {
   switch (errorKey) {
@@ -24,4 +26,10 @@ export function getErrors(
   return errors
     ? Object.entries(errors).map(([key, value]) => ({ key, value }))
     : [];
+}
+
+export function navigateToErrorPage(router: Router, error: HttpErrorResponse) {
+  router.navigate(['/error'], {
+    queryParams: { status: error.status },
+  });
 }

@@ -1,4 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   InvitationDTO,
@@ -6,27 +10,27 @@ import {
 } from '../models/invitations.models';
 import { DataResult, Result } from '../../common/models/result.models';
 import { catchError, map, Observable, of } from 'rxjs';
+import { navigateToErrorPage } from '../../common/services/error-utilities';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InvitationsService {
-  private readonly client: HttpClient;
-
-  public constructor(client: HttpClient) {
-    this.client = client;
-  }
+  public constructor(
+    private readonly client: HttpClient,
+    private readonly router: Router
+  ) {}
 
   public get(): Observable<DataResult<InvitationDTO[]>> {
     return this.client
       .get<InvitationDTO[]>(`http://192.168.0.179:5081/invitations`)
       .pipe(
-        map((res: InvitationDTO[]) => {
-          return DataResult.success<InvitationDTO[]>(res);
-        }),
-        catchError((error) => {
+        map((res: InvitationDTO[]) => DataResult.success<InvitationDTO[]>(res)),
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(DataResult.fail<InvitationDTO[]>(error));
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<InvitationDTO[]>());
         })
       );
   }
@@ -37,31 +41,27 @@ export class InvitationsService {
       userEmail,
       Number(organizationId)
     );
-    return this.client
-      .post<number>('http://192.168.0.179:5081/invitations', dto)
-      .pipe(
-        map((res: number) => {
-          return Result.success();
-        }),
-        catchError((error) => {
-          console.error(error);
-          return of(Result.fail(error));
-        })
-      );
+    return this.client.post('http://192.168.0.179:5081/invitations', dto).pipe(
+      map(() => Result.success()),
+      catchError((error: HttpErrorResponse) => {
+        console.error(error);
+        navigateToErrorPage(this.router, error);
+        return of(Result.fail());
+      })
+    );
   }
 
   public accept(initationId: number, accepted: boolean): Observable<Result> {
     return this.client
-      .post<any>(`http://192.168.0.179:5081/invitations/${initationId}`, null, {
+      .post(`http://192.168.0.179:5081/invitations/${initationId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
       .pipe(
-        map(() => {
-          return Result.success();
-        }),
-        catchError((error) => {
+        map(() => Result.success()),
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
         })
       );
   }

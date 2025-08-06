@@ -11,6 +11,7 @@ import {
 } from '../models/auth.models';
 import { DataResult, Result } from '../../common/models/result.models';
 import { Router } from '@angular/router';
+import { navigateToErrorPage } from '../../common/services/error-utilities';
 
 @Injectable({
   providedIn: 'root',
@@ -33,11 +34,10 @@ export class AuthService {
   // user
   public getUserDetails(): Observable<DataResult<UserDetails>> {
     return this.client.get<UserDetails>(`${this.baseUri}/users/details`).pipe(
-      map((res) => {
-        return DataResult.success<UserDetails>(res);
-      }),
-      catchError((error) => {
+      map((res) => DataResult.success<UserDetails>(res)),
+      catchError((error: HttpErrorResponse) => {
         console.error(error);
+        navigateToErrorPage(this.router, error);
         return of(DataResult.fail<UserDetails>());
       })
     );
@@ -45,12 +45,11 @@ export class AuthService {
 
   public updateUserDetails(userDetails: UserDetails): Observable<Result> {
     return this.client.put(`${this.baseUri}/users/details`, userDetails).pipe(
-      map((res) => {
-        return Result.success();
-      }),
-      catchError((error) => {
+      map(() => Result.success()),
+      catchError((error: HttpErrorResponse) => {
         console.error(error);
-        return of(Result.fail(error));
+        navigateToErrorPage(this.router, error);
+        return of(Result.fail());
       })
     );
   }
@@ -59,7 +58,7 @@ export class AuthService {
     return this.client
       .put(`${this.baseUri}/users/change_password`, request)
       .pipe(
-        map((res) => {
+        map(() => {
           this.logoutLocally();
           return Result.success();
         }),
@@ -68,6 +67,7 @@ export class AuthService {
           if (error.status === 400) {
             return of(Result.fail(error.error));
           }
+          navigateToErrorPage(this.router, error);
           return of(Result.fail());
         })
       );
@@ -79,14 +79,18 @@ export class AuthService {
         body: new DeleteUserRequest(password),
       })
       .pipe(
-        map((res) => {
+        map(() => {
           localStorage.clear();
           this.loggedIn.next(false);
           return Result.success();
         }),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          if (error.status === 400) {
+            return of(Result.fail(error.error));
+          }
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
         })
       );
   }
@@ -107,11 +111,11 @@ export class AuthService {
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          if (error.status === 401) {
+          if (error.status === 400) {
             return of(Result.fail('Incorrect password or email'));
           }
-          this.router.navigate(['/error'], { queryParams: { status: 500 } });
-          return of(Result.fail('Something went wrong'));
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
         })
       );
   }
@@ -133,9 +137,10 @@ export class AuthService {
           }
           return Result.fail(res.message!);
         }),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
         })
       );
   }
@@ -144,25 +149,25 @@ export class AuthService {
     return this.client
       .post<any>(`${this.baseUri}/auth/register`, registerDTO)
       .pipe(
-        map((res) => {
-          return Result.success();
-        }),
-        catchError((error) => {
+        map(() => Result.success()),
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
         })
       );
   }
 
   public logout(): Observable<Result> {
     return this.client.post(`${this.baseUri}/auth/logout`, null).pipe(
-      map((res) => {
+      map(() => {
         this.logoutLocally();
         return Result.success();
       }),
-      catchError((error) => {
+      catchError((error: HttpErrorResponse) => {
         console.error(error);
-        return of(Result.fail(error));
+        navigateToErrorPage(this.router, error);
+        return of(Result.fail());
       })
     );
   }

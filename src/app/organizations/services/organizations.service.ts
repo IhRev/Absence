@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {
   CreateOrganizationDTO,
   EditOrganizationDTO,
@@ -10,12 +10,13 @@ import {
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { DataResult, Result } from '../../common/models/result.models';
 import { AuthService } from '../../auth/services/auth.service';
+import { navigateToErrorPage } from '../../common/services/error-utilities';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrganizationsService {
-  private readonly client: HttpClient;
   private selectedOrganization = new BehaviorSubject<Organization | null>(null);
   private organizations = new BehaviorSubject<OrganizationDTO[] | null>(null);
 
@@ -23,10 +24,10 @@ export class OrganizationsService {
   public organizations$ = this.organizations.asObservable();
 
   public constructor(
-    client: HttpClient,
-    private readonly authService: AuthService
+    private readonly client: HttpClient,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {
-    this.client = client;
     this.authService.loggedIn$.subscribe((status) => {
       if (status) {
         this.load();
@@ -52,9 +53,10 @@ export class OrganizationsService {
           );
           return DataResult.success<Organization[]>(organizations);
         }),
-        catchError((e) => {
+        catchError((e: HttpErrorResponse) => {
           console.error(e);
-          return of(DataResult.fail<Organization[]>(e));
+          navigateToErrorPage(this.router, e);
+          return of(DataResult.fail<Organization[]>());
         })
       )
       .subscribe({
@@ -88,9 +90,10 @@ export class OrganizationsService {
           this.organizations.next(organizations);
           return DataResult.success<number>(res);
         }),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(DataResult.fail<number>(error));
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<number>());
         })
       );
   }
@@ -101,12 +104,11 @@ export class OrganizationsService {
         `http://192.168.0.179:5081/organizations/${this.selectedOrganization.value?.id}/members`
       )
       .pipe(
-        map((res: MemberDTO[]) => {
-          return DataResult.success<MemberDTO[]>(res);
-        }),
-        catchError((error) => {
+        map((res: MemberDTO[]) => DataResult.success<MemberDTO[]>(res)),
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(DataResult.fail<MemberDTO[]>(error));
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<MemberDTO[]>());
         })
       );
   }
@@ -123,9 +125,9 @@ export class OrganizationsService {
 
   public edit(organization: EditOrganizationDTO): Observable<Result> {
     return this.client
-      .put<any>('http://192.168.0.179:5081/organizations', organization)
+      .put('http://192.168.0.179:5081/organizations', organization)
       .pipe(
-        map((res) => {
+        map(() => {
           var edited = new Organization(
             organization.id,
             organization.name,
@@ -140,9 +142,10 @@ export class OrganizationsService {
           this.selectedOrganization.next(edited);
           return Result.success();
         }),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
         })
       );
   }
@@ -151,16 +154,17 @@ export class OrganizationsService {
     return this.client
       .delete<any>(`http://192.168.0.179:5081/organizations/${id}`)
       .pipe(
-        map((res) => {
+        map(() => {
           this.organizations.next(
             this.organizations.value!.filter((u) => u.id != id)
           );
           this.selectedOrganization.next(null);
           return Result.success();
         }),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(Result.fail(error));
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
         })
       );
   }
