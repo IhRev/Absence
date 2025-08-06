@@ -1,33 +1,44 @@
 <div class="container">
-  <h1 class="hidden">
-    Welcome to the Absence.com <br />
-    Easily manage employee <span>absences</span> across your organization
-  </h1>
+  <div class="not-logged-in-container" *ngIf="!loggedIn">
+    <h1 class="hidden">
+      Welcome to the Absence.com <br />
+      Easily manage employee <span>absences</span> across your organization
+    </h1>
 
-  <h2 class="hidden">
-    A user-friendly interface for managing absences and tracking employee
-    availability in a convenient way.
-  </h2>
+    <h2 class="hidden">
+      A user-friendly interface for managing absences and tracking employee
+      availability in a convenient way.
+    </h2>
 
-  <div class="btns">
-    <button class="hidden">Sign Up</button>
+    <div class="btns">
+      <button class="hidden">Sign Up</button>
+    </div>
+
+    <h3 class="hidden">Features</h3>
+
+    <div class="points">
+      <ul class="hidden">
+        <li class="first-point">View Employee Absences</li>
+        <li>Submit and Approve Absence Requests</li>
+        <li>Track Absence Statistics</li>
+        <li>Email or SMS Notifications</li>
+        <li>Role-Based Access</li>
+        <li>Manage Public Holidays</li>
+        <li>Track Remaining Vacation Days</li>
+      </ul>
+
+      <div class="img-wrapper">
+        <img src="assets/Photo.png" alt="Photo" class="hidden" />
+      </div>
+    </div>
   </div>
 
-  <h3 class="hidden">Features</h3>
-
-  <div class="points">
-    <ul class="hidden">
-      <li class="first-point">View Employee Absences</li>
-      <li>Submit and Approve Absence Requests</li>
-      <li>Track Absence Statistics</li>
-      <li>Email or SMS Notifications</li>
-      <li>Role-Based Access</li>
-      <li>Manage Public Holidays</li>
-      <li>Track Remaining Vacation Days</li>
-    </ul>
-
-    <div class="img-wrapper">
-      <img src="assets/Photo.png" alt="Photo" class="hidden" />
-    </div>
+  <div class="logged-in-container" *ngIf="loggedIn">
+    <h2 class="label">
+      Hello <span class="name">{{ user?.firstName }}</span
+      >, wanna take some free days?<br />You are just a few clicks away from the
+      vacation <i class="fa-solid fa-face-smile"></i><br />Just
+      <a class="absences-link" routerLink="/absences">click here</a>
+    </h2>
   </div>
 </div>

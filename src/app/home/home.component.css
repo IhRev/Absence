@@ -1,4 +1,4 @@
-.container {
+.not-logged-in-container {
   text-align: center;
   display: flex;
   align-items: center;
@@ -7,7 +7,7 @@
   margin-top: 50px;
 }
 
-.container h1 {
+.not-logged-in-container h1 {
   text-align: center;
   font-size: 58px;
   font-weight: 700;
@@ -15,7 +15,7 @@
   margin-bottom: 32px;
 }
 
-.container h2 {
+.not-logged-in-container h2 {
   text-align: center;
   font-size: 30px;
   font-weight: 400;
@@ -24,7 +24,7 @@
   max-width: 1000px;
 }
 
-.container h3 {
+.not-logged-in-container h3 {
   display: block;
   text-align: center;
   font-size: 32px;
@@ -32,7 +32,7 @@
   margin-bottom: 40px;
 }
 
-.container h1 span {
+.not-logged-in-container h1 span {
   color: lightblue;
 }
 
@@ -40,14 +40,14 @@
   opacity: 1 !important;
 }
 
-.container h1.show,
-.container h2.show,
-.container h3.show {
+.not-logged-in-container h1.show,
+.not-logged-in-container h2.show,
+.not-logged-in-container h3.show {
   transform: translateY(0) !important;
 }
 
-.container h2.show,
-.container h3.show {
+.not-logged-in-container h2.show,
+.not-logged-in-container h3.show {
   transition-delay: 400ms;
 }
 
@@ -56,9 +56,9 @@
   transition: transform 1s ease-in-out, opacity 1s ease-in-out;
 }
 
-.container h1.hidden,
-.container h2.hidden,
-.container h3.hidden {
+.not-logged-in-container h1.hidden,
+.not-logged-in-container h2.hidden,
+.not-logged-in-container h3.hidden {
   transform: translateY(-20px);
 }
 
@@ -170,4 +170,27 @@
 
 .img-wrapper img.show {
   transition-delay: 1s;
+}
+
+.logged-in-container h2 {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.logged-in-container h2 .name {
+  color: lightblue;
+}
+
+.logged-in-container .absences-link {
+  text-decoration: none;
+  color: lightblue;
+}
+
+.logged-in-container .absences-link:hover {
+  color: rgb(114, 176, 196);
+  transition: 0.2s;
+}
+
+.logged-in-container .fa-face-smile {
+  color: yellow;
 }
