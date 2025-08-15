@@ -10,7 +10,7 @@ import {
   EditAbsenceDTO,
 } from '../models/absence.models';
 import { catchError, map, Observable, of } from 'rxjs';
-import { DataResult } from '../../common/models/result.models';
+import { DataResult, Result } from '../../common/models/result.models';
 import { Router } from '@angular/router';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
 
@@ -42,6 +42,9 @@ export class AbsenceService {
         map((res: AbsenceDTO[]) => DataResult.success<AbsenceDTO[]>(res)),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
+          if (error.status === 400) {
+            return of(DataResult.fail<AbsenceDTO[]>(error.error));
+          }
           navigateToErrorPage(this.router, error);
           return of(DataResult.fail<AbsenceDTO[]>());
         })
@@ -57,37 +60,55 @@ export class AbsenceService {
 
   public addAbsence = (
     absence: CreateAbsenceDTO
-  ): Observable<DataResult<number | string>> =>
+  ): Observable<DataResult<number | null>> =>
     this.client.post<any>('http://192.168.0.179:5081/absences', absence).pipe(
-      map(
-        (res) => DataResult.success<number | string>(res),
+      map((res) => {
+        if (typeof res === 'number') {
+          return DataResult.success<number | null>(
+            res,
+            'Absence added successfully'
+          );
+        } else {
+          return DataResult.success<number | null>(null, res.data);
+        }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error(error);
+        if (error.status === 400) {
+          return of(DataResult.fail<number | null>(error.error));
+        }
+        navigateToErrorPage(this.router, error);
+        return of(DataResult.fail<number | null>());
+      })
+    );
+
+  public editAbsence = (absence: EditAbsenceDTO): Observable<Result> =>
+    this.client
+      .put<{ message: string }>('http://192.168.0.179:5081/absences', absence)
+      .pipe(
+        map((res) => Result.success(res.message)),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
+          if (error.status === 400) {
+            return of(Result.fail(error.error));
+          }
           navigateToErrorPage(this.router, error);
-          return of(DataResult.fail<number | string>());
+          return of(Result.fail());
         })
-      )
-    );
+      );
 
-  public editAbsence = (
-    absence: EditAbsenceDTO
-  ): Observable<DataResult<string>> =>
-    this.client.put<string>('http://192.168.0.179:5081/absences', absence).pipe(
-      map((res) => DataResult.success<string>(res)),
-      catchError((error: HttpErrorResponse) => {
-        console.error(error);
-        navigateToErrorPage(this.router, error);
-        return of(DataResult.fail<string>());
-      })
-    );
-
-  public deleteAbsence = (id: number): Observable<DataResult<string>> =>
-    this.client.delete<string>(`http://192.168.0.179:5081/absences/${id}`).pipe(
-      map((res) => DataResult.success<string>(res)),
-      catchError((error: HttpErrorResponse) => {
-        console.error(error);
-        navigateToErrorPage(this.router, error);
-        return of(DataResult.fail<string>());
-      })
-    );
+  public deleteAbsence = (id: number): Observable<Result> =>
+    this.client
+      .delete<{ message: string }>(`http://192.168.0.179:5081/absences/${id}`)
+      .pipe(
+        map((res) => Result.success(res.message)),
+        catchError((error: HttpErrorResponse) => {
+          console.error(error);
+          if (error.status === 400) {
+            return of(Result.fail(error.error));
+          }
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
+        })
+      );
 }

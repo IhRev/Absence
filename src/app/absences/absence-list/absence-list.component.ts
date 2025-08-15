@@ -44,6 +44,7 @@ export class AbsenceListComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
+    this.closeMessage();
     this.isProcessing = true;
     this.absenceTypeService.types$.subscribe({
       next: (value) => {
@@ -72,27 +73,28 @@ export class AbsenceListComponent implements OnInit {
   }
 
   public create(absence: CreateAbsenceDTO): void {
+    this.closeMessage();
     if (this.types) {
       this.isProcessing = true;
       this.absenceService.addAbsence(absence).subscribe({
         next: (result) => {
           if (result.isSuccess) {
-            if (typeof result.data === 'number') {
-              var newAbsence = new Absence(
-                ++AbsenceListComponent.num,
-                result.data!,
-                absence.name,
-                this.types!.find((t) => t.id === absence.type)!,
-                absence.startDate,
-                absence.endDate
+            if (result.data) {
+              this.absences.push(
+                new Absence(
+                  ++AbsenceListComponent.num,
+                  result.data,
+                  absence.name,
+                  this.types!.find((t) => t.id === absence.type)!,
+                  absence.startDate,
+                  absence.endDate
+                )
               );
-              this.absences.push(newAbsence);
             }
-            this.isSuccess = true;
-          } else {
-            this.isSuccess = false;
           }
+          this.isSuccess = result.isSuccess;
           this.message = result.message;
+          this.isProcessing = false;
         },
       });
       this.closeForm();
@@ -100,6 +102,8 @@ export class AbsenceListComponent implements OnInit {
   }
 
   public edit(absence: EditAbsenceDTO): void {
+    this.closeMessage();
+    this.isProcessing = true;
     this.absenceService.editAbsence(absence).subscribe({
       next: (result) => {
         if (result.isSuccess) {
@@ -109,27 +113,27 @@ export class AbsenceListComponent implements OnInit {
           )!;
           this.selectedAbsence!.startDate = absence.startDate;
           this.selectedAbsence!.endDate = absence.endDate;
-          this.isSuccess = true;
-        } else {
-          this.isSuccess = false;
         }
+        this.isSuccess = result.isSuccess;
         this.message = result.message;
+        this.isProcessing = false;
       },
     });
     this.closeForm();
   }
 
   public delete(id: number): void {
+    this.closeMessage();
+    this.isProcessing = true;
     this.absenceService.deleteAbsence(id).subscribe({
       next: (result) => {
         if (result.isSuccess) {
           AbsenceListComponent.num = 0;
           this.absences = this.absences.filter((a) => a.id !== id);
           this.absences.forEach((a) => (a.num = ++AbsenceListComponent.num));
-          this.isSuccess = true;
-        } else {
-          this.isSuccess = false;
         }
+        this.isSuccess = result.isSuccess;
+        this.isProcessing = false;
         this.message = result.message;
       },
     });
@@ -147,8 +151,9 @@ export class AbsenceListComponent implements OnInit {
 
   public applyFilters(filters: AbsenceFilters): void {
     if (this.types) {
+      this.closeMessage();
       this.loadAbsences(filters.startDate, filters.endDate);
-      this.filtersOpened = false;
+      this.closeFilters();
     }
   }
 
