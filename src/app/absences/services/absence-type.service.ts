@@ -2,17 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AbsenceTypeDTO } from '../models/absence.models';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { navigateToErrorPage } from '../../common/services/error-utilities';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AbsenceTypeService {
-  private readonly client: HttpClient;
   private types = new BehaviorSubject<AbsenceTypeDTO[] | null>(null);
   public types$ = this.types.asObservable();
 
-  public constructor(client: HttpClient) {
-    this.client = client;
+  public constructor(
+    private readonly client: HttpClient,
+    private readonly router: Router
+  ) {
     this.load();
   }
 
@@ -26,6 +29,7 @@ export class AbsenceTypeService {
         error: (e) => {
           console.error(e);
           this.types.next(null);
+          navigateToErrorPage(this.router, e);
         },
       });
   }

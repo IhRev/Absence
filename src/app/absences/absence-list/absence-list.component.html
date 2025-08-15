@@ -1,24 +1,30 @@
 <div class="container">
-  <div class="manage-panel">
-    <p
-      class="msg"
+  <div class="manage-panel" *ngIf="!isProcessing">
+    <div
+      class="msg-box"
       [ngClass]="{
-        'msg-success': isSuccess && message,
-        'msg-error': !isSuccess && message
+        'success-msg': isSuccess && message,
+        'error-msg': !isSuccess && message
       }"
     >
-      {{ message }}
-    </p>
+      <span class="msg">{{ message }}</span>
+      <button *ngIf="message" (click)="closeMessage()" class="close-btn">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
     <div class="btns">
       <button class="filter-btn" (click)="showFilters()">
         <i class="fa-solid fa-filter"></i>
       </button>
+
       <button class="add-btn" (click)="openForm()">
         <i class="fa-solid fa-plus"></i>
       </button>
     </div>
   </div>
-  <div class="grid-list">
+
+  <div class="grid-list" *ngIf="!isProcessing">
     <span class="header item item-start">#</span>
     <span class="header item">Name</span>
     <span class="header item">Type</span>
@@ -33,16 +39,19 @@
     <span class="item">{{ absence.endDate | date : "d MMMM, y" }}</span>
     <span class="item item-end">
       <div class="action-buttons">
-        <button class="delete-button" (click)="delete(absence.id)">
+        <button class="delete-btn" (click)="delete(absence.id)">
           <i class="fa-solid fa-trash"></i>
         </button>
-        <button class="edit-button" (click)="openForm(absence)">
+
+        <button class="edit-btn" (click)="openForm(absence)">
           <i class="fa-solid fa-pen"></i>
         </button>
       </div>
     </span>
     }
   </div>
+
+  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
 </div>
 
 <app-absence-form

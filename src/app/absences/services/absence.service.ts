@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import {
   AbsenceDTO,
   CreateAbsenceDTO,
@@ -7,16 +11,17 @@ import {
 } from '../models/absence.models';
 import { catchError, map, Observable, of } from 'rxjs';
 import { DataResult } from '../../common/models/result.models';
+import { Router } from '@angular/router';
+import { navigateToErrorPage } from '../../common/services/error-utilities';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AbsenceService {
-  private readonly client: HttpClient;
-
-  public constructor(client: HttpClient) {
-    this.client = client;
-  }
+  public constructor(
+    private readonly client: HttpClient,
+    private readonly router: Router
+  ) {}
 
   public getAbsences(
     startDate: Date,
@@ -34,12 +39,11 @@ export class AbsenceService {
           .set('endDate', this.toLocalDateString(endDate)),
       })
       .pipe(
-        map((res: AbsenceDTO[]) => {
-          return DataResult.success<AbsenceDTO[]>(res);
-        }),
-        catchError((error) => {
+        map((res: AbsenceDTO[]) => DataResult.success<AbsenceDTO[]>(res)),
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(DataResult.fail<AbsenceDTO[]>(error));
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<AbsenceDTO[]>());
         })
       );
   }
@@ -56,12 +60,11 @@ export class AbsenceService {
   ): Observable<DataResult<number | string>> =>
     this.client.post<any>('http://192.168.0.179:5081/absences', absence).pipe(
       map(
-        (res) => {
-          return DataResult.success<number | string>(res);
-        },
-        catchError((error) => {
+        (res) => DataResult.success<number | string>(res),
+        catchError((error: HttpErrorResponse) => {
           console.error(error);
-          return of(DataResult.fail<number | string>(error));
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<number | string>());
         })
       )
     );
@@ -71,18 +74,20 @@ export class AbsenceService {
   ): Observable<DataResult<string>> =>
     this.client.put<string>('http://192.168.0.179:5081/absences', absence).pipe(
       map((res) => DataResult.success<string>(res)),
-      catchError((error) => {
+      catchError((error: HttpErrorResponse) => {
         console.error(error);
-        return of(DataResult.fail<string>(error));
+        navigateToErrorPage(this.router, error);
+        return of(DataResult.fail<string>());
       })
     );
 
   public deleteAbsence = (id: number): Observable<DataResult<string>> =>
     this.client.delete<string>(`http://192.168.0.179:5081/absences/${id}`).pipe(
       map((res) => DataResult.success<string>(res)),
-      catchError((error) => {
+      catchError((error: HttpErrorResponse) => {
         console.error(error);
-        return of(DataResult.fail<string>(error));
+        navigateToErrorPage(this.router, error);
+        return of(DataResult.fail<string>());
       })
     );
 }
