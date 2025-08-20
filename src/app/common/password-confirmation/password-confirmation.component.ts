@@ -2,17 +2,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
-import { getErrorMessage, getErrors } from '../services/error-utilities';
+import { ModalFormComponent } from '../modal-form/modal-form.component';
+import { FormErrorComponent } from '../form-error/form-error.component';
 
 @Component({
   selector: 'app-password-confirmation',
   standalone: true,
-  imports: [FormsModule, NgIf, ReactiveFormsModule, NgFor],
+  imports: [ReactiveFormsModule, ModalFormComponent, FormErrorComponent],
   templateUrl: './password-confirmation.component.html',
   styleUrl: './password-confirmation.component.css',
 })
@@ -24,11 +23,6 @@ export class PasswordConfirmationComponent {
   public form = new FormGroup({
     password: new FormControl('', [Validators.minLength(8)]),
   });
-  public get passwordIsInvalid() {
-    return (
-      this.form.controls.password.touched && this.form.controls.password.dirty
-    );
-  }
 
   public submit(): void {
     this.submitted.emit(this.password);
@@ -37,10 +31,4 @@ export class PasswordConfirmationComponent {
   public close(): void {
     this.closed.emit();
   }
-
-  public getErrors(columnName: string) {
-    return getErrors(this.form, columnName);
-  }
-
-  public getErrorMessage = getErrorMessage;
 }

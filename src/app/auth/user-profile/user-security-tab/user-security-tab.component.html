@@ -10,21 +10,13 @@
     <div class="input-item">
       <label for="oldPassword">Old Password </label>
       <input type="password" id="oldPassword" formControlName="oldPassword" />
-      <div *ngIf="oldPasswordIsInvalid">
-        <p class="text-denger" *ngFor="let error of getErrors('oldPassword')">
-          *{{ getErrorMessage(error.key, error.value) }}
-        </p>
-      </div>
+      <app-form-error [form]="form" [name]="'oldPassword'" />
     </div>
 
     <div class="input-item">
       <label for="newPassword">New Password </label>
       <input type="password" id="newPassword" formControlName="newPassword" />
-      <div *ngIf="newPasswordIsInvalid">
-        <p class="text-denger" *ngFor="let error of getErrors('newPassword')">
-          *{{ getErrorMessage(error.key, error.value) }}
-        </p>
-      </div>
+      <app-form-error [form]="form" [name]="'newPassword'" />
     </div>
 
     <button class="submit-btn">Submit</button>

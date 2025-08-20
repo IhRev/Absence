@@ -51,3 +51,81 @@ main {
     rgb(135, 206, 250)
   );
 }
+
+.modal-dialog .input-item {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal-dialog label {
+  font-size: 14px;
+  width: 65px;
+  display: inline-block;
+  text-align: left;
+  color: white;
+}
+
+.modal-dialog input,
+.modal-dialog select {
+  border: 1px solid white;
+  outline: none;
+  transition: 0.4s;
+  border-radius: 5px;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  height: 30px;
+  padding: 5px;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.modal-dialog select option {
+  background-color: black;
+}
+
+.modal-dialog input[type="text"] {
+  padding: 2px 5px;
+}
+
+.modal-dialog input[type="date"] {
+  color-scheme: dark;
+}
+
+.modal-dialog input:focus,
+.modal-dialog select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+}
+
+.modal-dialog input:focus:not([readonly]) {
+  border-color: lightblue;
+  box-shadow: 0px 0px 7px rgba(0, 123, 255, 0.4);
+}
+
+.modal-dialog input:read-only {
+  color: rgb(176, 170, 170);
+}
+
+.modal-dialog .submit-btn {
+  border: none;
+  color: rgb(0, 0, 0);
+  transition: all 0.3s !important;
+  border-radius: 5px;
+  display: block;
+  background: rgb(110, 178, 201);
+  padding: 5px 30px;
+  font-size: 20px;
+  margin: 20px auto 0 auto;
+}
+
+.modal-dialog .submit-btn:hover {
+  background: rgb(70, 165, 196);
+}
+
+.modal-dialog .submit-btn:active {
+  background: rgb(47, 140, 171);
+}

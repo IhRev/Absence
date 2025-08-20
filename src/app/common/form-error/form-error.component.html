@@ -1,0 +1,5 @@
+<div *ngIf="isInvalid">
+  <p class="text-danger" *ngFor="let error of getErrors()">
+    *{{ getErrorMessage(error.key, error.value) }}
+  </p>
+</div>

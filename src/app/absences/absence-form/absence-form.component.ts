@@ -15,11 +15,12 @@ import {
   EditAbsenceDTO,
 } from '../models/absence.models';
 import { AbsenceTypeService } from '../services/absence-type.service';
+import { ModalFormComponent } from '../../common/modal-form/modal-form.component';
 
 @Component({
   selector: 'app-absence-form',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule],
+  imports: [NgFor, FormsModule, ModalFormComponent],
   templateUrl: './absence-form.component.html',
   styleUrl: './absence-form.component.css',
 })
@@ -34,6 +35,7 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
 
   public types: AbsenceTypeDTO[] = [];
   public name!: string;
+  public title!: string;
   public selectedType!: AbsenceTypeDTO;
   public startDate!: string;
   public endDate!: string;
@@ -64,10 +66,12 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
           new Date(this.absence.startDate)
         );
         this.endDate = this.getDateOnlyString(new Date(this.absence.endDate));
+        this.title = 'Edit';
       } else {
         this.name = 'Absence';
         this.selectedType = this.types[0];
         this.startDate = this.endDate = this.getDateOnlyString(new Date());
+        this.title = 'Add';
       }
     }
   }

@@ -8,17 +8,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import {
-  getErrorMessage,
-  getErrors,
-} from '../../../common/services/error-utilities';
+import { NgIf } from '@angular/common';
 import { Message } from '../../models/user-profile.models';
+import { FormErrorComponent } from '../../../common/form-error/form-error.component';
 
 @Component({
   selector: 'app-user-general-tab',
   standalone: true,
-  imports: [FormsModule, NgIf, ReactiveFormsModule, NgFor],
+  imports: [FormsModule, NgIf, ReactiveFormsModule, FormErrorComponent],
   templateUrl: './user-general-tab.component.html',
   styleUrl: './user-general-tab.component.css',
 })
@@ -31,19 +28,6 @@ export class UserGeneralTabComponent implements OnInit {
   public loaded: boolean = false;
   public isProcessing: boolean = false;
   @Output() displayMessage = new EventEmitter<Message>();
-
-  public get firstNameIsInvalid(): boolean {
-    return (
-      this.form.controls.firstName.touched &&
-      this.form.controls.firstName.invalid
-    );
-  }
-
-  public get lastNameIsInvalid(): boolean {
-    return (
-      this.form.controls.lastName.touched && this.form.controls.lastName.invalid
-    );
-  }
 
   constructor(private readonly authService: AuthService) {}
 
@@ -83,12 +67,6 @@ export class UserGeneralTabComponent implements OnInit {
           this.isProcessing = false;
         },
       });
-  }
-
-  public getErrorMessage = getErrorMessage;
-
-  public getErrors(columnName: string) {
-    return getErrors(this.form, columnName);
   }
 
   private displayMsg(isSuccess: boolean, message: string | null): void {

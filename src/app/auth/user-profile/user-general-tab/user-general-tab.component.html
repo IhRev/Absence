@@ -13,21 +13,13 @@
     <div class="input-item">
       <label for="firstName">First Name </label>
       <input type="text" id="firstName" formControlName="firstName" />
-      <div *ngIf="firstNameIsInvalid">
-        <p class="text-denger" *ngFor="let error of getErrors('firstName')">
-          *{{ getErrorMessage(error.key, error.value) }}
-        </p>
-      </div>
+      <app-form-error [form]="form" [name]="'firstName'" />
     </div>
 
     <div class="input-item">
       <label for="lastName">Last Name </label>
       <input type="text" id="lastName" formControlName="lastName" />
-      <div *ngIf="lastNameIsInvalid">
-        <p class="text-denger" *ngFor="let error of getErrors('lastName')">
-          *{{ getErrorMessage(error.key, error.value) }}
-        </p>
-      </div>
+      <app-form-error [form]="form" [name]="'lastName'" />
     </div>
 
     <button class="submit-btn">Edit</button>

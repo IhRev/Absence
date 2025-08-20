@@ -10,12 +10,9 @@ import { AuthService } from '../../services/auth.service';
 import { ChangePasswordRequest } from '../../models/auth.models';
 import { Router } from '@angular/router';
 import { PasswordConfirmationComponent } from '../../../common/password-confirmation/password-confirmation.component';
-import {
-  getErrorMessage,
-  getErrors,
-} from '../../../common/services/error-utilities';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Message } from '../../models/user-profile.models';
+import { FormErrorComponent } from '../../../common/form-error/form-error.component';
 
 @Component({
   selector: 'app-user-security-tab',
@@ -25,7 +22,7 @@ import { Message } from '../../models/user-profile.models';
     FormsModule,
     ReactiveFormsModule,
     NgIf,
-    NgFor,
+    FormErrorComponent,
   ],
   templateUrl: './user-security-tab.component.html',
   styleUrl: './user-security-tab.component.css',
@@ -39,18 +36,7 @@ export class UserSecurityTabComponent {
       validators: [Validators.required, Validators.minLength(6)],
     }),
   });
-  public get oldPasswordIsInvalid(): boolean {
-    return (
-      this.form.controls.oldPassword.touched &&
-      this.form.controls.oldPassword.invalid
-    );
-  }
-  public get newPasswordIsInvalid(): boolean {
-    return (
-      this.form.controls.newPassword.touched &&
-      this.form.controls.newPassword.invalid
-    );
-  }
+
   public isProcessing: boolean = false;
   public confirmationOpened: boolean = false;
   @Output() displayMessage = new EventEmitter<Message>();
@@ -110,12 +96,6 @@ export class UserSecurityTabComponent {
       },
     });
   }
-
-  public getErrors(columnName: string) {
-    return getErrors(this.form, columnName);
-  }
-
-  public getErrorMessage = getErrorMessage;
 
   private displayMsg(isSuccess: boolean, message: string | null): void {
     this.displayMessage.emit(new Message(isSuccess, message));
