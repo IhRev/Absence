@@ -1,25 +1,29 @@
 <app-modal-form [isVisible]="isVisible" [title]="title" (closeModal)="close()">
-  <div>
+  <form [formGroup]="form" (submit)="submit()">
     <div class="input-item">
       <label for="name">Name</label>
-      <input required type="text" id="name" [(ngModel)]="name" />
+      <input type="text" id="name" formControlName="name" />
+      <app-form-error [form]="form" [name]="'name'" />
     </div>
     <div class="input-item">
       <label for="type">Type</label>
-      <select required id="type" [(ngModel)]="selectedType">
-        <option *ngFor="let type of types" [ngValue]="type">
+      <select id="type" formControlName="selectedType">
+        <option *ngFor="let type of types" [ngValue]="type.id">
           {{ type.name }}
         </option>
       </select>
+      <app-form-error [form]="form" [name]="'selectedType'" />
     </div>
     <div class="input-item">
       <label for="startDate">Start Date</label>
-      <input required type="date" id="startDate" [(ngModel)]="startDate" />
+      <input type="date" id="startDate" formControlName="startDate" />
+      <app-form-error [form]="form" [name]="'startDate'" />
     </div>
     <div class="input-item">
       <label for="endDate">End Date</label>
-      <input required type="date" id="endDate" [(ngModel)]="endDate" />
+      <input type="date" id="endDate" formControlName="endDate" />
+      <app-form-error [form]="form" [name]="'endDate'" />
     </div>
-    <button (click)="submit()" class="submit-button">Submit</button>
-  </div>
+    <button class="submit-btn">Submit</button>
+  </form>
 </app-modal-form>

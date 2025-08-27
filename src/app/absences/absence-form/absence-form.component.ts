@@ -7,7 +7,13 @@ import {
   Output,
 } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import {
   Absence,
   AbsenceTypeDTO,
@@ -16,11 +22,18 @@ import {
 } from '../models/absence.models';
 import { AbsenceTypeService } from '../services/absence-type.service';
 import { ModalFormComponent } from '../../common/modal-form/modal-form.component';
+import { FormErrorComponent } from '../../common/form-error/form-error.component';
 
 @Component({
   selector: 'app-absence-form',
   standalone: true,
-  imports: [NgFor, FormsModule, ModalFormComponent],
+  imports: [
+    NgFor,
+    FormsModule,
+    ModalFormComponent,
+    ReactiveFormsModule,
+    FormErrorComponent,
+  ],
   templateUrl: './absence-form.component.html',
   styleUrl: './absence-form.component.css',
 })
@@ -33,13 +46,19 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
   @Output() public submitCreate = new EventEmitter<CreateAbsenceDTO>();
   @Output() public submitEdit = new EventEmitter<EditAbsenceDTO>();
 
-  public types: AbsenceTypeDTO[] = [];
-  public name!: string;
   public title!: string;
-  public selectedType!: AbsenceTypeDTO;
-  public startDate!: string;
-  public endDate!: string;
-  public message?: string;
+  public message!: string;
+  public types: AbsenceTypeDTO[] = [];
+  public form = new FormGroup({
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(30),
+    ]),
+    selectedType: new FormControl<number>(1, [Validators.required]),
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
+  });
 
   public constructor(absenceTypeService: AbsenceTypeService) {
     this.absenceTypeService = absenceTypeService;
@@ -58,19 +77,20 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
   public ngOnChanges(): void {
     if (this.isVisible) {
       if (this.absence) {
-        this.name = this.absence.name;
-        this.selectedType = this.types.find(
-          (t) => t.id == this.absence?.type.id
-        )!;
-        this.startDate = this.getDateOnlyString(
-          new Date(this.absence.startDate)
-        );
-        this.endDate = this.getDateOnlyString(new Date(this.absence.endDate));
+        this.form.setValue({
+          name: this.absence.name,
+          selectedType: this.absence?.type.id,
+          startDate: this.getDateOnlyString(new Date(this.absence.startDate)),
+          endDate: this.getDateOnlyString(new Date(this.absence.endDate)),
+        });
         this.title = 'Edit';
       } else {
-        this.name = 'Absence';
-        this.selectedType = this.types[0];
-        this.startDate = this.endDate = this.getDateOnlyString(new Date());
+        this.form.setValue({
+          name: 'Absence',
+          selectedType: this.types[0].id,
+          startDate: this.getDateOnlyString(new Date()),
+          endDate: this.getDateOnlyString(new Date()),
+        });
         this.title = 'Add';
       }
     }
@@ -85,19 +105,19 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
       this.submitEdit.emit(
         new EditAbsenceDTO(
           this.absence.id,
-          this.name,
-          this.selectedType.id,
-          new Date(this.startDate),
-          new Date(this.endDate)
+          this.form.controls.name.value!,
+          this.form.controls.selectedType.value!,
+          new Date(this.form.controls.startDate.value!),
+          new Date(this.form.controls.endDate.value!)
         )
       );
     } else {
       this.submitCreate.emit(
         new CreateAbsenceDTO(
-          this.name,
-          this.selectedType.id,
-          new Date(this.startDate),
-          new Date(this.endDate),
+          this.form.controls.name.value!,
+          this.form.controls.selectedType.value!,
+          new Date(this.form.controls.startDate.value!),
+          new Date(this.form.controls.endDate.value!),
           Number(localStorage.getItem('organization'))
         )
       );

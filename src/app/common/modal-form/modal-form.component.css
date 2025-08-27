@@ -49,3 +49,7 @@
 .close-btn:active {
   background: rgb(156, 28, 28);
 }
+
+hr {
+  margin-bottom: 5px;
+}

@@ -53,19 +53,19 @@ main {
 }
 
 .modal-dialog .input-item {
-  padding: 10px;
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
   flex-wrap: wrap;
+  margin: 0px 15px 15px 20px;
+  align-items: start;
 }
 
 .modal-dialog label {
-  font-size: 14px;
-  width: 65px;
+  font-size: 22px;
   display: inline-block;
   text-align: left;
   color: white;
+  margin-bottom: 5px;
 }
 
 .modal-dialog input,
@@ -75,12 +75,12 @@ main {
   transition: 0.4s;
   border-radius: 5px;
   width: 100%;
+  min-width: 350px;
   background-color: transparent;
   color: white;
-  height: 30px;
+  height: 34px;
   padding: 5px;
   font-size: 20px;
-  margin-top: 10px;
 }
 
 .modal-dialog select option {
