@@ -14,7 +14,7 @@ export class EventsService {
     var organizationId = localStorage.getItem('organization');
     return this.client
       .get<EventDTO[]>(
-        `http://192.168.0.179:5081/organizations/${organizationId}/absences/events`
+        `http://192.168.0.100:5081/organizations/${organizationId}/absences/events`
       )
       .pipe(
         map((res: EventDTO[]) => {
@@ -29,7 +29,7 @@ export class EventsService {
 
   public respond(eventId: number, accepted: boolean): Observable<Result> {
     return this.client
-      .post<any>(`http://192.168.0.179:5081/absences/events/${eventId}`, null, {
+      .post<any>(`http://192.168.0.100:5081/absences/events/${eventId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
       .pipe(

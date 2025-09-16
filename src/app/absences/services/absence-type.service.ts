@@ -21,7 +21,7 @@ export class AbsenceTypeService {
 
   private load(): void {
     this.client
-      .get<AbsenceTypeDTO[]>('http://192.168.0.179:5081/absences/types')
+      .get<AbsenceTypeDTO[]>('http://192.168.0.100:5081/absences/types')
       .subscribe({
         next: (res: AbsenceTypeDTO[]) => {
           this.types.next(res);

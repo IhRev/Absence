@@ -16,7 +16,7 @@ export class EventTypesService {
 
   private load(): void {
     this.client
-      .get<EventTypeDTO[]>('http://192.168.0.179:5081/absences/event_types')
+      .get<EventTypeDTO[]>('http://192.168.0.100:5081/absences/event_types')
       .subscribe({
         next: (res: EventTypeDTO[]) => {
           this.types.next(res);

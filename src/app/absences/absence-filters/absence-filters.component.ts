@@ -1,12 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbsenceFilters } from '../models/filters.models';
-import { NgIf } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ModalFormComponent } from '../../common/modal-form/modal-form.component';
 
 @Component({
   selector: 'app-absence-filters',
   standalone: true,
-  imports: [NgIf, FormsModule],
+  imports: [FormsModule, ModalFormComponent, ReactiveFormsModule],
   templateUrl: './absence-filters.component.html',
   styleUrl: './absence-filters.component.css',
 })
@@ -15,13 +21,19 @@ export class AbsenceFiltersComponent implements OnInit {
   @Output() public closeModal = new EventEmitter();
   @Output() public submitModal = new EventEmitter<AbsenceFilters>();
 
-  public startDate!: string;
-  public endDate!: string;
+  public form = new FormGroup({
+    startDate: new FormControl('', []),
+    endDate: new FormControl('', []),
+  });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const currentYear = new Date().getFullYear();
-    this.startDate = this.getDateOnlyString(new Date(currentYear, 0, 1));
-    this.endDate = this.getDateOnlyString(new Date(currentYear, 11, 31));
+    this.form.value.startDate = this.getDateOnlyString(
+      new Date(currentYear, 0, 1)
+    );
+    this.form.value.endDate = this.getDateOnlyString(
+      new Date(currentYear, 11, 31)
+    );
   }
 
   public close(): void {
@@ -29,9 +41,23 @@ export class AbsenceFiltersComponent implements OnInit {
   }
 
   public submit(): void {
-    this.submitModal.emit(
-      new AbsenceFilters(new Date(this.startDate), new Date(this.endDate))
-    );
+    if (this.form.valid) {
+      const currentYear = new Date().getFullYear();
+
+      var startDate = this.form.value.startDate;
+      if (!startDate) {
+        startDate = this.getDateOnlyString(new Date(currentYear, 0, 1));
+      }
+
+      var endDate = this.form.value.endDate;
+      if (!endDate) {
+        endDate = this.getDateOnlyString(new Date(currentYear, 0, 1));
+      }
+
+      this.submitModal.emit(
+        new AbsenceFilters(new Date(startDate), new Date(endDate))
+      );
+    }
   }
 
   private getDateOnlyString(date: Date): string {

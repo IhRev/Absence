@@ -17,7 +17,7 @@ import { navigateToErrorPage } from '../../common/services/error-utilities';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly baseUri: string = 'http://192.168.0.179:5081';
+  private readonly baseUri: string = 'http://192.168.0.100:5081';
   private loggedIn = new BehaviorSubject<boolean>(this.tokenExists());
 
   public loggedIn$ = this.loggedIn.asObservable();

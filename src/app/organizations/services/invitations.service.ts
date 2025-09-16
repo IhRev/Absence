@@ -24,7 +24,7 @@ export class InvitationsService {
 
   public get(): Observable<DataResult<InvitationDTO[]>> {
     return this.client
-      .get<InvitationDTO[]>(`http://192.168.0.179:5081/invitations`)
+      .get<InvitationDTO[]>(`http://192.168.0.100:5081/invitations`)
       .pipe(
         map((res: InvitationDTO[]) => DataResult.success<InvitationDTO[]>(res)),
         catchError((error: HttpErrorResponse) => {
@@ -41,7 +41,7 @@ export class InvitationsService {
       userEmail,
       Number(organizationId)
     );
-    return this.client.post('http://192.168.0.179:5081/invitations', dto).pipe(
+    return this.client.post('http://192.168.0.100:5081/invitations', dto).pipe(
       map(() => Result.success()),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
@@ -53,7 +53,7 @@ export class InvitationsService {
 
   public accept(initationId: number, accepted: boolean): Observable<Result> {
     return this.client
-      .post(`http://192.168.0.179:5081/invitations/${initationId}`, null, {
+      .post(`http://192.168.0.100:5081/invitations/${initationId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
       .pipe(

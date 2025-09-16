@@ -44,7 +44,7 @@ export class OrganizationsService {
 
   private load(): void {
     this.client
-      .get<OrganizationDTO[]>('http://192.168.0.179:5081/organizations')
+      .get<OrganizationDTO[]>('http://192.168.0.100:5081/organizations')
       .pipe(
         map((res: OrganizationDTO[]) => {
           var organizations = res.map(
@@ -80,7 +80,7 @@ export class OrganizationsService {
     organization: CreateOrganizationDTO
   ): Observable<DataResult<number>> {
     return this.client
-      .post<number>('http://192.168.0.179:5081/organizations', organization)
+      .post<number>('http://192.168.0.100:5081/organizations', organization)
       .pipe(
         map((res: number) => {
           var organizations = [
@@ -101,7 +101,7 @@ export class OrganizationsService {
   public getMembers(): Observable<DataResult<MemberDTO[]>> {
     return this.client
       .get<MemberDTO[]>(
-        `http://192.168.0.179:5081/organizations/${this.selectedOrganization.value?.id}/members`
+        `http://192.168.0.100:5081/organizations/${this.selectedOrganization.value?.id}/members`
       )
       .pipe(
         map((res: MemberDTO[]) => DataResult.success<MemberDTO[]>(res)),
@@ -125,7 +125,7 @@ export class OrganizationsService {
 
   public edit(organization: EditOrganizationDTO): Observable<Result> {
     return this.client
-      .put('http://192.168.0.179:5081/organizations', organization)
+      .put('http://192.168.0.100:5081/organizations', organization)
       .pipe(
         map(() => {
           var edited = new Organization(
@@ -152,7 +152,7 @@ export class OrganizationsService {
 
   public delete(id: number): Observable<Result> {
     return this.client
-      .delete<any>(`http://192.168.0.179:5081/organizations/${id}`)
+      .delete<any>(`http://192.168.0.100:5081/organizations/${id}`)
       .pipe(
         map(() => {
           this.organizations.next(

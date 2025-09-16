@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
+import { NgFor } from '@angular/common';
 import {
   FormControl,
   FormGroup,

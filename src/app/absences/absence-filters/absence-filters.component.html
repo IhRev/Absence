@@ -1,20 +1,15 @@
-<div class="modal-container" *ngIf="isVisible">
-  <div class="modal-dialog">
-    <div class="header">
-      <p class="header-label">Filters</p>
-      <button class="close-button" (click)="close()">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+<app-modal-form
+  [isVisible]="isVisible"
+  [title]="'Filters'"
+  (closeModal)="close()"
+>
+  <form [formGroup]="form" (submit)="submit()">
+    <div class="input-item">
+      <label>Period</label>
+      <input type="date" formControlName="startDate" />
+      <span>-</span>
+      <input type="date" formControlName="endDate" />
     </div>
-    <hr />
-    <div>
-      <div class="input-item">
-        <span>Period:</span>
-        <input required type="date" id="startDate" [(ngModel)]="startDate" />
-        <span>-</span>
-        <input required type="date" id="endDate" [(ngModel)]="endDate" />
-      </div>
-      <button (click)="submit()" class="submit-button">Submit</button>
-    </div>
-  </div>
-</div>
+    <button class="submit-btn">Submit</button>
+  </form>
+</app-modal-form>
