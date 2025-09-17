@@ -13,6 +13,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { DataResult, Result } from '../../common/models/result.models';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class AbsenceEventsService {
     var organizationId = localStorage.getItem('organization');
     return this.client
       .get<AbsenceEventDTO[]>(
-        `http://192.168.0.179:5081/organizations/${organizationId}/absences/events`
+        `${environment.apiUrl}/organizations/${organizationId}/absences/events`
       )
       .pipe(
         map((res: AbsenceEventDTO[]) => {
@@ -60,7 +61,7 @@ export class AbsenceEventsService {
 
   public respond = (eventId: number, accepted: boolean): Observable<Result> =>
     this.client
-      .post<any>(`http://192.168.0.179:5081/events/${eventId}`, null, {
+      .post<any>(`${environment.apiUrl}/events/${eventId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
       .pipe(
@@ -74,9 +75,7 @@ export class AbsenceEventsService {
 
   private loadTypes(): void {
     this.client
-      .get<AbsenceEventTypeDTO[]>(
-        `http://192.168.0.100:5081/absences/event_types`
-      )
+      .get<AbsenceEventTypeDTO[]>(`${environment.apiUrl}/absences/event_types`)
       .subscribe({
         next: (res) => (this.types = res),
         error: (e) => {

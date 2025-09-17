@@ -13,6 +13,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { DataResult, Result } from '../../common/models/result.models';
 import { Router } from '@angular/router';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -30,8 +31,8 @@ export class AbsenceService {
   ): Observable<DataResult<AbsenceDTO[]>> {
     var organizationId = localStorage.getItem('organization');
     var url: string = userId
-      ? `http://192.168.0.100:5081/organizations/${organizationId}/users/${userId}/absences`
-      : `http://192.168.0.100:5081/organizations/${organizationId}/absences`;
+      ? `${environment.apiUrl}/organizations/${organizationId}/users/${userId}/absences`
+      : `${environment.apiUrl}/organizations/${organizationId}/absences`;
     return this.client
       .get<AbsenceDTO[]>(url, {
         params: new HttpParams()
@@ -61,7 +62,7 @@ export class AbsenceService {
   public addAbsence = (
     absence: CreateAbsenceDTO
   ): Observable<DataResult<number | null>> =>
-    this.client.post<any>('http://192.168.0.100:5081/absences', absence).pipe(
+    this.client.post<any>(`${environment.apiUrl}/absences`, absence).pipe(
       map((res) => {
         if (typeof res === 'number') {
           return DataResult.success<number | null>(
@@ -84,7 +85,7 @@ export class AbsenceService {
 
   public editAbsence = (absence: EditAbsenceDTO): Observable<Result> =>
     this.client
-      .put<{ message: string }>('http://192.168.0.100:5081/absences', absence)
+      .put<{ message: string }>('${environment.apiUrl}/absences', absence)
       .pipe(
         map((res) => Result.success(res.message)),
         catchError((error: HttpErrorResponse) => {
@@ -99,7 +100,7 @@ export class AbsenceService {
 
   public deleteAbsence = (id: number): Observable<Result> =>
     this.client
-      .delete<{ message: string }>(`http://192.168.0.100:5081/absences/${id}`)
+      .delete<{ message: string }>(`${environment.apiUrl}/absences/${id}`)
       .pipe(
         map((res) => Result.success(res.message)),
         catchError((error: HttpErrorResponse) => {

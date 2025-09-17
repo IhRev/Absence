@@ -12,6 +12,7 @@ import { DataResult, Result } from '../../common/models/result.models';
 import { catchError, map, Observable, of } from 'rxjs';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class InvitationsService {
 
   public get(): Observable<DataResult<InvitationDTO[]>> {
     return this.client
-      .get<InvitationDTO[]>(`http://192.168.0.100:5081/invitations`)
+      .get<InvitationDTO[]>(`${environment.apiUrl}/invitations`)
       .pipe(
         map((res: InvitationDTO[]) => DataResult.success<InvitationDTO[]>(res)),
         catchError((error: HttpErrorResponse) => {
@@ -41,7 +42,7 @@ export class InvitationsService {
       userEmail,
       Number(organizationId)
     );
-    return this.client.post('http://192.168.0.100:5081/invitations', dto).pipe(
+    return this.client.post(`${environment.apiUrl}/invitations`, dto).pipe(
       map(() => Result.success()),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
@@ -53,7 +54,7 @@ export class InvitationsService {
 
   public accept(initationId: number, accepted: boolean): Observable<Result> {
     return this.client
-      .post(`http://192.168.0.100:5081/invitations/${initationId}`, null, {
+      .post(`${environment.apiUrl}/invitations/${initationId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
       .pipe(

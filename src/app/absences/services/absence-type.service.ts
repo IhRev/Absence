@@ -4,6 +4,7 @@ import { AbsenceTypeDTO } from '../models/absence.models';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class AbsenceTypeService {
 
   private load(): void {
     this.client
-      .get<AbsenceTypeDTO[]>('http://192.168.0.100:5081/absences/types')
+      .get<AbsenceTypeDTO[]>(`${environment.apiUrl}/absences/types`)
       .subscribe({
         next: (res: AbsenceTypeDTO[]) => {
           this.types.next(res);

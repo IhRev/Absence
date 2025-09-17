@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
 import { DataResult, Result } from '../../common/models/result.models';
 import { EventDTO } from '../models/events.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class EventsService {
     var organizationId = localStorage.getItem('organization');
     return this.client
       .get<EventDTO[]>(
-        `http://192.168.0.100:5081/organizations/${organizationId}/absences/events`
+        `${environment.apiUrl}/organizations/${organizationId}/absences/events`
       )
       .pipe(
         map((res: EventDTO[]) => {
@@ -29,7 +30,7 @@ export class EventsService {
 
   public respond(eventId: number, accepted: boolean): Observable<Result> {
     return this.client
-      .post<any>(`http://192.168.0.100:5081/absences/events/${eventId}`, null, {
+      .post<any>(`${environment.apiUrl}/absences/events/${eventId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
       .pipe(

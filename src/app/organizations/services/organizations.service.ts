@@ -12,6 +12,7 @@ import { DataResult, Result } from '../../common/models/result.models';
 import { AuthService } from '../../auth/services/auth.service';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +45,7 @@ export class OrganizationsService {
 
   private load(): void {
     this.client
-      .get<OrganizationDTO[]>('http://192.168.0.100:5081/organizations')
+      .get<OrganizationDTO[]>(`${environment.apiUrl}/organizations`)
       .pipe(
         map((res: OrganizationDTO[]) => {
           var organizations = res.map(
@@ -80,7 +81,7 @@ export class OrganizationsService {
     organization: CreateOrganizationDTO
   ): Observable<DataResult<number>> {
     return this.client
-      .post<number>('http://192.168.0.100:5081/organizations', organization)
+      .post<number>(`${environment.apiUrl}/organizations`, organization)
       .pipe(
         map((res: number) => {
           var organizations = [
@@ -99,18 +100,21 @@ export class OrganizationsService {
   }
 
   public getMembers(): Observable<DataResult<MemberDTO[]>> {
-    return this.client
-      .get<MemberDTO[]>(
-        `http://192.168.0.100:5081/organizations/${this.selectedOrganization.value?.id}/members`
-      )
-      .pipe(
-        map((res: MemberDTO[]) => DataResult.success<MemberDTO[]>(res)),
-        catchError((error: HttpErrorResponse) => {
-          console.error(error);
-          navigateToErrorPage(this.router, error);
-          return of(DataResult.fail<MemberDTO[]>());
-        })
-      );
+    if (this.selectedOrganization.value?.isOwner) {
+      return this.client
+        .get<MemberDTO[]>(
+          `${environment.apiUrl}/organizations/${this.selectedOrganization.value?.id}/members`
+        )
+        .pipe(
+          map((res: MemberDTO[]) => DataResult.success<MemberDTO[]>(res)),
+          catchError((error: HttpErrorResponse) => {
+            console.error(error);
+            navigateToErrorPage(this.router, error);
+            return of(DataResult.fail<MemberDTO[]>());
+          })
+        );
+    }
+    return of(DataResult.fail<MemberDTO[]>());
   }
 
   public selectOrganization(organization: Organization): void {
@@ -125,7 +129,7 @@ export class OrganizationsService {
 
   public edit(organization: EditOrganizationDTO): Observable<Result> {
     return this.client
-      .put('http://192.168.0.100:5081/organizations', organization)
+      .put(`${environment.apiUrl}/organizations`, organization)
       .pipe(
         map(() => {
           var edited = new Organization(
@@ -152,7 +156,7 @@ export class OrganizationsService {
 
   public delete(id: number): Observable<Result> {
     return this.client
-      .delete<any>(`http://192.168.0.100:5081/organizations/${id}`)
+      .delete<any>(`${environment.apiUrl}/organizations/${id}`)
       .pipe(
         map(() => {
           this.organizations.next(

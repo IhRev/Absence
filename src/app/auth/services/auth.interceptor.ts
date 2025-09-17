@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, EMPTY, switchMap, throwError } from 'rxjs';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
@@ -15,13 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(cloned).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401) {
-        if (req.url.includes('/refresh')) {
-          authService.logoutLocally();
-          router.navigate(['/login']);
-          return throwError(() => err);
-        }
-
+      if (err.status === 401 && !req.url.includes('/refresh')) {
         return authService.refreshToken().pipe(
           switchMap((result) => {
             if (result.isSuccess) {
@@ -33,7 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             }
             authService.logoutLocally();
             router.navigate(['/login']);
-            return throwError(() => err);
+            return EMPTY;
           })
         );
       }

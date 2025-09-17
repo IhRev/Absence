@@ -122,9 +122,7 @@ export class OrganizationsComponent implements OnInit {
   private loadMembers(): void {
     this.organizationService.getMembers().subscribe({
       next: (res) => {
-        if (res.isSuccess) {
-          this.members = res.data!;
-        }
+        this.members = res.data!;
       },
     });
   }

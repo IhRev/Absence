@@ -12,12 +12,12 @@ import {
 import { DataResult, Result } from '../../common/models/result.models';
 import { Router } from '@angular/router';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly baseUri: string = 'http://192.168.0.100:5081';
   private loggedIn = new BehaviorSubject<boolean>(this.tokenExists());
 
   public loggedIn$ = this.loggedIn.asObservable();
@@ -33,30 +33,34 @@ export class AuthService {
 
   // user
   public getUserDetails(): Observable<DataResult<UserDetails>> {
-    return this.client.get<UserDetails>(`${this.baseUri}/users/details`).pipe(
-      map((res) => DataResult.success<UserDetails>(res)),
-      catchError((error: HttpErrorResponse) => {
-        console.error(error);
-        navigateToErrorPage(this.router, error);
-        return of(DataResult.fail<UserDetails>());
-      })
-    );
+    return this.client
+      .get<UserDetails>(`${environment.apiUrl}/users/details`)
+      .pipe(
+        map((res) => DataResult.success<UserDetails>(res)),
+        catchError((error: HttpErrorResponse) => {
+          console.error(error);
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<UserDetails>());
+        })
+      );
   }
 
   public updateUserDetails(userDetails: UserDetails): Observable<Result> {
-    return this.client.put(`${this.baseUri}/users/details`, userDetails).pipe(
-      map(() => Result.success()),
-      catchError((error: HttpErrorResponse) => {
-        console.error(error);
-        navigateToErrorPage(this.router, error);
-        return of(Result.fail());
-      })
-    );
+    return this.client
+      .put(`${environment.apiUrl}/users/details`, userDetails)
+      .pipe(
+        map(() => Result.success()),
+        catchError((error: HttpErrorResponse) => {
+          console.error(error);
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
+        })
+      );
   }
 
   public changePassword(request: ChangePasswordRequest): Observable<Result> {
     return this.client
-      .put(`${this.baseUri}/users/change_password`, request)
+      .put(`${environment.apiUrl}/users/change_password`, request)
       .pipe(
         map(() => {
           this.logoutLocally();
@@ -75,7 +79,7 @@ export class AuthService {
 
   public deleteProfile(password: string): Observable<Result> {
     return this.client
-      .delete(`${this.baseUri}/users`, {
+      .delete(`${environment.apiUrl}/users`, {
         body: new DeleteUserRequest(password),
       })
       .pipe(
@@ -98,7 +102,7 @@ export class AuthService {
   // auth
   public login(credentials: UserCredentials): Observable<Result> {
     return this.client
-      .post<AuthResponse>(`${this.baseUri}/auth/login`, credentials)
+      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
       .pipe(
         map((res) => {
           if (res.isSuccess) {
@@ -124,7 +128,7 @@ export class AuthService {
     const refreshToken = localStorage.getItem('refreshToken');
     const accessToken = localStorage.getItem('accessToken');
     return this.client
-      .post<AuthResponse>(`${this.baseUri}/auth/refresh_token`, {
+      .post<AuthResponse>(`${environment.apiUrl}/auth/refresh_token`, {
         refreshToken: refreshToken,
         accessToken: accessToken,
       })
@@ -139,7 +143,6 @@ export class AuthService {
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
           return of(Result.fail());
         })
       );
@@ -147,7 +150,7 @@ export class AuthService {
 
   public register(registerDTO: RegisterDTO): Observable<Result> {
     return this.client
-      .post<any>(`${this.baseUri}/auth/register`, registerDTO)
+      .post<any>(`${environment.apiUrl}/auth/register`, registerDTO)
       .pipe(
         map(() => Result.success()),
         catchError((error: HttpErrorResponse) => {
@@ -159,7 +162,7 @@ export class AuthService {
   }
 
   public logout(): Observable<Result> {
-    return this.client.post(`${this.baseUri}/auth/logout`, null).pipe(
+    return this.client.post(`${environment.apiUrl}/auth/logout`, null).pipe(
       map(() => {
         this.logoutLocally();
         return Result.success();

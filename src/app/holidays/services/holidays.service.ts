@@ -7,6 +7,8 @@ import {
 } from '../models/holidays.models';
 import { catchError, map, Observable, of } from 'rxjs';
 import { DataResult, Result } from '../../common/models/result.models';
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -22,7 +24,7 @@ export class HolidaysService {
   ): Observable<DataResult<HolidayDTO[]>> {
     return this.client
       .get<HolidayDTO[]>(
-        `http://192.168.0.100:5081/organizations/${organizationId}/holidays`
+        `${environment.apiUrl}/organizations/${organizationId}/holidays`
       )
       .pipe(
         map((res: HolidayDTO[]) => {
@@ -37,7 +39,7 @@ export class HolidaysService {
 
   public addHoliday(holiday: CreateHolidayDTO): Observable<DataResult<number>> {
     return this.client
-      .post<number>('http://192.168.0.100:5081/holidays', holiday)
+      .post<number>(`${environment.apiUrl}/holidays`, holiday)
       .pipe(
         map((res: number) => {
           return DataResult.success<number>(res);
@@ -50,7 +52,7 @@ export class HolidaysService {
   }
 
   public editHoliday(holiday: EditHolidayDTO): Observable<Result> {
-    return this.client.put('http://192.168.0.100:5081/holidays', holiday).pipe(
+    return this.client.put(`${environment.apiUrl}/holidays`, holiday).pipe(
       map((res: any) => {
         return Result.success();
       }),
@@ -62,7 +64,7 @@ export class HolidaysService {
   }
 
   public deleteHoliday(id: number): Observable<Result> {
-    return this.client.delete(`http://192.168.0.100:5081/holidays/${id}`).pipe(
+    return this.client.delete(`${environment.apiUrl}/holidays/${id}`).pipe(
       map((res: any) => {
         return Result.success();
       }),
