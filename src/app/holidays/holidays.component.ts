@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HolidayFormComponent } from './holiday-form/holiday-form.component';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { HolidaysService } from './services/holidays.service';
 import {
   CreateHolidayDTO,
@@ -13,38 +13,48 @@ import { Organization } from '../organizations/models/organizations.models';
 @Component({
   selector: 'app-holidays',
   standalone: true,
-  imports: [DatePipe, HolidayFormComponent, NgIf],
+  imports: [DatePipe, HolidayFormComponent, NgIf, NgClass],
   templateUrl: './holidays.component.html',
   styleUrl: './holidays.component.css',
 })
 export class HolidaysComponent implements OnInit {
   private static num = 0;
-  private readonly holidaysService: HolidaysService;
-  private readonly organizationService: OrganizationsService;
   public organization: Organization | null = null;
 
   public holidays: Holiday[] = [];
   public isFormOpened: boolean = false;
   public selectedHoliday: Holiday | null = null;
+  public isProcessing: boolean = false;
+  public message: string | null = null;
+  public isSuccess: boolean = false;
 
   public constructor(
-    holidaysService: HolidaysService,
-    organizationService: OrganizationsService
-  ) {
-    this.holidaysService = holidaysService;
-    this.organizationService = organizationService;
-  }
+    private readonly holidaysService: HolidaysService,
+    private readonly organizationService: OrganizationsService
+  ) {}
 
   public ngOnInit(): void {
+    this.startProcess();
     this.organizationService.selectedOrganization$.subscribe((value) => {
       if (value) {
+        this.isProcessing = false;
         this.organization = value;
         this.loadHolidays();
       }
     });
   }
 
+  public closeMessage(): void {
+    this.message = null;
+  }
+
+  private startProcess() {
+    this.isProcessing = true;
+    this.closeMessage();
+  }
+
   private loadHolidays(): void {
+    this.startProcess();
     if (this.organization) {
       this.holidaysService.getHolidays(this.organization!.id).subscribe({
         next: (res) => {
@@ -53,7 +63,11 @@ export class HolidaysComponent implements OnInit {
             this.holidays = res.data!.map(
               (h) => new Holiday(++HolidaysComponent.num, h.id, h.name, h.date)
             );
+          } else {
+            this.isSuccess = false;
+            this.message = res.message;
           }
+          this.isProcessing = false;
         },
       });
     }
@@ -71,19 +85,25 @@ export class HolidaysComponent implements OnInit {
   }
 
   public create(holiday: CreateHolidayDTO): void {
+    this.startProcess();
     if (this.organization) {
       this.holidaysService.addHoliday(holiday).subscribe({
-        next: (data) => {
-          if (data.isSuccess) {
+        next: (res) => {
+          if (res.isSuccess) {
             this.holidays.push(
               new Holiday(
                 ++HolidaysComponent.num,
-                data.data!,
+                res.data!,
                 holiday.name,
                 holiday.date
               )
             );
+            this.message = 'Holiday created successfully!';
+          } else {
+            this.message = res.message;
           }
+          this.isSuccess = res.isSuccess;
+          this.isProcessing = false;
         },
       });
       this.closeForm();
@@ -91,25 +111,37 @@ export class HolidaysComponent implements OnInit {
   }
 
   public edit(holiday: EditHolidayDTO): void {
+    this.startProcess();
     this.holidaysService.editHoliday(holiday).subscribe({
-      next: (data) => {
-        if (data.isSuccess) {
+      next: (res) => {
+        if (res.isSuccess) {
           this.selectedHoliday!.name = holiday.name;
           this.selectedHoliday!.date = holiday.date;
+          this.message = 'Holiday edited successfully!';
+        } else {
+          this.message = res.message;
         }
+        this.isSuccess = res.isSuccess;
+        this.isProcessing = false;
       },
     });
     this.closeForm();
   }
 
   public delete(id: number): void {
+    this.startProcess();
     this.holidaysService.deleteHoliday(id).subscribe({
-      next: (data) => {
-        if (data.isSuccess) {
+      next: (res) => {
+        if (res.isSuccess) {
           HolidaysComponent.num = 0;
           this.holidays = this.holidays.filter((a) => a.id !== id);
           this.holidays.forEach((h) => (h.num = ++HolidaysComponent.num));
+          this.message = 'Holiday deleted successfully!';
+        } else {
+          this.message = res.message;
         }
+        this.isSuccess = res.isSuccess;
+        this.isProcessing = false;
       },
     });
   }

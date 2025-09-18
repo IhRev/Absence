@@ -8,16 +8,17 @@ import {
 import { catchError, map, Observable, of } from 'rxjs';
 import { DataResult, Result } from '../../common/models/result.models';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { navigateToErrorPage } from '../../common/services/error-utilities';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HolidaysService {
-  private readonly client: HttpClient;
-
-  public constructor(client: HttpClient) {
-    this.client = client;
-  }
+  public constructor(
+    private readonly client: HttpClient,
+    private readonly router: Router
+  ) {}
 
   public getHolidays(
     organizationId: number
@@ -27,12 +28,11 @@ export class HolidaysService {
         `${environment.apiUrl}/organizations/${organizationId}/holidays`
       )
       .pipe(
-        map((res: HolidayDTO[]) => {
-          return DataResult.success<HolidayDTO[]>(res);
-        }),
+        map((res: HolidayDTO[]) => DataResult.success<HolidayDTO[]>(res)),
         catchError((error) => {
           console.error(error);
-          return of(DataResult.fail<HolidayDTO[]>(error));
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<HolidayDTO[]>());
         })
       );
   }
@@ -41,36 +41,33 @@ export class HolidaysService {
     return this.client
       .post<number>(`${environment.apiUrl}/holidays`, holiday)
       .pipe(
-        map((res: number) => {
-          return DataResult.success<number>(res);
-        }),
+        map((res: number) => DataResult.success<number>(res)),
         catchError((error) => {
           console.error(error);
-          return of(DataResult.fail<number>(error));
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<number>());
         })
       );
   }
 
   public editHoliday(holiday: EditHolidayDTO): Observable<Result> {
     return this.client.put(`${environment.apiUrl}/holidays`, holiday).pipe(
-      map((res: any) => {
-        return Result.success();
-      }),
+      map(() => Result.success()),
       catchError((error) => {
         console.error(error);
-        return of(Result.fail(error));
+        navigateToErrorPage(this.router, error);
+        return of(Result.fail());
       })
     );
   }
 
   public deleteHoliday(id: number): Observable<Result> {
     return this.client.delete(`${environment.apiUrl}/holidays/${id}`).pipe(
-      map((res: any) => {
-        return Result.success();
-      }),
+      map(() => Result.success()),
       catchError((error) => {
         console.error(error);
-        return of(Result.fail(error));
+        navigateToErrorPage(this.router, error);
+        return of(Result.fail());
       })
     );
   }

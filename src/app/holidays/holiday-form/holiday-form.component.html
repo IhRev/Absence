@@ -1,22 +1,15 @@
-<div class="modal-container" *ngIf="isVisible">
-  <div class="modal-dialog">
-    <div class="header">
-      <p class="header-label">Holiday Form</p>
-      <button class="close-button" (click)="close()">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+<app-modal-form [isVisible]="isVisible" [title]="title" (closeModal)="close()">
+  <form [formGroup]="form" (submit)="submit()">
+    <div class="input-item">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" />
+      <app-form-error [form]="form" [name]="'name'" />
     </div>
-    <hr />
-    <div>
-      <div class="input-item">
-        <label for="name">Name</label>
-        <input required type="text" id="name" [(ngModel)]="name" />
-      </div>
-      <div class="input-item">
-        <label for="startDate">Date</label>
-        <input required type="date" id="startDate" [(ngModel)]="date" />
-      </div>
-      <button (click)="submit()" class="submit-button">Submit</button>
+    <div class="input-item">
+      <label for="date">Date</label>
+      <input type="date" id="date" formControlName="date" />
+      <app-form-error [form]="form" [name]="'date'" />
     </div>
-  </div>
-</div>
+    <button class="submit-btn">Submit</button>
+  </form>
+</app-modal-form>

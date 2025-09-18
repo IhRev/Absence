@@ -1,10 +1,30 @@
 <div class="container" *ngIf="organization">
-  <div class="btns" *ngIf="organization.isAdmin">
-    <button class="add-btn" (click)="openForm()">
-      <i class="fa-solid fa-plus"></i>
-    </button>
+  <div class="manage-panel" *ngIf="!isProcessing && organization.isAdmin">
+    <div
+      class="msg-box"
+      [ngClass]="{
+        'success-msg': isSuccess && message,
+        'error-msg': !isSuccess && message
+      }"
+    >
+      <span class="msg">{{ message }}</span>
+      <button *ngIf="message" (click)="closeMessage()" class="close-btn">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="btns">
+      <button class="add-btn" (click)="openForm()">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
   </div>
-  <div class="grid-list" [class.admin-grid]="organization.isAdmin">
+
+  <div
+    class="grid-list"
+    *ngIf="!isProcessing"
+    [class.admin-grid]="organization.isAdmin"
+  >
     <span class="header item item-start">#</span>
     <span class="header item">Name</span>
     <span class="header item">Date</span>
@@ -19,16 +39,19 @@
     }}</span>
     <span class="item item-end" *ngIf="organization.isAdmin">
       <div class="action-buttons">
-        <button class="delete-button" (click)="delete(holiday.id)">
+        <button class="delete-btn" (click)="delete(holiday.id)">
           <i class="fa-solid fa-trash"></i>
         </button>
-        <button class="edit-button" (click)="openForm(holiday)">
+
+        <button class="edit-btn" (click)="openForm(holiday)">
           <i class="fa-solid fa-pen"></i>
         </button>
       </div>
     </span>
     }
   </div>
+
+  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
 </div>
 
 <app-holiday-form
