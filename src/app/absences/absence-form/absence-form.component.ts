@@ -38,8 +38,6 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
   styleUrl: './absence-form.component.css',
 })
 export class AbsenceFormComponent implements OnInit, OnChanges {
-  private readonly absenceTypeService: AbsenceTypeService;
-
   @Input() public isVisible = false;
   @Input() public absence: Absence | null = null;
   @Output() public closeModal = new EventEmitter();
@@ -60,9 +58,7 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
     endDate: new FormControl('', [Validators.required]),
   });
 
-  public constructor(absenceTypeService: AbsenceTypeService) {
-    this.absenceTypeService = absenceTypeService;
-  }
+  public constructor(private readonly absenceTypeService: AbsenceTypeService) {}
 
   public ngOnInit(): void {
     this.absenceTypeService.types$.subscribe({

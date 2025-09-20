@@ -1,18 +1,10 @@
-<div class="modal-container" *ngIf="isVisible">
-  <div class="modal-dialog">
-    <div class="header">
-      <p class="header-label">Organization Form</p>
-      <button class="close-button" (click)="close()">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+<app-modal-form [isVisible]="isVisible" [title]="title" (closeModal)="close()">
+  <form [formGroup]="form" (submit)="submit()">
+    <div class="input-item">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" />
+      <app-form-error [form]="form" [name]="'name'" />
     </div>
-    <hr />
-    <div>
-      <div class="input-item">
-        <label for="name">Name</label>
-        <input required type="text" id="name" [(ngModel)]="name" />
-      </div>
-      <button (click)="submit()" class="submit-button">Submit</button>
-    </div>
-  </div>
-</div>
+    <button class="submit-btn">Submit</button>
+  </form>
+</app-modal-form>
