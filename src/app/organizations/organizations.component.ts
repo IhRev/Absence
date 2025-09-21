@@ -25,6 +25,7 @@ export class OrganizationsComponent implements OnInit {
   public selectedMember: MemberDTO | null = null;
   public isFormOpened: boolean = false;
   public isInviteFormOpened: boolean = false;
+  public organization: Organization | null = null;
 
   public constructor(
     private readonly organizationService: OrganizationsService,
@@ -70,8 +71,9 @@ export class OrganizationsComponent implements OnInit {
     });
   }
 
-  public openForm(): void {
+  public openForm(organization?: Organization): void {
     this.isFormOpened = true;
+    this.organization = organization ? organization : null;
   }
 
   public closeForm(): void {

@@ -34,7 +34,9 @@
     <h1>{{ selectedOrganization!.name }}</h1>
     <div class="org-details">
       <button class="invite-btn" (click)="openInviteForm()">Invite user</button>
-      <button class="edit-btn" (click)="openForm()">Edit</button>
+      <button class="edit-btn" (click)="openForm(selectedOrganization!)">
+        Edit
+      </button>
       <button class="del-btn" (click)="delete()">Delete</button>
     </div>
     <div class="list-block">
@@ -74,7 +76,9 @@
 
 <app-organization-form
   (closeModal)="closeForm()"
-  (submitModal)="add($event)"
+  (submitCreate)="add($event)"
+  (submitEdit)="edit($event)"
+  [organization]="organization"
   [isVisible]="isFormOpened"
 />
 
