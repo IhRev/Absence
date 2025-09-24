@@ -37,7 +37,7 @@
       <button class="edit-btn" (click)="openForm(selectedOrganization!)">
         Edit
       </button>
-      <button class="del-btn" (click)="delete()">Delete</button>
+      <button class="delete-btn" (click)="delete()">Delete</button>
     </div>
     <div class="list-block">
       <div class="header">
@@ -52,24 +52,21 @@
         >
           {{ member.fullName }}
           <span *ngIf="member.isOwner" class="owner">owner</span>
+          <span *ngIf="!member.isOwner && member.isAdmin" class="owner"
+            >admin</span
+          >
         </li>
       </ul>
     </div>
   </div>
 
-  <hr *ngIf="selectedMember" />
+  <hr *ngIf="selectedMember && !selectedMember.isOwner" />
 
-  <div class="member" *ngIf="selectedMember">
+  <div class="member" *ngIf="selectedMember && !selectedMember.isOwner">
     <h1 class="label">{{ selectedMember.fullName }}</h1>
-    <div class="member-details">
-      <button
-        *ngIf="!selectedMember.isAdmin"
-        class="access-btn"
-        (click)="changeAccess()"
-      >
-        Change access
-      </button>
-      <button class="del-btn" (click)="deleteUser()">Delete user</button>
+    <div class="member-details" *ngIf="!selectedMember.isAdmin">
+      <button class="access-btn" (click)="changeAccess()">Change access</button>
+      <button class="delete-btn" (click)="deleteUser()">Delete user</button>
     </div>
   </div>
 </div>

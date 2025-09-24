@@ -39,7 +39,6 @@ export class OrganizationsComponent implements OnInit {
     this.organizationService.selectedOrganization$.subscribe((value) => {
       if (value) {
         this.selectedOrganization = value;
-        this.selectedMember = null;
         this.loadMembers();
       } else {
         this.selectedOrganization = null;
@@ -58,7 +57,11 @@ export class OrganizationsComponent implements OnInit {
   }
 
   public selectMember(selected: MemberDTO): void {
-    this.selectedMember = selected;
+    if (selected === this.selectedMember) {
+      this.selectedMember = null;
+    } else {
+      this.selectedMember = selected;
+    }
   }
 
   public add(organization: CreateOrganizationDTO): void {
@@ -125,6 +128,7 @@ export class OrganizationsComponent implements OnInit {
     this.organizationService.getMembers().subscribe({
       next: (res) => {
         this.members = res.data!;
+        this.selectedMember = res.data!.find((m) => m.isOwner)!;
       },
     });
   }
