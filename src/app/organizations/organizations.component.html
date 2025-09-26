@@ -32,12 +32,16 @@
 
   <div class="organization-block" *ngIf="members">
     <h1>{{ selectedOrganization!.name }}</h1>
-    <div class="org-details">
+    <div class="org-details" *ngIf="selectedOrganization?.isAdmin">
       <button class="invite-btn" (click)="openInviteForm()">Invite user</button>
+      @if (selectedOrganization?.isOwner) {
       <button class="edit-btn" (click)="openForm(selectedOrganization!)">
         Edit
       </button>
-      <button class="delete-btn" (click)="delete()">Delete</button>
+      <button class="delete-btn" (click)="confirmationOpened = true">
+        Delete
+      </button>
+      }
     </div>
     <div class="list-block">
       <div class="header">
@@ -83,4 +87,10 @@
   (closeModal)="closeInviteForm()"
   (submitModal)="sendInvitation($event)"
   [isVisible]="isInviteFormOpened"
+/>
+
+<app-password-confirmation
+  [isVisible]="confirmationOpened"
+  (closed)="confirmationOpened = false"
+  (submitted)="confirmationSubmitted($event)"
 />

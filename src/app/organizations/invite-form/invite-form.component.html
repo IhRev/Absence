@@ -1,18 +1,10 @@
-<div class="modal-container" *ngIf="isVisible">
-  <div class="modal-dialog">
-    <div class="header">
-      <p class="header-label">Invite</p>
-      <button class="close-button" (click)="close()">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+<app-modal-form [isVisible]="isVisible" title="Invite" (closeModal)="close()">
+  <form [formGroup]="form" (submit)="submit()">
+    <div class="input-item">
+      <label for="email">Email</label>
+      <input type="text" id="email" formControlName="email" />
+      <app-form-error [form]="form" name="email" />
     </div>
-    <hr />
-    <div>
-      <div class="input-item">
-        <label for="email">Email</label>
-        <input required type="text" id="email" [(ngModel)]="email" />
-      </div>
-      <button (click)="submit()" class="submit-button">Submit</button>
-    </div>
-  </div>
-</div>
+    <button class="submit-btn">Submit</button>
+  </form>
+</app-modal-form>

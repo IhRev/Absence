@@ -28,3 +28,7 @@ export interface MemberDTO {
   isAdmin: boolean;
   isOwner: boolean;
 }
+
+export class DeleteOrganizationRequest {
+  public constructor(public password: string) {}
+}

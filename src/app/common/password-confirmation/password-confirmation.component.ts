@@ -19,13 +19,14 @@ export class PasswordConfirmationComponent {
   @Input() public isVisible: boolean = false;
   @Output() public submitted = new EventEmitter<string>();
   @Output() public closed = new EventEmitter();
-  public password: string = '';
   public form = new FormGroup({
     password: new FormControl('', [Validators.minLength(8)]),
   });
 
   public submit(): void {
-    this.submitted.emit(this.password);
+    if (this.form.valid) {
+      this.submitted.emit(this.form.value.password!);
+    }
   }
 
   public close(): void {

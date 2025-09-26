@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   CreateOrganizationDTO,
+  DeleteOrganizationRequest,
   EditOrganizationDTO,
   MemberDTO,
   Organization,
@@ -154,9 +155,11 @@ export class OrganizationsService {
       );
   }
 
-  public delete(id: number): Observable<Result> {
+  public delete(id: number, password: string): Observable<Result> {
     return this.client
-      .delete<any>(`${environment.apiUrl}/organizations/${id}`)
+      .delete<any>(`${environment.apiUrl}/organizations/${id}`, {
+        body: new DeleteOrganizationRequest(password),
+      })
       .pipe(
         map(() => {
           this.organizations.next(

@@ -10,11 +10,18 @@ import { OrganizationsService } from './services/organizations.service';
 import { OrganizationFormComponent } from './organization-form/organization-form.component';
 import { InviteFormComponent } from './invite-form/invite-form.component';
 import { InvitationsService } from './services/invitations.service';
+import { PasswordConfirmationComponent } from '../common/password-confirmation/password-confirmation.component';
 
 @Component({
   selector: 'app-organizations',
   standalone: true,
-  imports: [NgIf, NgFor, OrganizationFormComponent, InviteFormComponent],
+  imports: [
+    NgIf,
+    NgFor,
+    OrganizationFormComponent,
+    InviteFormComponent,
+    PasswordConfirmationComponent,
+  ],
   templateUrl: './organizations.component.html',
   styleUrl: './organizations.component.css',
 })
@@ -26,6 +33,8 @@ export class OrganizationsComponent implements OnInit {
   public isFormOpened: boolean = false;
   public isInviteFormOpened: boolean = false;
   public organization: Organization | null = null;
+  public confirmationOpened: boolean = false;
+  public isProcessing: boolean = false;
 
   public constructor(
     private readonly organizationService: OrganizationsService,
@@ -104,16 +113,6 @@ export class OrganizationsComponent implements OnInit {
   public changeAccess(): void {}
   public deleteUser(): void {}
 
-  public delete(): void {
-    this.organizationService.delete(this.selectedOrganization!.id).subscribe({
-      next: (res) => {
-        if (res.isSuccess) {
-        }
-        this.isFormOpened = false;
-      },
-    });
-  }
-
   public edit(organization: EditOrganizationDTO): void {
     this.organizationService.edit(organization).subscribe({
       next: (res) => {
@@ -131,5 +130,19 @@ export class OrganizationsComponent implements OnInit {
         this.selectedMember = res.data!.find((m) => m.isOwner)!;
       },
     });
+  }
+
+  public confirmationSubmitted(password: string): void {
+    this.confirmationOpened = false;
+    this.isProcessing = true;
+    this.organizationService
+      .delete(this.selectedOrganization!.id, password)
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.isProcessing = false;
+          }
+        },
+      });
   }
 }
