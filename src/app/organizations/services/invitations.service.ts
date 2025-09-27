@@ -43,9 +43,12 @@ export class InvitationsService {
       Number(organizationId)
     );
     return this.client.post(`${environment.apiUrl}/invitations`, dto).pipe(
-      map(() => Result.success()),
+      map(() => Result.success('User invited successfully')),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
+        if (error.status === 400) {
+          return of(Result.fail(error.error));
+        }
         navigateToErrorPage(this.router, error);
         return of(Result.fail());
       })

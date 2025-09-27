@@ -94,10 +94,16 @@ export class OrganizationsService {
             new Organization(res, organization.name, true, true),
           ];
           this.organizations.next(organizations);
-          return DataResult.success<number>(res);
+          return DataResult.success<number>(
+            res,
+            'New organization added successfully'
+          );
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
+          if (error.status === 400) {
+            return of(DataResult.fail<number>(error.error));
+          }
           navigateToErrorPage(this.router, error);
           return of(DataResult.fail<number>());
         })
@@ -146,10 +152,13 @@ export class OrganizationsService {
             )
           );
           this.selectedOrganization.next(edited);
-          return Result.success();
+          return Result.success('Organization edited successfully');
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
+          if (error.status === 400) {
+            return of(Result.fail(error.error));
+          }
           navigateToErrorPage(this.router, error);
           return of(Result.fail());
         })
@@ -167,7 +176,7 @@ export class OrganizationsService {
             this.organizations.value!.filter((u) => u.id != id)
           );
           this.selectedOrganization.next(null);
-          return Result.success();
+          return Result.success('Your organization deleted successfully');
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
@@ -186,7 +195,9 @@ export class OrganizationsService {
         `${environment.apiUrl}/organizations/${organizationId}/members/${memberId}`
       )
       .pipe(
-        map(() => Result.success()),
+        map(() =>
+          Result.success('Member deleted successfully from organization')
+        ),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
           navigateToErrorPage(this.router, error);
@@ -207,7 +218,7 @@ export class OrganizationsService {
         { params: new HttpParams().set('isAdmin', isAdmin) }
       )
       .pipe(
-        map(() => Result.success()),
+        map(() => Result.success('Member access changed successfully')),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
           navigateToErrorPage(this.router, error);

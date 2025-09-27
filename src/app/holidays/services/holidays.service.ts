@@ -44,6 +44,9 @@ export class HolidaysService {
         map((res: number) => DataResult.success<number>(res)),
         catchError((error) => {
           console.error(error);
+          if (error.status === 400) {
+            return of(DataResult.fail<number>(error.error));
+          }
           navigateToErrorPage(this.router, error);
           return of(DataResult.fail<number>());
         })
@@ -55,6 +58,9 @@ export class HolidaysService {
       map(() => Result.success()),
       catchError((error) => {
         console.error(error);
+        if (error.status === 400) {
+          return of(Result.fail(error.error));
+        }
         navigateToErrorPage(this.router, error);
         return of(Result.fail());
       })

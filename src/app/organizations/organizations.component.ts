@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   CreateOrganizationDTO,
@@ -21,6 +21,7 @@ import { PasswordConfirmationComponent } from '../common/password-confirmation/p
     OrganizationFormComponent,
     InviteFormComponent,
     PasswordConfirmationComponent,
+    NgClass,
   ],
   templateUrl: './organizations.component.html',
   styleUrl: './organizations.component.css',
@@ -35,6 +36,8 @@ export class OrganizationsComponent implements OnInit {
   public organization: Organization | null = null;
   public confirmationOpened: boolean = false;
   public isProcessing: boolean = false;
+  public message: string | null = null;
+  public isSuccess: boolean = false;
 
   public constructor(
     private readonly organizationService: OrganizationsService,
@@ -74,11 +77,13 @@ export class OrganizationsComponent implements OnInit {
   }
 
   public add(organization: CreateOrganizationDTO): void {
+    this.isProcessing = true;
     this.organizationService.add(organization).subscribe({
       next: (res) => {
-        if (res.isSuccess) {
-        }
+        this.message = res.message;
+        this.isSuccess = res.isSuccess;
         this.isFormOpened = false;
+        this.isProcessing = false;
       },
     });
   }
@@ -101,16 +106,19 @@ export class OrganizationsComponent implements OnInit {
   }
 
   public sendInvitation(email: string): void {
+    this.isProcessing = true;
     this.invitationsService.send(email).subscribe({
       next: (res) => {
-        if (res.isSuccess) {
-        }
+        this.message = res.message;
+        this.isSuccess = res.isSuccess;
         this.isInviteFormOpened = false;
+        this.isProcessing = false;
       },
     });
   }
 
   public changeAccess(): void {
+    this.isProcessing = true;
     this.organizationService
       .changeAccess(
         this.selectedOrganization!.id,
@@ -122,11 +130,15 @@ export class OrganizationsComponent implements OnInit {
           if (res.isSuccess) {
             this.selectedMember!.isAdmin = true;
           }
+          this.isProcessing = false;
+          this.message = res.message;
+          this.isSuccess = res.isSuccess;
         },
       });
   }
 
   public deleteUser(): void {
+    this.isProcessing = true;
     var id = this.selectedMember!.id;
     this.organizationService
       .deleteMember(this.selectedOrganization!.id, this.selectedMember!.id)
@@ -136,21 +148,27 @@ export class OrganizationsComponent implements OnInit {
             this.members = this.members!.filter((m) => m.id != id);
             this.selectedMember = null;
           }
+          this.isProcessing = false;
+          this.message = res.message;
+          this.isSuccess = res.isSuccess;
         },
       });
   }
 
   public edit(organization: EditOrganizationDTO): void {
+    this.isProcessing = true;
     this.organizationService.edit(organization).subscribe({
       next: (res) => {
-        if (res.isSuccess) {
-        }
+        this.message = res.message;
+        this.isSuccess = res.isSuccess;
         this.isFormOpened = false;
+        this.isProcessing = false;
       },
     });
   }
 
   private loadMembers(): void {
+    this.isProcessing = true;
     this.organizationService.getMembers().subscribe({
       next: (res) => {
         if (res.isSuccess) {
@@ -158,6 +176,7 @@ export class OrganizationsComponent implements OnInit {
           this.members = res.data!;
           this.selectedMember = res.data!.find((m) => m.isOwner)!;
         }
+        this.isProcessing = false;
       },
     });
   }
@@ -169,9 +188,9 @@ export class OrganizationsComponent implements OnInit {
       .delete(this.selectedOrganization!.id, password)
       .subscribe({
         next: (res) => {
-          if (res.isSuccess) {
-            this.isProcessing = false;
-          }
+          this.message = res.message;
+          this.isSuccess = res.isSuccess;
+          this.isProcessing = false;
         },
       });
   }

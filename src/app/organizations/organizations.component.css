@@ -24,6 +24,12 @@
 .container {
   margin-top: 20px;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.organizations-container {
+  display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
@@ -168,4 +174,54 @@ button {
 
 .member-details button {
   width: 150px !important;
+}
+
+.msg-box {
+  display: flex;
+  flex: 1 1 auto;
+  border-radius: 5px;
+  height: 36px;
+  font-size: 20px;
+  padding: 0 5px;
+  margin-right: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.msg-box.success-msg {
+  background-color: rgba(43, 184, 43, 0.438);
+}
+
+.msg-box.error-msg {
+  background-color: rgba(184, 43, 43, 0.438);
+}
+
+.msg-box .msg {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.msg-box .close-btn {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 24px;
+  height: 24px;
+  padding-top: 1px;
+  padding-right: 1px;
+}
+
+.msg-box .close-btn:hover {
+  border-radius: 50px;
+  background-color: rgba(0, 0, 0, 0.153);
+  transition: all 0.2s;
+}
+
+.load-icon {
+  display: block;
+  text-align: center;
+  margin: 50px auto 0 auto;
+  font-size: 30px;
+  width: 100px;
 }

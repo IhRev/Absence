@@ -1,3 +1,4 @@
+@if(!isProcessing){
 <div
   class="empty-container"
   *ngIf="organizations && organizations.length === 0"
@@ -8,75 +9,98 @@
   </button>
 </div>
 
-<div class="container" *ngIf="organizations">
-  <div class="list-block" *ngIf="organizations.length > 0">
-    <div class="header">
-      <h1 class="label">Your organizations</h1>
-      <button class="add-btn" (click)="openForm()">
-        <i class="fa-solid fa-plus"></i>
-      </button>
-    </div>
-    <ul class="list-box">
-      <li
-        *ngFor="let organization of organizations"
-        class="item"
-        (click)="selectOrganization(organization)"
-        [class.active-item]="selectedOrganization === organization"
-      >
-        {{ organization.name }}
-      </li>
-    </ul>
+<div class="container">
+  <div
+    *ngIf="message"
+    class="msg-box"
+    [ngClass]="{
+      'success-msg': isSuccess && message,
+      'error-msg': !isSuccess && message
+    }"
+  >
+    <span class="msg">{{ message }}</span>
+    <button (click)="message = null" class="close-btn">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
-  <hr *ngIf="members" />
-
-  <div class="organization-block" *ngIf="members">
-    <h1>{{ selectedOrganization!.name }}</h1>
-    <div class="org-details" *ngIf="selectedOrganization?.isAdmin">
-      <button class="invite-btn" (click)="openInviteForm()">Invite user</button>
-      @if (selectedOrganization?.isOwner) {
-      <button class="edit-btn" (click)="openForm(selectedOrganization!)">
-        Edit
-      </button>
-      <button class="delete-btn" (click)="confirmationOpened = true">
-        Delete
-      </button>
-      }
-    </div>
-    <div class="list-block">
+  <div class="organizations-container" *ngIf="organizations">
+    <div class="list-block" *ngIf="organizations.length > 0">
       <div class="header">
-        <h2 class="label">Members</h2>
+        <h1 class="label">Your organizations</h1>
+        <button class="add-btn" (click)="openForm()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
       </div>
       <ul class="list-box">
         <li
-          *ngFor="let member of members"
+          *ngFor="let organization of organizations"
           class="item"
-          (click)="selectMember(member)"
-          [class.active-item]="selectedMember === member"
+          (click)="selectOrganization(organization)"
+          [class.active-item]="selectedOrganization === organization"
         >
-          {{ member.fullName }}
-          <span *ngIf="member.isOwner" class="owner">owner</span>
-          <span *ngIf="!member.isOwner && member.isAdmin" class="owner"
-            >admin</span
-          >
+          {{ organization.name }}
         </li>
       </ul>
     </div>
-  </div>
 
-  @if (selectedMember && !selectedMember.isOwner &&
-  selectedOrganization?.isAdmin) {
-  <hr />
+    <hr *ngIf="members" />
 
-  <div class="member">
-    <h1 class="label">{{ selectedMember.fullName }}</h1>
-    <div class="member-details" *ngIf="selectedOrganization?.isAdmin">
-      <button class="access-btn" (click)="changeAccess()">Change access</button>
-      <button class="delete-btn" (click)="deleteUser()">Delete user</button>
+    <div class="organization-block" *ngIf="members">
+      <h1>{{ selectedOrganization!.name }}</h1>
+      <div class="org-details" *ngIf="selectedOrganization?.isAdmin">
+        <button class="invite-btn" (click)="openInviteForm()">
+          Invite user
+        </button>
+        @if (selectedOrganization?.isOwner) {
+        <button class="edit-btn" (click)="openForm(selectedOrganization!)">
+          Edit
+        </button>
+        <button class="delete-btn" (click)="confirmationOpened = true">
+          Delete
+        </button>
+        }
+      </div>
+      <div class="list-block">
+        <div class="header">
+          <h2 class="label">Members</h2>
+        </div>
+        <ul class="list-box">
+          <li
+            *ngFor="let member of members"
+            class="item"
+            (click)="selectMember(member)"
+            [class.active-item]="selectedMember === member"
+          >
+            {{ member.fullName }}
+            <span *ngIf="member.isOwner" class="owner">owner</span>
+            <span *ngIf="!member.isOwner && member.isAdmin" class="owner"
+              >admin</span
+            >
+          </li>
+        </ul>
+      </div>
     </div>
+
+    @if (selectedMember && !selectedMember.isOwner &&
+    selectedOrganization?.isAdmin) {
+    <hr />
+
+    <div class="member">
+      <h1 class="label">{{ selectedMember.fullName }}</h1>
+      <div class="member-details" *ngIf="selectedOrganization?.isAdmin">
+        <button class="access-btn" (click)="changeAccess()">
+          Change access
+        </button>
+        <button class="delete-btn" (click)="deleteUser()">Delete user</button>
+      </div>
+    </div>
+    }
   </div>
-  }
 </div>
+} @else{
+<i class="fa-solid fa-spinner fa-spin load-icon"></i>
+}
 
 <app-organization-form
   (closeModal)="closeForm()"
