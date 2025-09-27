@@ -64,15 +64,18 @@
     </div>
   </div>
 
-  <hr *ngIf="selectedMember && !selectedMember.isOwner" />
+  @if (selectedMember && !selectedMember.isOwner &&
+  selectedOrganization?.isAdmin) {
+  <hr />
 
-  <div class="member" *ngIf="selectedMember && !selectedMember.isOwner">
+  <div class="member">
     <h1 class="label">{{ selectedMember.fullName }}</h1>
-    <div class="member-details" *ngIf="!selectedMember.isAdmin">
+    <div class="member-details" *ngIf="selectedOrganization?.isAdmin">
       <button class="access-btn" (click)="changeAccess()">Change access</button>
       <button class="delete-btn" (click)="deleteUser()">Delete user</button>
     </div>
   </div>
+  }
 </div>
 
 <app-organization-form

@@ -110,8 +110,35 @@ export class OrganizationsComponent implements OnInit {
     });
   }
 
-  public changeAccess(): void {}
-  public deleteUser(): void {}
+  public changeAccess(): void {
+    this.organizationService
+      .changeAccess(
+        this.selectedOrganization!.id,
+        this.selectedMember!.id,
+        true
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.selectedMember!.isAdmin = true;
+          }
+        },
+      });
+  }
+
+  public deleteUser(): void {
+    var id = this.selectedMember!.id;
+    this.organizationService
+      .deleteMember(this.selectedOrganization!.id, this.selectedMember!.id)
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.members = this.members!.filter((m) => m.id != id);
+            this.selectedMember = null;
+          }
+        },
+      });
+  }
 
   public edit(organization: EditOrganizationDTO): void {
     this.organizationService.edit(organization).subscribe({
@@ -126,8 +153,11 @@ export class OrganizationsComponent implements OnInit {
   private loadMembers(): void {
     this.organizationService.getMembers().subscribe({
       next: (res) => {
-        this.members = res.data!;
-        this.selectedMember = res.data!.find((m) => m.isOwner)!;
+        if (res.isSuccess) {
+          this.selectedMember = null;
+          this.members = res.data!;
+          this.selectedMember = res.data!.find((m) => m.isOwner)!;
+        }
       },
     });
   }

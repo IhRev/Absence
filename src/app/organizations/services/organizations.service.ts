@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   CreateOrganizationDTO,
@@ -101,21 +105,18 @@ export class OrganizationsService {
   }
 
   public getMembers(): Observable<DataResult<MemberDTO[]>> {
-    if (this.selectedOrganization.value?.isOwner) {
-      return this.client
-        .get<MemberDTO[]>(
-          `${environment.apiUrl}/organizations/${this.selectedOrganization.value?.id}/members`
-        )
-        .pipe(
-          map((res: MemberDTO[]) => DataResult.success<MemberDTO[]>(res)),
-          catchError((error: HttpErrorResponse) => {
-            console.error(error);
-            navigateToErrorPage(this.router, error);
-            return of(DataResult.fail<MemberDTO[]>());
-          })
-        );
-    }
-    return of(DataResult.fail<MemberDTO[]>());
+    return this.client
+      .get<MemberDTO[]>(
+        `${environment.apiUrl}/organizations/${this.selectedOrganization.value?.id}/members`
+      )
+      .pipe(
+        map((res: MemberDTO[]) => DataResult.success<MemberDTO[]>(res)),
+        catchError((error: HttpErrorResponse) => {
+          console.error(error);
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<MemberDTO[]>());
+        })
+      );
   }
 
   public selectOrganization(organization: Organization): void {
@@ -157,7 +158,7 @@ export class OrganizationsService {
 
   public delete(id: number, password: string): Observable<Result> {
     return this.client
-      .delete<any>(`${environment.apiUrl}/organizations/${id}`, {
+      .delete(`${environment.apiUrl}/organizations/${id}`, {
         body: new DeleteOrganizationRequest(password),
       })
       .pipe(
@@ -168,6 +169,45 @@ export class OrganizationsService {
           this.selectedOrganization.next(null);
           return Result.success();
         }),
+        catchError((error: HttpErrorResponse) => {
+          console.error(error);
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
+        })
+      );
+  }
+
+  public deleteMember(
+    organizationId: number,
+    memberId: number
+  ): Observable<Result> {
+    return this.client
+      .delete(
+        `${environment.apiUrl}/organizations/${organizationId}/members/${memberId}`
+      )
+      .pipe(
+        map(() => Result.success()),
+        catchError((error: HttpErrorResponse) => {
+          console.error(error);
+          navigateToErrorPage(this.router, error);
+          return of(Result.fail());
+        })
+      );
+  }
+
+  public changeAccess(
+    organizationId: number,
+    memberId: number,
+    isAdmin: boolean
+  ): Observable<Result> {
+    return this.client
+      .put(
+        `${environment.apiUrl}/organizations/${organizationId}/members/${memberId}`,
+        null,
+        { params: new HttpParams().set('isAdmin', isAdmin) }
+      )
+      .pipe(
+        map(() => Result.success()),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
           navigateToErrorPage(this.router, error);
