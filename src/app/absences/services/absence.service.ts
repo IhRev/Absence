@@ -70,7 +70,7 @@ export class AbsenceService {
             'Absence added successfully'
           );
         } else {
-          return DataResult.success<number | null>(null, res.data);
+          return DataResult.success<number | null>(null, res.message);
         }
       }),
       catchError((error: HttpErrorResponse) => {
