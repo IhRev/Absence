@@ -1,21 +1,37 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding: 90px 5px 5px 5px;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.btns {
+  display: flex;
+  gap: 20px;
+  justify-content: start;
 }
 
 .link {
   text-decoration: none;
-  background-color: lightblue;
   color: black;
-  font-size: 18px;
+  border: none;
+  transition: all 0.3s !important;
   border-radius: 5px;
-  padding: 10px 15px;
-  width: 85px;
+  background: rgb(110, 178, 201);
+  padding: 5px 20px;
+  font-size: 20px;
 }
 
 .link:hover {
-  background-color: rgba(173, 216, 230, 0.8);
+  background: rgb(70, 165, 196);
+}
+
+.link:hover:active {
+  background: rgb(47, 140, 171);
+}
+
+.btns a.active {
+  background: rgb(47, 140, 171);
+  transition: background-color 1s;
+  color: #000;
 }
