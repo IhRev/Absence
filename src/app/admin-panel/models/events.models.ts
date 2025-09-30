@@ -9,7 +9,7 @@ export interface EventDTO {
   startDate: Date;
   endDate: Date;
   absenceType: number;
-  userId: number;
+  user: string;
   absenceEventType: number;
 }
 
