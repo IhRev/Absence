@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { EventTypesService } from '../services/event-types.service';
 import { EventTypeDTO, Event } from '../models/events.models';
 import { EventsService } from '../services/events.service';
-import { NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { AbsenceTypeService } from '../../absences/services/absence-type.service';
 import { AbsenceTypeDTO } from '../../absences/models/absence.models';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, DatePipe],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css',
 })
