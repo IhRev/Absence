@@ -96,28 +96,32 @@
 
 .menu-toggle {
   margin-right: 10px;
-  font-size: 25px;
-  display: none;
   cursor: pointer;
+  display: none;
 }
 
-.menu-toggle :hover {
+.menu-toggle:hover {
   background-color: rgba(64, 68, 71, 0.543);
 }
 
 @media screen and (min-width: 768px) {
-  .logo-container {
-    margin-left: 20px;
-  }
-
   .menu-container {
     margin-right: 20px;
   }
 }
 
 @media screen and (max-width: 768px) {
+  .nav-bar {
+    height: 100px;
+  }
+
   .menu-toggle {
     display: block;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    line-height: 40px;
   }
 
   .menu-container {
@@ -125,7 +129,7 @@
     flex-direction: column;
     position: absolute;
     width: 100%;
-    top: 90px;
+    top: 100px;
     bottom: 0;
     left: 0;
     background-color: rgb(38, 44, 44);
@@ -142,6 +146,11 @@
     height: 50px;
     padding: 10px;
     border-bottom: 1px solid rgb(72, 68, 68);
+  }
+
+  .main-nav {
+    height: 70px;
+    padding: 5px 5px;
   }
 }
 

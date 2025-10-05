@@ -68,3 +68,10 @@
 .submit-btn:active {
   background: rgb(47, 140, 171);
 }
+
+@media screen and (max-width: 568px) {
+  .register-form {
+    max-width: 90%;
+    padding: 30px 20px;
+  }
+}

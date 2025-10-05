@@ -83,3 +83,10 @@
   color: rgb(249, 36, 36);
   font-size: 16px;
 }
+
+@media screen and (max-width: 568px) {
+  .login-form {
+    max-width: 90%;
+    padding: 30px 20px;
+  }
+}
