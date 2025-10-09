@@ -35,7 +35,7 @@
     <span class="item item-start">{{ holiday.num }}</span>
     <span class="item">{{ holiday.name }}</span>
     <span class="item" [class.item-end]="!organization.isAdmin">{{
-      holiday.date | date : "d MMMM, y"
+      holiday.date | date : "dd.MM.yyyy"
     }}</span>
     <span class="item item-end" *ngIf="organization.isAdmin">
       <div class="action-buttons">
