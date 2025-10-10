@@ -135,7 +135,7 @@
     background-color: rgb(38, 44, 44);
     text-align: center;
     transition: all 0.3s ease;
-    height: 100%;
+    height: calc(100% - 100px);
     z-index: 1000;
   }
 

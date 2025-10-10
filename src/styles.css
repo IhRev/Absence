@@ -60,6 +60,16 @@ main {
   align-items: start;
 }
 
+@media screen and (max-width: 500px) {
+  .modal-dialog .input-item {
+    margin: 0px 5px 15px 5px;
+  }
+
+  .modal-dialog input {
+    min-width: none;
+  }
+}
+
 .modal-dialog label {
   font-size: 22px;
   display: inline-block;
