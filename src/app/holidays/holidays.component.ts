@@ -15,7 +15,10 @@ import { Organization } from '../organizations/models/organizations.models';
   standalone: true,
   imports: [DatePipe, HolidayFormComponent, NgIf, NgClass, NgFor],
   templateUrl: './holidays.component.html',
-  styleUrl: './holidays.component.css',
+  styleUrls: [
+    './holidays.component.css',
+    '../common/styles/grid-list-styles.css',
+  ],
 })
 export class HolidaysComponent implements OnInit {
   private static num = 0;

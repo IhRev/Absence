@@ -85,20 +85,41 @@ button {
   background-color: rgb(28, 118, 26);
 }
 
-.filter-btn {
-  background: rgb(60, 153, 184);
+.grid-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
 }
 
-.filter-btn:hover {
-  background: rgb(26, 129, 164);
+.grid-header {
+  background-color: rgb(38, 38, 38);
 }
 
-.filter-btn:active {
-  background: rgb(21, 103, 130);
+.grid-header span {
+  font-weight: bold;
+  font-size: 22px;
 }
 
 .grid-row {
-  grid-template-columns: 50px 1fr 1fr 1fr 1fr 120px;
+  display: grid;
+  grid-row-gap: 10px;
+  border-radius: 10px;
+  border: 2px solid rgb(38, 38, 38);
+}
+
+.grid-item-row {
+  border: 2px solid rgb(38, 38, 38);
+}
+
+.grid-row span {
+  font-size: 20px;
+  background-color: transparent;
+  padding: 5px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .action-buttons {
@@ -153,5 +174,39 @@ button {
 @media screen and (max-width: 576px) {
   .container {
     padding-top: 30px;
+  }
+
+  .grid-header {
+    display: none !important;
+  }
+
+  .grid-row {
+    display: flex;
+    flex-direction: column;
+    background-color: #2b2b2b;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .grid-row span {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #3a3a3a;
+  }
+
+  .grid-row span:last-child {
+    border-bottom: none;
+  }
+
+  .grid-row span::before {
+    content: attr(data-label);
+    font-weight: bold;
+  }
+
+  .grid-list {
+    padding: 0 10px;
   }
 }

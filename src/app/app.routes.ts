@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
-import { AbsenceListComponent } from './absences/absence-list/absence-list.component';
+import { AbsenceListComponent } from './absences/absences.component';
 import { HomeComponent } from './home/home.component';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
 import { AboutComponent } from './about/about.component';

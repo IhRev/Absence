@@ -20,18 +20,18 @@
     </div>
   </div>
 
-  <div
-    class="grid-list"
-    *ngIf="!isProcessing"
-    [class.admin-grid]="organization.isAdmin"
-  >
-    <div class="grid-header grid-row">
+  <div class="grid-list" *ngIf="!isProcessing">
+    <div class="grid-header grid-row" [class.admin-grid]="organization.isAdmin">
       <span>#</span>
       <span>Name</span>
       <span>Date</span>
       <span *ngIf="organization.isAdmin">Actions</span>
     </div>
-    <div class="grid-row grid-item-row" *ngFor="let holiday of holidays">
+    <div
+      [class.admin-grid]="organization.isAdmin"
+      class="grid-row grid-item-row"
+      *ngFor="let holiday of holidays"
+    >
       <span data-label="#">{{ holiday.num }}</span>
       <span data-label="Name">{{ holiday.name }}</span>
       <span data-label="Date">{{ holiday.date | date : "dd.MM.yyyy" }}</span>

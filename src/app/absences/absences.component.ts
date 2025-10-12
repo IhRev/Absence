@@ -4,13 +4,13 @@ import {
   AbsenceTypeDTO,
   CreateAbsenceDTO,
   EditAbsenceDTO,
-} from '../models/absence.models';
-import { AbsenceFormComponent } from '../absence-form/absence-form.component';
+} from './models/absence.models';
+import { AbsenceFormComponent } from './absence-form/absence-form.component';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { AbsenceService } from '../services/absence.service';
-import { AbsenceTypeService } from '../services/absence-type.service';
-import { AbsenceFiltersComponent } from '../absence-filters/absence-filters.component';
-import { AbsenceFilters } from '../models/filters.models';
+import { AbsenceService } from './services/absence.service';
+import { AbsenceTypeService } from './services/absence-type.service';
+import { AbsenceFiltersComponent } from './absence-filters/absence-filters.component';
+import { AbsenceFilters } from './models/filters.models';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -24,8 +24,11 @@ import { NgClass } from '@angular/common';
     NgIf,
     NgFor,
   ],
-  templateUrl: './absence-list.component.html',
-  styleUrl: './absence-list.component.css',
+  templateUrl: './absences.component.html',
+  styleUrls: [
+    './absences.component.css',
+    '../common/styles/grid-list-styles.css',
+  ],
 })
 export class AbsenceListComponent implements OnInit {
   private static num = 0;
