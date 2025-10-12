@@ -6,7 +6,7 @@ import {
   EditAbsenceDTO,
 } from '../models/absence.models';
 import { AbsenceFormComponent } from '../absence-form/absence-form.component';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { AbsenceService } from '../services/absence.service';
 import { AbsenceTypeService } from '../services/absence-type.service';
 import { AbsenceFiltersComponent } from '../absence-filters/absence-filters.component';
@@ -22,6 +22,7 @@ import { NgClass } from '@angular/common';
     AbsenceFiltersComponent,
     NgClass,
     NgIf,
+    NgFor,
   ],
   templateUrl: './absence-list.component.html',
   styleUrl: './absence-list.component.css',

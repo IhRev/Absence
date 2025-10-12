@@ -25,30 +25,35 @@
   </div>
 
   <div class="grid-list" *ngIf="!isProcessing">
-    <span class="header item item-start">#</span>
-    <span class="header item">Name</span>
-    <span class="header item">Type</span>
-    <span class="header item">Start Date</span>
-    <span class="header item">End Date</span>
-    <span class="header item item-end">Actions</span>
-    @for (absence of absences; track absence) {
-    <span class="item item-start">{{ absence.num }}</span>
-    <span class="item">{{ absence.name }}</span>
-    <span class="item">{{ absence.type.name }}</span>
-    <span class="item">{{ absence.startDate | date : "d MMMM, y" }}</span>
-    <span class="item">{{ absence.endDate | date : "d MMMM, y" }}</span>
-    <span class="item item-end">
-      <div class="action-buttons">
-        <button class="delete-btn" (click)="delete(absence.id)">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-
-        <button class="edit-btn" (click)="openForm(absence)">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-      </div>
-    </span>
-    }
+    <div class="grid-header grid-row">
+      <span>#</span>
+      <span>Name</span>
+      <span>Type</span>
+      <span>Start Date</span>
+      <span>End Date</span>
+      <span>Actions</span>
+    </div>
+    <div class="grid-row grid-item-row" *ngFor="let absence of absences">
+      <span data-label="#">{{ absence.num }}</span>
+      <span data-label="Name">{{ absence.name }}</span>
+      <span data-label="Type">{{ absence.type.name }}</span>
+      <span data-label="Start Date">{{
+        absence.startDate | date : "dd.MM.yyyy"
+      }}</span>
+      <span data-label="End Date">{{
+        absence.endDate | date : "dd.MM.yyyy"
+      }}</span>
+      <span data-label="Actions">
+        <div class="action-buttons">
+          <button class="delete-btn" (click)="delete(absence.id)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+          <button class="edit-btn" (click)="openForm(absence)">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+        </div>
+      </span>
+    </div>
   </div>
 
   <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>

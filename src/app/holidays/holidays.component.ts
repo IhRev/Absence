@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HolidayFormComponent } from './holiday-form/holiday-form.component';
-import { DatePipe, NgClass, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { HolidaysService } from './services/holidays.service';
 import {
   CreateHolidayDTO,
@@ -13,7 +13,7 @@ import { Organization } from '../organizations/models/organizations.models';
 @Component({
   selector: 'app-holidays',
   standalone: true,
-  imports: [DatePipe, HolidayFormComponent, NgIf, NgClass],
+  imports: [DatePipe, HolidayFormComponent, NgIf, NgClass, NgFor],
   templateUrl: './holidays.component.html',
   styleUrl: './holidays.component.css',
 })

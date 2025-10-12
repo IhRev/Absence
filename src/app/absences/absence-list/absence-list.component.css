@@ -97,40 +97,8 @@ button {
   background: rgb(21, 103, 130);
 }
 
-.grid-list {
-  display: grid;
-  grid-template-columns: repeat(6, auto);
-  grid-row-gap: 10px;
-  width: 100%;
-}
-
-.item {
-  font-size: 20px;
-  background-color: transparent;
-  padding: 5px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-top: 2px solid rgb(38, 38, 38);
-  border-bottom: 2px solid rgb(38, 38, 38);
-}
-
-.header {
-  background-color: rgb(38, 38, 38);
-  font-weight: bold;
-  font-size: 22px;
-  border-color: transparent !important;
-}
-
-.item-start {
-  border-radius: 10px 0px 0px 10px;
-  border-left: 2px solid rgb(38, 38, 38);
-}
-
-.item-end {
-  border-radius: 0px 10px 10px 0px;
-  border-right: 2px solid rgb(38, 38, 38);
+.grid-row {
+  grid-template-columns: 50px 1fr 1fr 1fr 1fr 120px;
 }
 
 .action-buttons {
@@ -141,6 +109,7 @@ button {
 }
 
 .action-buttons button {
+  height: 30px;
   width: 30px;
   font-size: 20px;
   color: white;
@@ -183,14 +152,6 @@ button {
 
 @media screen and (max-width: 576px) {
   .container {
-    padding-top: 55px;
-  }
-
-  .item-start {
-    border-radius: 5px 0px 0px 5px;
-  }
-
-  .item-end {
-    border-radius: 0px 5px 5px 0px;
+    padding-top: 30px;
   }
 }

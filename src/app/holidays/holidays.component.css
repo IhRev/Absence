@@ -85,13 +85,6 @@ button {
   background-color: rgb(28, 118, 26);
 }
 
-.grid-list {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  grid-row-gap: 10px;
-  width: 100%;
-}
-
 .admin-grid {
   grid-template-columns: repeat(4, auto) !important;
 }
@@ -134,6 +127,7 @@ button {
 
 .action-buttons button {
   width: 30px;
+  height: 30px;
   font-size: 20px;
   color: white;
   outline: none;
@@ -176,19 +170,5 @@ button {
 @media screen and (max-width: 576px) {
   .container {
     padding-top: 30px;
-  }
-
-  .item-start {
-    border-radius: 5px 0px 0px 5px;
-  }
-
-  .item-end {
-    border-radius: 0px 5px 5px 0px;
-  }
-
-  .item {
-    font-size: 1rem;
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
 }

@@ -25,32 +25,28 @@
     *ngIf="!isProcessing"
     [class.admin-grid]="organization.isAdmin"
   >
-    <span class="header item item-start">#</span>
-    <span class="header item">Name</span>
-    <span class="header item">Date</span>
-    <span *ngIf="organization.isAdmin" class="header item item-end"
-      >Actions</span
-    >
-    @for (holiday of holidays; track holiday) {
-    <span class="item item-start">{{ holiday.num }}</span>
-    <span class="item">{{ holiday.name }}</span>
-    <span class="item" [class.item-end]="!organization.isAdmin">{{
-      holiday.date | date : "dd.MM.yyyy"
-    }}</span>
-    <span class="item item-end" *ngIf="organization.isAdmin">
-      <div class="action-buttons">
-        <button class="delete-btn" (click)="delete(holiday.id)">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-
-        <button class="edit-btn" (click)="openForm(holiday)">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-      </div>
-    </span>
-    }
+    <div class="grid-header grid-row">
+      <span>#</span>
+      <span>Name</span>
+      <span>Date</span>
+      <span *ngIf="organization.isAdmin">Actions</span>
+    </div>
+    <div class="grid-row grid-item-row" *ngFor="let holiday of holidays">
+      <span data-label="#">{{ holiday.num }}</span>
+      <span data-label="Name">{{ holiday.name }}</span>
+      <span data-label="Date">{{ holiday.date | date : "dd.MM.yyyy" }}</span>
+      <span *ngIf="organization.isAdmin" data-label="Actions">
+        <div class="action-buttons">
+          <button class="delete-btn" (click)="delete(holiday.id)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+          <button class="edit-btn" (click)="openForm(holiday)">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+        </div>
+      </span>
+    </div>
   </div>
-
   <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
 </div>
 
