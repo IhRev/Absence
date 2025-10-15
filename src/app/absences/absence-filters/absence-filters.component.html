@@ -5,10 +5,14 @@
 >
   <form [formGroup]="form" (submit)="submit()">
     <div class="input-item">
-      <label>Period</label>
-      <input type="date" formControlName="startDate" />
-      <span>-</span>
-      <input type="date" formControlName="endDate" />
+      <label for="startDate">From</label>
+      <input id="startDate" type="date" formControlName="startDate" />
+      <app-form-error [form]="form" [name]="'startDate'" />
+    </div>
+    <div class="input-item">
+      <label for="endDate">To</label>
+      <input id="endDate" type="date" formControlName="endDate" />
+      <app-form-error [form]="form" [name]="'endDate'" />
     </div>
     <button class="submit-btn">Submit</button>
   </form>

@@ -30,7 +30,10 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
     FormErrorComponent,
   ],
   templateUrl: './holiday-form.component.html',
-  styleUrl: './holiday-form.component.css',
+  styleUrls: [
+    './holiday-form.component.css',
+    '../../common/styles/modal-dialog-styles.css',
+  ],
 })
 export class HolidayFormComponent implements OnChanges {
   @Input() public isVisible = false;

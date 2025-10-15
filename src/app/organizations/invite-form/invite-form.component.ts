@@ -19,7 +19,10 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
     FormErrorComponent,
   ],
   templateUrl: './invite-form.component.html',
-  styleUrl: './invite-form.component.css',
+  styleUrls: [
+    './invite-form.component.css',
+    '../../common/styles/modal-dialog-styles.css',
+  ],
 })
 export class InviteFormComponent {
   @Input() public isVisible = false;

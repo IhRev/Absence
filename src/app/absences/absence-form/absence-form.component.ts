@@ -35,7 +35,10 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
     FormErrorComponent,
   ],
   templateUrl: './absence-form.component.html',
-  styleUrl: './absence-form.component.css',
+  styleUrls: [
+    './absence-form.component.css',
+    '../../common/styles/modal-dialog-styles.css',
+  ],
 })
 export class AbsenceFormComponent implements OnInit, OnChanges {
   @Input() public isVisible = false;

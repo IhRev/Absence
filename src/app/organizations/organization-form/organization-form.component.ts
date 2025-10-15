@@ -30,7 +30,10 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
     FormErrorComponent,
   ],
   templateUrl: './organization-form.component.html',
-  styleUrl: './organization-form.component.css',
+  styleUrls: [
+    './organization-form.component.css',
+    '../../common/styles/modal-dialog-styles.css',
+  ],
 })
 export class OrganizationFormComponent implements OnChanges {
   @Input() public isVisible = false;

@@ -13,7 +13,10 @@ import { FormErrorComponent } from '../form-error/form-error.component';
   standalone: true,
   imports: [ReactiveFormsModule, ModalFormComponent, FormErrorComponent],
   templateUrl: './password-confirmation.component.html',
-  styleUrl: './password-confirmation.component.css',
+  styleUrls: [
+    './password-confirmation.component.css',
+    '../styles/modal-dialog-styles.css',
+  ],
 })
 export class PasswordConfirmationComponent {
   @Input() public isVisible: boolean = false;

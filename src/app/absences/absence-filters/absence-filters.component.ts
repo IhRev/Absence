@@ -8,13 +8,22 @@ import {
   Validators,
 } from '@angular/forms';
 import { ModalFormComponent } from '../../common/modal-form/modal-form.component';
+import { FormErrorComponent } from '../../common/form-error/form-error.component';
 
 @Component({
   selector: 'app-absence-filters',
   standalone: true,
-  imports: [FormsModule, ModalFormComponent, ReactiveFormsModule],
+  imports: [
+    FormsModule,
+    ModalFormComponent,
+    ReactiveFormsModule,
+    FormErrorComponent,
+  ],
   templateUrl: './absence-filters.component.html',
-  styleUrl: './absence-filters.component.css',
+  styleUrls: [
+    './absence-filters.component.css',
+    '../../common/styles/modal-dialog-styles.css',
+  ],
 })
 export class AbsenceFiltersComponent implements OnInit {
   @Input() public isVisible = false;
@@ -22,8 +31,8 @@ export class AbsenceFiltersComponent implements OnInit {
   @Output() public submitModal = new EventEmitter<AbsenceFilters>();
 
   public form = new FormGroup({
-    startDate: new FormControl('', []),
-    endDate: new FormControl('', []),
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
   });
 
   public ngOnInit(): void {
