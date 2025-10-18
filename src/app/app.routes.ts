@@ -9,6 +9,9 @@ import { HolidaysComponent } from './holidays/holidays.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { EventsComponent } from './admin-panel/events/events.component';
 import { ErrorPageComponent } from './common/error-page/error-page.component';
+import { UserGeneralTabComponent } from './auth/user-profile/user-general-tab/user-general-tab.component';
+import { UserInvitationsTabComponent } from './auth/user-profile/user-invitations-tab/user-invitations-tab.component';
+import { UserSecurityTabComponent } from './auth/user-profile/user-security-tab/user-security-tab.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -18,6 +21,9 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'profile', component: UserProfileComponent },
+  { path: 'profile/general', component: UserGeneralTabComponent },
+  { path: 'profile/security', component: UserSecurityTabComponent },
+  { path: 'profile/invitations', component: UserInvitationsTabComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'holidays', component: HolidaysComponent },
   {

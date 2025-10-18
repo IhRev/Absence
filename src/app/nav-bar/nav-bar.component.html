@@ -56,11 +56,36 @@
       </ng-container>
       <ng-template #loggedInTemplate>
         <a
+          *ngIf="!isMenuOpen"
           (click)="linkClicked()"
           routerLink="/profile"
           routerLinkActive="active"
           >My Profile</a
         >
+        <a *ngIf="isMenuOpen" (click)="linkClicked('profile')">My Profile</a>
+        @if (isSubmenuOpen && isMenuOpen) {
+        <a
+          class="sub-menu-link"
+          (click)="linkClicked()"
+          routerLink="/profile/general"
+          routerLinkActive="active"
+          >General</a
+        >
+        <a
+          class="sub-menu-link"
+          (click)="linkClicked()"
+          routerLink="/profile/security"
+          routerLinkActive="active"
+          >Security</a
+        >
+        <a
+          class="sub-menu-link"
+          (click)="linkClicked()"
+          routerLink="/profile/invitations"
+          routerLinkActive="active"
+          >Invitations</a
+        >
+        }
       </ng-template>
     </div>
   </div>

@@ -63,6 +63,16 @@
   align-items: center;
 }
 
+.submenu-list {
+  display: none;
+  position: absolute;
+  background: #333;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  list-style: none;
+  margin-top: 0.5rem;
+}
+
 .menu-container a {
   text-decoration: none;
   color: white;
@@ -151,6 +161,11 @@
   .main-nav {
     height: 70px;
     padding: 5px 5px;
+  }
+
+  .sub-menu-link {
+    padding-left: 50px !important;
+    font-size: 15px !important;
   }
 }
 
