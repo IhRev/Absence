@@ -97,3 +97,10 @@ li button:active {
 .tab {
   width: 100%;
 }
+
+@media screen and (max-width: 576px) {
+  .body hr,
+  .tabs {
+    display: none;
+  }
+}

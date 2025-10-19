@@ -21,9 +21,6 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'profile', component: UserProfileComponent },
-  { path: 'profile/general', component: UserGeneralTabComponent },
-  { path: 'profile/security', component: UserSecurityTabComponent },
-  { path: 'profile/invitations', component: UserInvitationsTabComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'holidays', component: HolidaysComponent },
   {

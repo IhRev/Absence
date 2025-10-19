@@ -67,21 +67,24 @@
         <a
           class="sub-menu-link"
           (click)="linkClicked()"
-          routerLink="/profile/general"
+          routerLink="/profile"
+          [queryParams]="{ tabName: 'general' }"
           routerLinkActive="active"
           >General</a
         >
         <a
           class="sub-menu-link"
           (click)="linkClicked()"
-          routerLink="/profile/security"
+          routerLink="/profile"
+          [queryParams]="{ tabName: 'security' }"
           routerLinkActive="active"
           >Security</a
         >
         <a
           class="sub-menu-link"
           (click)="linkClicked()"
-          routerLink="/profile/invitations"
+          routerLink="/profile"
+          [queryParams]="{ tabName: 'invitations' }"
           routerLinkActive="active"
           >Invitations</a
         >
