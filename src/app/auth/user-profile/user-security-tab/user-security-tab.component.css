@@ -1,5 +1,6 @@
-.change-password-form {
-  width: 400px;
+.container {
+  width: 100%;
+  max-width: 400px;
 }
 
 .input-item {
@@ -109,4 +110,11 @@ button {
   margin-top: 50px;
   font-size: 30px;
   width: 100px;
+}
+
+@media screen and (max-width: 576px) {
+  .container {
+    margin: 0 auto;
+    padding: 20px 10px;
+  }
 }
