@@ -23,8 +23,8 @@
           <td>{{ event.type }}</td>
           <td>{{ event.absenceType }}</td>
           <td>{{ event.name }}</td>
-          <td>{{ event.startDate | date }}</td>
-          <td>{{ event.endDate | date }}</td>
+          <td>{{ event.startDate | date : "dd.MM.yyyy" }}</td>
+          <td>{{ event.endDate | date : "dd.MM.yyyy" }}</td>
           <td>
             <div class="btns">
               <button class="accept-btn" (click)="respond(event.id, true)">

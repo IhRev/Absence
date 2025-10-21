@@ -39,8 +39,12 @@ table {
 
 table th,
 table td {
-  padding: 10px;
+  padding: 0 10px 10px 10px;
   text-align: center;
   border: 0px;
   font-size: 20px;
+}
+
+.table-form {
+  overflow-y: auto;
 }

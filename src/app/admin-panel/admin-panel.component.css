@@ -1,12 +1,13 @@
 .container {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: row;
+  gap: 30px;
   margin-top: 20px;
 }
 
 .btns {
   display: flex;
+  flex-direction: column;
   gap: 20px;
   justify-content: start;
 }
@@ -20,6 +21,8 @@
   background: rgb(110, 178, 201);
   padding: 5px 20px;
   font-size: 20px;
+  height: 44px;
+  text-align: center;
 }
 
 .link:hover {
@@ -34,4 +37,15 @@
   background: rgb(47, 140, 171);
   transition: background-color 1s;
   color: #000;
+}
+
+@media screen and (max-width: 576px) {
+  .container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .btns {
+    flex-direction: row;
+  }
 }
