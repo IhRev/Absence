@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="head">
+    <h2>{{ title }}</h2>
+    <button (click)="wrapped = !wrapped">
+      <i *ngIf="wrapped" class="fa-solid fa-chevron-down"></i>
+      <i *ngIf="!wrapped" class="fa-solid fa-chevron-up"></i>
+    </button>
+  </div>
+  <div [class.wrapped]="wrapped" class="body">
+    <ng-content />
+  </div>
+</div>

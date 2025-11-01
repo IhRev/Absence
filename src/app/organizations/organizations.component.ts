@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   CreateOrganizationDTO,
@@ -11,6 +11,8 @@ import { OrganizationFormComponent } from './organization-form/organization-form
 import { InviteFormComponent } from './invite-form/invite-form.component';
 import { InvitationsService } from './services/invitations.service';
 import { PasswordConfirmationComponent } from '../common/password-confirmation/password-confirmation.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { WrappableControlComponent } from '../common/wrappable-control/wrappable-control.component';
 
 @Component({
   selector: 'app-organizations',
@@ -22,6 +24,8 @@ import { PasswordConfirmationComponent } from '../common/password-confirmation/p
     InviteFormComponent,
     PasswordConfirmationComponent,
     NgClass,
+    WrappableControlComponent,
+    NgTemplateOutlet,
   ],
   templateUrl: './organizations.component.html',
   styleUrl: './organizations.component.css',
@@ -38,13 +42,18 @@ export class OrganizationsComponent implements OnInit {
   public isProcessing: boolean = false;
   public message: string | null = null;
   public isSuccess: boolean = false;
+  public isMobile: boolean = false;
 
   public constructor(
     private readonly organizationService: OrganizationsService,
-    private readonly invitationsService: InvitationsService
+    private readonly invitationsService: InvitationsService,
+    private readonly breakingObserver: BreakpointObserver
   ) {}
 
   public ngOnInit(): void {
+    this.breakingObserver.observe([Breakpoints.Handset]).subscribe((res) => {
+      this.isMobile = res.matches;
+    });
     this.organizationService.organizations$.subscribe((value) => {
       this.organizations = value;
     });

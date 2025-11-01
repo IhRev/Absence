@@ -1,4 +1,5 @@
 @if(!isProcessing){
+<!-- Empty container  -->
 <div
   class="empty-container"
   *ngIf="organizations && organizations.length === 0"
@@ -9,7 +10,9 @@
   </button>
 </div>
 
+<!-- Not empty container -->
 <div class="container">
+  <!-- Message box  -->
   <div
     *ngIf="message"
     class="msg-box"
@@ -24,14 +27,12 @@
     </button>
   </div>
 
+  <!-- Blocks -->
   <div class="organizations-container" *ngIf="organizations">
-    <div class="list-block" *ngIf="organizations.length > 0">
-      <div class="header">
-        <h1 class="label">Your organizations</h1>
-        <button class="add-btn" (click)="openForm()">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-      </div>
+    <!-- Organizations list -->
+
+    <!-- Organizations list content -->
+    <ng-template #orgListBlockContent>
       <ul class="list-box">
         <li
           *ngFor="let organization of organizations"
@@ -42,12 +43,34 @@
           {{ organization.name }}
         </li>
       </ul>
+    </ng-template>
+
+    <!-- Desktop organizations list -->
+    <div class="list-block wide-screen" *ngIf="organizations.length > 0">
+      <div class="header">
+        <h1 class="label">Organizations</h1>
+        <button class="add-btn" (click)="openForm()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      <ng-container *ngTemplateOutlet="orgListBlockContent"></ng-container>
     </div>
 
-    <hr *ngIf="members" />
+    <!-- Mobile organizations list -->
+    <app-wrappable-control [title]="'Organizations'" class="narrow-screen">
+      <div class="header">
+        <button class="add-btn" (click)="openForm()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      <ng-container *ngTemplateOutlet="orgListBlockContent"></ng-container>
+    </app-wrappable-control>
 
-    <div class="organization-block" *ngIf="members">
-      <h1>{{ selectedOrganization!.name }}</h1>
+    @if(members){
+    <hr class="wide-screen" />
+
+    <!-- Organization details content -->
+    <ng-template #orgDetailsContent>
       <div class="org-details" *ngIf="selectedOrganization?.isAdmin">
         <button class="invite-btn" (click)="openInviteForm()">
           Invite user
@@ -80,21 +103,48 @@
           </li>
         </ul>
       </div>
+    </ng-template>
+
+    <!-- Desktop organization details -->
+    <div class="organization-block wide-screen">
+      <h1>{{ selectedOrganization!.name }}</h1>
+      <ng-container *ngTemplateOutlet="orgDetailsContent"></ng-container>
     </div>
 
-    @if (selectedMember && !selectedMember.isOwner &&
+    <!-- Mobile organization details -->
+    <app-wrappable-control
+      class="narrow-screen"
+      [title]="selectedOrganization!.name"
+    >
+      <ng-container *ngTemplateOutlet="orgDetailsContent"></ng-container>
+    </app-wrappable-control>
+    } @if (selectedMember && !selectedMember.isOwner &&
     selectedOrganization?.isAdmin) {
-    <hr />
+    <hr class="wide-screen" />
 
-    <div class="member">
-      <h1 class="label">{{ selectedMember.fullName }}</h1>
+    <!-- Member details content -->
+    <ng-template #memberContent>
       <div class="member-details" *ngIf="selectedOrganization?.isAdmin">
         <button class="access-btn" (click)="changeAccess()">
           Change access
         </button>
         <button class="delete-btn" (click)="deleteUser()">Delete user</button>
       </div>
+    </ng-template>
+
+    <!-- Desktop member details -->
+    <div class="member wide-screen">
+      <h1 class="label">{{ selectedMember.fullName }}</h1>
+      <ng-container *ngTemplateOutlet="memberContent"></ng-container>
     </div>
+
+    <!-- Mobile member details -->
+    <app-wrappable-control
+      class="narrow-screen"
+      [title]="selectedMember.fullName"
+    >
+      <ng-container *ngTemplateOutlet="memberContent"></ng-container>
+    </app-wrappable-control>
     }
   </div>
 </div>
