@@ -1,0 +1,19 @@
+<app-modal-form
+  [isVisible]="isVisible"
+  [title]="'Filters'"
+  (closeModal)="close()"
+>
+  <form [formGroup]="form" (submit)="submit()">
+    <div class="input-item">
+      <label for="startDate">From</label>
+      <input id="startDate" type="date" formControlName="startDate" />
+      <app-form-error [form]="form" [name]="'startDate'" />
+    </div>
+    <div class="input-item">
+      <label for="endDate">To</label>
+      <input id="endDate" type="date" formControlName="endDate" />
+      <app-form-error [form]="form" [name]="'endDate'" />
+    </div>
+    <button class="submit-btn">Submit</button>
+  </form>
+</app-modal-form>

@@ -5,3 +5,15 @@
 .grid-row {
   grid-template-columns: 50px 1fr 1fr;
 }
+
+.filter-btn {
+  background: rgb(60, 153, 184);
+}
+
+.filter-btn:hover {
+  background: rgb(26, 129, 164);
+}
+
+.filter-btn:active {
+  background: rgb(21, 103, 130);
+}

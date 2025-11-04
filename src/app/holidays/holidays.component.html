@@ -14,6 +14,9 @@
     </div>
 
     <div class="btns">
+      <button class="filter-btn" (click)="filtersOpened = true">
+        <i class="fa-solid fa-filter"></i>
+      </button>
       <button class="add-btn" (click)="openForm()">
         <i class="fa-solid fa-plus"></i>
       </button>
@@ -56,4 +59,10 @@
   (submitEdit)="edit($event)"
   [isVisible]="isFormOpened"
   [holiday]="selectedHoliday"
+/>
+
+<app-holiday-filters
+  (closeModal)="filtersOpened = false"
+  (submitModal)="applyFilters($event)"
+  [isVisible]="filtersOpened"
 />

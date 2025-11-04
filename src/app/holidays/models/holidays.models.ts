@@ -30,3 +30,7 @@ export class Holiday {
     public date: Date
   ) {}
 }
+
+export class HolidayFilters {
+  public constructor(public startDate: Date, public endDate: Date) {}
+}

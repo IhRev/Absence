@@ -6,14 +6,23 @@ import {
   CreateHolidayDTO,
   EditHolidayDTO,
   Holiday,
+  HolidayFilters,
 } from './models/holidays.models';
 import { OrganizationsService } from '../organizations/services/organizations.service';
 import { Organization } from '../organizations/models/organizations.models';
+import { HolidayFiltersComponent } from './holiday-filters/holiday-filters.component';
 
 @Component({
   selector: 'app-holidays',
   standalone: true,
-  imports: [DatePipe, HolidayFormComponent, NgIf, NgClass, NgFor],
+  imports: [
+    DatePipe,
+    HolidayFormComponent,
+    NgIf,
+    NgClass,
+    NgFor,
+    HolidayFiltersComponent,
+  ],
   templateUrl: './holidays.component.html',
   styleUrls: [
     './holidays.component.css',
@@ -30,6 +39,7 @@ export class HolidaysComponent implements OnInit {
   public isProcessing: boolean = false;
   public message: string | null = null;
   public isSuccess: boolean = false;
+  public filtersOpened: boolean = false;
 
   public constructor(
     private readonly holidaysService: HolidaysService,
@@ -42,9 +52,19 @@ export class HolidaysComponent implements OnInit {
       if (value) {
         this.isProcessing = false;
         this.organization = value;
-        this.loadHolidays();
+        const currentYear = new Date().getFullYear();
+        this.loadHolidays(
+          new Date(currentYear, 0, 1),
+          new Date(currentYear, 11, 31)
+        );
       }
     });
+  }
+
+  public applyFilters(filters: HolidayFilters): void {
+    this.closeMessage();
+    this.loadHolidays(filters.startDate, filters.endDate);
+    this.filtersOpened = false;
   }
 
   public closeMessage(): void {
@@ -56,23 +76,26 @@ export class HolidaysComponent implements OnInit {
     this.closeMessage();
   }
 
-  private loadHolidays(): void {
+  private loadHolidays(startDate: Date, endDate: Date): void {
     this.startProcess();
     if (this.organization) {
-      this.holidaysService.getHolidays(this.organization!.id).subscribe({
-        next: (res) => {
-          if (res.isSuccess) {
-            HolidaysComponent.num = 0;
-            this.holidays = res.data!.map(
-              (h) => new Holiday(++HolidaysComponent.num, h.id, h.name, h.date)
-            );
-          } else {
-            this.isSuccess = false;
-            this.message = res.message;
-          }
-          this.isProcessing = false;
-        },
-      });
+      this.holidaysService
+        .getHolidays(this.organization!.id, startDate, endDate)
+        .subscribe({
+          next: (res) => {
+            if (res.isSuccess) {
+              HolidaysComponent.num = 0;
+              this.holidays = res.data!.map(
+                (h) =>
+                  new Holiday(++HolidaysComponent.num, h.id, h.name, h.date)
+              );
+            } else {
+              this.isSuccess = false;
+              this.message = res.message;
+            }
+            this.isProcessing = false;
+          },
+        });
     }
   }
 

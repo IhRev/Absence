@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   CreateHolidayDTO,
@@ -21,11 +21,18 @@ export class HolidaysService {
   ) {}
 
   public getHolidays(
-    organizationId: number
+    organizationId: number,
+    startDate: Date,
+    endDate: Date
   ): Observable<DataResult<HolidayDTO[]>> {
     return this.client
       .get<HolidayDTO[]>(
-        `${environment.apiUrl}/organizations/${organizationId}/holidays`
+        `${environment.apiUrl}/organizations/${organizationId}/holidays`,
+        {
+          params: new HttpParams()
+            .set('startDate', this.toLocalDateString(startDate))
+            .set('endDate', this.toLocalDateString(endDate)),
+        }
       )
       .pipe(
         map((res: HolidayDTO[]) => DataResult.success<HolidayDTO[]>(res)),
@@ -76,5 +83,12 @@ export class HolidaysService {
         return of(Result.fail());
       })
     );
+  }
+
+  private toLocalDateString(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }
