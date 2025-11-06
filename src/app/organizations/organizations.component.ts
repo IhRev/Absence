@@ -13,6 +13,7 @@ import { InvitationsService } from './services/invitations.service';
 import { PasswordConfirmationComponent } from '../common/password-confirmation/password-confirmation.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { WrappableControlComponent } from '../common/wrappable-control/wrappable-control.component';
+import { ConfirmationComponent } from '../common/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-organizations',
@@ -26,6 +27,7 @@ import { WrappableControlComponent } from '../common/wrappable-control/wrappable
     NgClass,
     WrappableControlComponent,
     NgTemplateOutlet,
+    ConfirmationComponent,
   ],
   templateUrl: './organizations.component.html',
   styleUrl: './organizations.component.css',
@@ -38,6 +40,7 @@ export class OrganizationsComponent implements OnInit {
   public isFormOpened: boolean = false;
   public isInviteFormOpened: boolean = false;
   public organization: Organization | null = null;
+  public confirmationPasswordOpened: boolean = false;
   public confirmationOpened: boolean = false;
   public isProcessing: boolean = false;
   public message: string | null = null;
@@ -190,8 +193,8 @@ export class OrganizationsComponent implements OnInit {
     });
   }
 
-  public confirmationSubmitted(password: string): void {
-    this.confirmationOpened = false;
+  public passwordConfirmed(password: string): void {
+    this.confirmationPasswordOpened = false;
     this.isProcessing = true;
     this.organizationService
       .delete(this.selectedOrganization!.id, password)
@@ -202,5 +205,17 @@ export class OrganizationsComponent implements OnInit {
           this.isProcessing = false;
         },
       });
+  }
+
+  private methodAfterConfirmation!: () => void;
+
+  public openConfirmation(methodAfterConfirmation: () => void) {
+    this.confirmationOpened = true;
+    this.methodAfterConfirmation = methodAfterConfirmation;
+  }
+
+  public confirmationSubmitted() {
+    this.confirmationOpened = false;
+    this.methodAfterConfirmation();
   }
 }

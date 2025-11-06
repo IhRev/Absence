@@ -1,0 +1,14 @@
+<app-modal-form
+  [isVisible]="isVisible"
+  title="Are you sure?"
+  (closeModal)="close()"
+>
+  <div class="btns">
+    <button class="accept-btn" (click)="submit()">
+      <i class="fa-solid fa-check"></i>
+    </button>
+    <button class="reject-btn" (click)="close()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+</app-modal-form>

@@ -79,7 +79,7 @@
         <button class="edit-btn" (click)="openForm(selectedOrganization!)">
           Edit
         </button>
-        <button class="delete-btn" (click)="confirmationOpened = true">
+        <button class="delete-btn" (click)="confirmationPasswordOpened = true">
           Delete
         </button>
         }
@@ -125,10 +125,12 @@
     <!-- Member details content -->
     <ng-template #memberContent>
       <div class="member-details" *ngIf="selectedOrganization?.isAdmin">
-        <button class="access-btn" (click)="changeAccess()">
+        <button class="access-btn" (click)="openConfirmation(changeAccess)">
           Change access
         </button>
-        <button class="delete-btn" (click)="deleteUser()">Delete user</button>
+        <button class="delete-btn" (click)="openConfirmation(deleteUser)">
+          Delete user
+        </button>
       </div>
     </ng-template>
 
@@ -167,7 +169,13 @@
 />
 
 <app-password-confirmation
+  [isVisible]="confirmationPasswordOpened"
+  (closed)="confirmationPasswordOpened = false"
+  (submitted)="passwordConfirmed($event)"
+/>
+
+<app-confirmation
   [isVisible]="confirmationOpened"
   (closed)="confirmationOpened = false"
-  (submitted)="confirmationSubmitted($event)"
+  (submitted)="confirmationSubmitted()"
 />
