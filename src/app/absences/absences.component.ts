@@ -156,15 +156,19 @@ export class AbsenceListComponent implements OnInit {
   public applyFilters(filters: AbsenceFilters): void {
     if (this.types) {
       this.closeMessage();
-      this.loadAbsences(filters.startDate, filters.endDate);
+      this.loadAbsences(filters.startDate, filters.endDate, filters.memberId);
       this.closeFilters();
     }
   }
 
-  private loadAbsences(startDate: Date, endDate: Date): void {
+  private loadAbsences(
+    startDate: Date,
+    endDate: Date,
+    memberId?: number | null
+  ): void {
     this.isProcessing = true;
     this.absences = [];
-    this.absenceService.getAbsences(startDate, endDate).subscribe({
+    this.absenceService.getAbsences(startDate, endDate, memberId).subscribe({
       next: (result) => {
         if (result.isSuccess) {
           AbsenceListComponent.num = 0;

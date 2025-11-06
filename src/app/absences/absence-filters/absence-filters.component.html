@@ -14,6 +14,15 @@
       <input id="endDate" type="date" formControlName="endDate" />
       <app-form-error [form]="form" [name]="'endDate'" />
     </div>
+    <div class="input-item" *ngIf="members">
+      <label for="member">Member</label>
+      <select id="member" formControlName="selectedMember">
+        <option *ngFor="let member of members" [ngValue]="member.id">
+          {{ member.fullName }}
+        </option>
+      </select>
+      <app-form-error [form]="form" [name]="'endDate'" />
+    </div>
     <button class="submit-btn">Submit</button>
   </form>
 </app-modal-form>

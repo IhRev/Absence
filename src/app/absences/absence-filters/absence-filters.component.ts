@@ -9,7 +9,9 @@ import {
 } from '@angular/forms';
 import { ModalFormComponent } from '../../common/modal-form/modal-form.component';
 import { FormErrorComponent } from '../../common/form-error/form-error.component';
-
+import { OrganizationsService } from '../../organizations/services/organizations.service';
+import { MemberDTO } from '../../organizations/models/organizations.models';
+import { NgFor, NgIf } from '@angular/common';
 @Component({
   selector: 'app-absence-filters',
   standalone: true,
@@ -18,6 +20,8 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
     ModalFormComponent,
     ReactiveFormsModule,
     FormErrorComponent,
+    NgIf,
+    NgFor,
   ],
   templateUrl: './absence-filters.component.html',
   styleUrls: [
@@ -26,23 +30,36 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
   ],
 })
 export class AbsenceFiltersComponent implements OnInit {
+  private currentYear = new Date().getFullYear();
   @Input() public isVisible = false;
   @Output() public closeModal = new EventEmitter();
   @Output() public submitModal = new EventEmitter<AbsenceFilters>();
+  public members: MemberDTO[] | null = null;
 
   public form = new FormGroup({
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
+    startDate: new FormControl<string>(
+      this.getDateOnlyString(new Date(this.currentYear, 0, 1)),
+      [Validators.required]
+    ),
+    endDate: new FormControl<string>(
+      this.getDateOnlyString(new Date(this.currentYear, 11, 31)),
+      [Validators.required]
+    ),
+    selectedMember: new FormControl<number>(0, []),
   });
 
+  constructor(private readonly organizationsService: OrganizationsService) {}
+
   public ngOnInit(): void {
-    const currentYear = new Date().getFullYear();
-    this.form.value.startDate = this.getDateOnlyString(
-      new Date(currentYear, 0, 1)
-    );
-    this.form.value.endDate = this.getDateOnlyString(
-      new Date(currentYear, 11, 31)
-    );
+    this.organizationsService.selectedOrganization$.subscribe((value) => {
+      if (value && value.isAdmin) {
+        this.organizationsService.getMembers().subscribe((res) => {
+          if (res.isSuccess) {
+            this.members = res.data!;
+          }
+        });
+      }
+    });
   }
 
   public close(): void {
@@ -54,17 +71,16 @@ export class AbsenceFiltersComponent implements OnInit {
       const currentYear = new Date().getFullYear();
 
       var startDate = this.form.value.startDate;
-      if (!startDate) {
-        startDate = this.getDateOnlyString(new Date(currentYear, 0, 1));
-      }
-
       var endDate = this.form.value.endDate;
-      if (!endDate) {
-        endDate = this.getDateOnlyString(new Date(currentYear, 0, 1));
+
+      var selectedMember = this.form.value.selectedMember;
+      var memeber: number | null = null;
+      if (selectedMember) {
+        memeber = Number(selectedMember);
       }
 
       this.submitModal.emit(
-        new AbsenceFilters(new Date(startDate), new Date(endDate))
+        new AbsenceFilters(new Date(startDate!), new Date(endDate!), memeber)
       );
     }
   }
