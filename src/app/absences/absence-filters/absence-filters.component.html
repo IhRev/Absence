@@ -16,7 +16,7 @@
     </div>
     <div class="input-item" *ngIf="members">
       <label for="member">Member</label>
-      <select id="member" formControlName="selectedMember">
+      <select id="member" formControlName="selectedMembers" multiple>
         <option *ngFor="let member of members" [ngValue]="member.id">
           {{ member.fullName }}
         </option>

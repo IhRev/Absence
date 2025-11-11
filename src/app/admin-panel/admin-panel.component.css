@@ -5,6 +5,10 @@
   margin-top: 20px;
 }
 
+.content {
+  flex: 1;
+}
+
 .btns {
   display: flex;
   flex-direction: column;

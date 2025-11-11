@@ -12,6 +12,7 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
 import { OrganizationsService } from '../../organizations/services/organizations.service';
 import { MemberDTO } from '../../organizations/models/organizations.models';
 import { NgFor, NgIf } from '@angular/common';
+
 @Component({
   selector: 'app-absence-filters',
   standalone: true,
@@ -45,7 +46,7 @@ export class AbsenceFiltersComponent implements OnInit {
       this.getDateOnlyString(new Date(this.currentYear, 11, 31)),
       [Validators.required]
     ),
-    selectedMember: new FormControl<number>(0, []),
+    selectedMembers: new FormControl<number[]>([]),
   });
 
   constructor(private readonly organizationsService: OrganizationsService) {}
@@ -73,14 +74,14 @@ export class AbsenceFiltersComponent implements OnInit {
       var startDate = this.form.value.startDate;
       var endDate = this.form.value.endDate;
 
-      var selectedMember = this.form.value.selectedMember;
-      var memeber: number | null = null;
-      if (selectedMember) {
-        memeber = Number(selectedMember);
+      var selectedMembers = this.form.value.selectedMembers;
+      var memebers: number[] | null = null;
+      if (selectedMembers) {
+        memebers = selectedMembers.map((m) => Number(m));
       }
 
       this.submitModal.emit(
-        new AbsenceFilters(new Date(startDate!), new Date(endDate!), memeber)
+        new AbsenceFilters(new Date(startDate!), new Date(endDate!), memebers)
       );
     }
   }

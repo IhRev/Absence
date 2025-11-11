@@ -26,19 +26,47 @@ export class AbsenceService {
 
   public getAbsences(
     startDate: Date,
-    endDate: Date,
-    userId: number | null = null
+    endDate: Date
   ): Observable<DataResult<AbsenceDTO[]>> {
     var organizationId = localStorage.getItem('organization');
-    var url: string = userId
-      ? `${environment.apiUrl}/organizations/${organizationId}/users/${userId}/absences`
-      : `${environment.apiUrl}/organizations/${organizationId}/absences`;
     return this.client
-      .get<AbsenceDTO[]>(url, {
-        params: new HttpParams()
-          .set('startDate', this.toLocalDateString(startDate))
-          .set('endDate', this.toLocalDateString(endDate)),
-      })
+      .get<AbsenceDTO[]>(
+        `${environment.apiUrl}/organizations/${organizationId}/absences`,
+        {
+          params: new HttpParams()
+            .set('startDate', this.toLocalDateString(startDate))
+            .set('endDate', this.toLocalDateString(endDate)),
+        }
+      )
+      .pipe(
+        map((res: AbsenceDTO[]) => DataResult.success<AbsenceDTO[]>(res)),
+        catchError((error: HttpErrorResponse) => {
+          console.error(error);
+          if (error.status === 400) {
+            return of(DataResult.fail<AbsenceDTO[]>(error.error));
+          }
+          navigateToErrorPage(this.router, error);
+          return of(DataResult.fail<AbsenceDTO[]>());
+        })
+      );
+  }
+
+  public getAbsencesBySelectedUsers(
+    startDate: Date,
+    endDate: Date,
+    usersIds: number[]
+  ): Observable<DataResult<AbsenceDTO[]>> {
+    var organizationId = localStorage.getItem('organization');
+    return this.client
+      .post<AbsenceDTO[]>(
+        `${environment.apiUrl}/organizations/${organizationId}/absences`,
+        usersIds,
+        {
+          params: new HttpParams()
+            .set('startDate', this.toLocalDateString(startDate))
+            .set('endDate', this.toLocalDateString(endDate)),
+        }
+      )
       .pipe(
         map((res: AbsenceDTO[]) => DataResult.success<AbsenceDTO[]>(res)),
         catchError((error: HttpErrorResponse) => {

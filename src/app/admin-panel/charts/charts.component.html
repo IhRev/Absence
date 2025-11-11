@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="bar-chart-container">
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-select
+          [panelClass]="'mat-select-panel'"
+          class="select"
+          multiple
+          [(value)]="selectedMembersIds"
+          (closed)="loadData()"
+        >
+          <mat-option
+            class="option"
+            *ngFor="let member of allMembers"
+            [value]="member.id"
+          >
+            {{ member.fullName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <canvas class="barChart" id="canvas"></canvas>
+  </div>
+</div>

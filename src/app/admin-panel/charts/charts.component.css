@@ -1,0 +1,33 @@
+::ng-deep .mat-select-panel {
+  background-color: black !important;
+}
+
+.select {
+  color: white !important;
+}
+
+.option {
+  color: white !important;
+}
+
+.option:hover {
+  background-color: blue !important;
+}
+
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  color: white !important;
+}
+
+/* ::ng-deep .mat-option.mat-selected {
+  background-color: #424242 !important;
+}
+
+::ng-deep .mat-option:hover {
+  background-color: #555 !important;
+} */
+
+/* mat-select {
+  background-color: #2c2c2c !important;
+  color: #fff !important;
+  border-radius: 4px;
+} */

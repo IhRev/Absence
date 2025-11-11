@@ -156,19 +156,57 @@ export class AbsenceListComponent implements OnInit {
   public applyFilters(filters: AbsenceFilters): void {
     if (this.types) {
       this.closeMessage();
-      this.loadAbsences(filters.startDate, filters.endDate, filters.memberId);
+      if (filters.membersIds) {
+        this.loadAbsencesBySelectedUsers(
+          filters.startDate,
+          filters.endDate,
+          filters.membersIds
+        );
+      } else {
+        this.loadAbsences(filters.startDate, filters.endDate);
+      }
       this.closeFilters();
     }
   }
 
-  private loadAbsences(
+  private loadAbsencesBySelectedUsers(
     startDate: Date,
     endDate: Date,
-    memberId?: number | null
+    usersIds: number[]
   ): void {
     this.isProcessing = true;
     this.absences = [];
-    this.absenceService.getAbsences(startDate, endDate, memberId).subscribe({
+    this.absenceService
+      .getAbsencesBySelectedUsers(startDate, endDate, usersIds)
+      .subscribe({
+        next: (result) => {
+          if (result.isSuccess) {
+            AbsenceListComponent.num = 0;
+            result.data!.forEach((a) =>
+              this.absences.push(
+                new Absence(
+                  ++AbsenceListComponent.num,
+                  a.id,
+                  a.name,
+                  this.types!.find((t) => t.id === a.type)!,
+                  a.startDate,
+                  a.endDate
+                )
+              )
+            );
+          } else {
+            this.isSuccess = false;
+            this.message = result.message;
+          }
+          this.isProcessing = false;
+        },
+      });
+  }
+
+  private loadAbsences(startDate: Date, endDate: Date): void {
+    this.isProcessing = true;
+    this.absences = [];
+    this.absenceService.getAbsences(startDate, endDate).subscribe({
       next: (result) => {
         if (result.isSuccess) {
           AbsenceListComponent.num = 0;

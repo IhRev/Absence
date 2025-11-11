@@ -12,6 +12,7 @@ import { ErrorPageComponent } from './common/error-page/error-page.component';
 import { UserGeneralTabComponent } from './auth/user-profile/user-general-tab/user-general-tab.component';
 import { UserInvitationsTabComponent } from './auth/user-profile/user-invitations-tab/user-invitations-tab.component';
 import { UserSecurityTabComponent } from './auth/user-profile/user-security-tab/user-security-tab.component';
+import { ChartsComponent } from './admin-panel/charts/charts.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -30,6 +31,10 @@ export const routes: Routes = [
       {
         path: 'events',
         component: EventsComponent,
+      },
+      {
+        path: 'charts',
+        component: ChartsComponent,
       },
     ],
   },
