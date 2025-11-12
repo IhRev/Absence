@@ -18,6 +18,18 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-select
+          [panelClass]="'mat-select-panel'"
+          class="select"
+          [(value)]="selectedYear"
+          (closed)="loadData()"
+        >
+          <mat-option class="option" *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <canvas class="barChart" id="canvas"></canvas>
   </div>

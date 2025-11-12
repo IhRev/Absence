@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { NgFor } from '@angular/common';
+import { HolidaysService } from '../../holidays/services/holidays.service';
+import { HolidayDTO } from '../../holidays/models/holidays.models';
 
 @Component({
   selector: 'app-charts',
@@ -34,6 +36,8 @@ export class ChartsComponent implements OnInit {
     'November',
     'December',
   ];
+  years: number[] = [];
+  selectedYear: number = 0;
 
   private barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
@@ -45,26 +49,47 @@ export class ChartsComponent implements OnInit {
 
   constructor(
     private readonly absenceService: AbsenceService,
+    private readonly holidaysService: HolidaysService,
     private readonly organizationsService: OrganizationsService
   ) {}
 
   loadData() {
     this.absenceService
       .getAbsencesBySelectedUsers(
-        new Date(2025, 0, 1),
-        new Date(2025, 11, 31),
+        new Date(this.selectedYear, 0, 1),
+        new Date(this.selectedYear, 11, 31),
         this.selectedMembersIds
       )
       .subscribe({
         next: (absencesRes) => {
           if (absencesRes.isSuccess) {
-            this.updateChartData(absencesRes.data!);
+            var organization = Number(localStorage.getItem('organization'));
+            this.holidaysService
+              .getHolidays(
+                organization,
+                new Date(this.selectedYear, 0, 1),
+                new Date(this.selectedYear, 11, 31)
+              )
+              .subscribe({
+                next: (holidaysRes) => {
+                  if (holidaysRes.isSuccess) {
+                    const holidays = holidaysRes.data!.map((h) => h.date);
+                    this.updateChartData(absencesRes.data!, holidays);
+                  }
+                },
+              });
           }
         },
       });
   }
 
   ngOnInit() {
+    var currentYear = new Date().getFullYear();
+    for (let i = currentYear - 10; i <= currentYear; i++) {
+      this.years.push(i);
+    }
+    this.selectedYear = currentYear;
+
     this.organizationsService.selectedOrganization$.subscribe((value) => {
       if (value && value.isAdmin) {
         this.organizationsService.getMembers().subscribe((res) => {
@@ -96,11 +121,18 @@ export class ChartsComponent implements OnInit {
     });
   }
 
-  updateChartData(absences: AbsenceDTO[]) {
+  updateChartData(absences: AbsenceDTO[], holidays: Date[]) {
     const counts = Array(12).fill(0);
     for (const absence of absences) {
-      const month = new Date(absence.startDate).getMonth();
-      counts[month]++;
+      for (
+        let date = new Date(absence.startDate);
+        date <= new Date(absence.endDate);
+        date.setDate(date.getDate() + 1)
+      ) {
+        if (!holidays.includes(date)) {
+          counts[date.getMonth()]++;
+        }
+      }
     }
     this.chart.data.datasets[0].data = counts;
     this.chart.update();

@@ -113,7 +113,7 @@ export class AbsenceService {
 
   public editAbsence = (absence: EditAbsenceDTO): Observable<Result> =>
     this.client
-      .put<{ message: string }>('${environment.apiUrl}/absences', absence)
+      .put<{ message: string }>(`${environment.apiUrl}/absences`, absence)
       .pipe(
         map((res) => Result.success(res.message)),
         catchError((error: HttpErrorResponse) => {
