@@ -10,7 +10,7 @@ import lgZoom from 'lightgallery/plugins/zoom';
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',
 })
-export class AboutComponent implements AfterViewInit {
+export class AboutComponent implements AfterViewInit, OnDestroy {
   private lightGalleryInstance: any;
 
   ngAfterViewInit(): void {
@@ -33,5 +33,11 @@ export class AboutComponent implements AfterViewInit {
 
     const items = document.querySelectorAll('.item');
     items.forEach((item) => animationObserver.observe(item));
+  }
+
+  ngOnDestroy(): void {
+    if (this.lightGalleryInstance) {
+      this.lightGalleryInstance.destroy();
+    }
   }
 }
