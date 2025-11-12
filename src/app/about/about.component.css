@@ -33,12 +33,27 @@
 
 .item > p {
   font-size: 25px;
+  transform: translateX(-100px);
+}
+
+.item:nth-child(2n) > p {
+  transform: translateX(100px);
 }
 
 .item > .image-container {
   border-radius: 15px;
   border: 1px solid black;
   box-shadow: 0px 0px 8px black;
+  transform: translateX(100px);
+}
+
+.item:nth-child(2n) > .image-container {
+  transform: translateX(-100px);
+}
+
+.item.show > * {
+  transition: 2s;
+  transform: translateX(0) !important;
 }
 
 @media screen and (max-width: 576px) {

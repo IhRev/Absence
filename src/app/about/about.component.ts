@@ -22,5 +22,16 @@ export class AboutComponent implements AfterViewInit {
         speed: 500,
       });
     }
+
+    const animationObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    });
+
+    const items = document.querySelectorAll('.item');
+    items.forEach((item) => animationObserver.observe(item));
   }
 }
