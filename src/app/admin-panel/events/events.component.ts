@@ -1,82 +1,71 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { EventTypesService } from '../services/event-types.service';
-import { EventTypeDTO, Event } from '../models/events.models';
+import { Event } from '../models/events.models';
 import { EventsService } from '../services/events.service';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { AbsenceTypeService } from '../../absences/services/absence-type.service';
-import { AbsenceTypeDTO } from '../../absences/models/absence.models';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [NgIf, DatePipe],
+  imports: [DatePipe],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css',
 })
 export class EventsComponent implements OnInit {
-  private static num = 0;
-  private eventTypes: EventTypeDTO[] | null = null;
-  private absenceTypes: AbsenceTypeDTO[] | null = null;
-  public events: Event[] = [];
+  #num = 0;
+  readonly #typesService = inject(EventTypesService);
+  readonly #eventsService = inject(EventsService);
+  readonly #absenceTypeService = inject(AbsenceTypeService);
 
-  public constructor(
-    private readonly typesService: EventTypesService,
-    private readonly eventsService: EventsService,
-    private readonly absenceTypeService: AbsenceTypeService
-  ) {}
+  events = signal<Event[]>([]);
 
-  public ngOnInit(): void {
-    this.typesService.types$.subscribe({
-      next: (eventTypes) => {
-        if (eventTypes) {
-          this.eventTypes = eventTypes;
-          this.absenceTypeService.types$.subscribe({
-            next: (absenceTypes) => {
-              if (absenceTypes) {
-                this.absenceTypes = absenceTypes;
-                this.load();
-              }
-            },
+  ngOnInit() {
+    this.#load();
+  }
+
+  respond(id: number, accepted: boolean) {
+    this.#eventsService.respond(id, accepted).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.events.update((events) => {
+            this.#num = 0;
+            return events
+              .filter((e) => e.id != id)
+              .map((e) => {
+                e.num = ++this.#num;
+                return e;
+              });
           });
         }
       },
     });
   }
 
-  private load() {
-    if (this.absenceTypes && this.eventTypes) {
-      this.eventsService.getEvents().subscribe({
-        next: (res) => {
-          if (res.isSuccess) {
-            EventsComponent.num = 0;
-            this.events = res.data!.map(
+  #load() {
+    this.#eventsService.getEvents().subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.#num = 0;
+          this.events.set(
+            res.data!.map(
               (e) =>
                 new Event(
-                  ++EventsComponent.num,
+                  ++this.#num,
                   e.id,
                   e.name,
                   e.startDate,
                   e.endDate,
-                  this.absenceTypes!.find((t) => t.id === e.absenceType)!.name,
+                  this.#absenceTypeService.types.find(
+                    (t) => t.id === e.absenceType
+                  )!.name,
                   e.user,
-                  this.eventTypes!.find(
+                  this.#typesService.types.find(
                     (t) => t.id === e.absenceEventType
                   )!.name
                 )
-            );
-          }
-        },
-      });
-    }
-  }
-
-  public respond(id: number, accepted: boolean) {
-    this.eventsService.respond(id, accepted).subscribe({
-      next: (res) => {
-        if (res.isSuccess) {
-          this.events = this.events.filter((t) => t.id != id);
-          EventsComponent.num = 0;
-          this.events.forEach((a) => (a.num = ++EventsComponent.num));
+            )
+          );
         }
       },
     });

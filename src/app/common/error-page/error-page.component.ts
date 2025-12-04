@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -9,18 +9,18 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './error-page.component.css',
 })
 export class ErrorPageComponent {
-  public statusCode: number | null = null;
+  readonly #route = inject(ActivatedRoute);
+  readonly #router = inject(Router);
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router
-  ) {
-    this.route.queryParams.subscribe((params) => {
+  statusCode = signal<number | null>(null);
+
+  constructor() {
+    this.#route.queryParams.subscribe((params) => {
       this.statusCode = params['status'] || 404;
     });
   }
 
-  public goHome(): void {
-    this.router.navigate(['/home']);
+  goHome() {
+    this.#router.navigate(['/home']);
   }
 }

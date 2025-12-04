@@ -1,10 +1,6 @@
 <div class="container">
-  <form
-    (submit)="edit()"
-    [formGroup]="form"
-    class="profile-form"
-    *ngIf="!isProcessing && loaded"
-  >
+  @if (!isProcessing() && loaded()) {
+  <form (submit)="edit()" [formGroup]="form" class="profile-form">
     <div class="input-item">
       <label for="Email">Email </label>
       <input type="text" id="email" formControlName="email" readonly />
@@ -24,6 +20,7 @@
 
     <button class="submit-btn">Edit</button>
   </form>
-
-  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
+  }@else if (isProcessing()) {
+  <i class="fa-solid fa-spinner fa-spin load-icon"></i>
+  }
 </div>

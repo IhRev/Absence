@@ -1,14 +1,17 @@
-import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, Input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-wrappable-control',
   standalone: true,
-  imports: [NgIf],
+  imports: [],
   templateUrl: './wrappable-control.component.html',
   styleUrl: './wrappable-control.component.css',
 })
 export class WrappableControlComponent {
-  @Input() title: string = '';
-  wrapped: boolean = true;
+  title = input('');
+  wrapped = signal(true);
+
+  toggle() {
+    this.wrapped.update((prev) => !prev);
+  }
 }

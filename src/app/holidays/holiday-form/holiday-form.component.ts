@@ -1,9 +1,10 @@
 import {
   Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnChanges,
+  output,
+  input,
+  signal,
+  inject,
+  effect,
 } from '@angular/core';
 import {
   FormControl,
@@ -19,6 +20,8 @@ import {
 } from '../models/holidays.models';
 import { ModalFormComponent } from '../../common/modal-form/modal-form.component';
 import { FormErrorComponent } from '../../common/form-error/form-error.component';
+import { OrganizationsService } from '../../organizations/services/organizations.service';
+import { DateHelper } from '../../common/helpers/date-helper';
 
 @Component({
   selector: 'app-holiday-form',
@@ -35,15 +38,16 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
     '../../common/styles/modal-dialog-styles.css',
   ],
 })
-export class HolidayFormComponent implements OnChanges {
-  @Input() public isVisible = false;
-  @Input() public holiday: Holiday | null = null;
-  @Output() public closeModal = new EventEmitter();
-  @Output() public submitCreate = new EventEmitter<CreateHolidayDTO>();
-  @Output() public submitEdit = new EventEmitter<EditHolidayDTO>();
+export class HolidayFormComponent {
+  readonly #organizationsService = inject(OrganizationsService);
 
-  public message?: string;
-  public form = new FormGroup({
+  holiday = input<Holiday | null>(null);
+  closeModal = output();
+  submitCreate = output<CreateHolidayDTO>();
+  submitEdit = output<EditHolidayDTO>();
+  message = signal<string | undefined>(undefined);
+  title = signal<string>('');
+  form = new FormGroup({
     name: new FormControl('Holiday', [
       Validators.required,
       Validators.minLength(3),
@@ -51,36 +55,32 @@ export class HolidayFormComponent implements OnChanges {
     ]),
     date: new FormControl('', [Validators.required]),
   });
-  public title: string = '';
 
-  public ngOnChanges(): void {
-    if (this.isVisible) {
-      if (this.holiday) {
+  constructor() {
+    effect(() => {
+      const holiday = this.holiday();
+      if (holiday) {
         this.form.setValue({
-          name: this.holiday.name,
-          date: this.getDateOnlyString(new Date(this.holiday.date)),
+          name: holiday!.name,
+          date: DateHelper.getDateOnlyString(new Date(holiday!.date)),
         });
-        this.title = 'Update Holiday';
+        queueMicrotask(() => this.title.set('Update Holiday'));
       } else {
         this.form.setValue({
           name: 'Holiday',
-          date: this.getDateOnlyString(new Date()),
+          date: DateHelper.getDateOnlyString(new Date()),
         });
-        this.title = 'Add Holiday';
+        queueMicrotask(() => this.title.set('Add Holiday'));
       }
-    }
+    });
   }
 
-  public close(): void {
-    this.closeModal.emit();
-  }
-
-  public submit(): void {
+  submit() {
     if (this.form.valid) {
-      if (this.holiday) {
+      if (this.holiday()) {
         this.submitEdit.emit(
           new EditHolidayDTO(
-            this.holiday.id,
+            this.holiday()!.id,
             this.form.value.name!,
             new Date(this.form.value.date!)
           )
@@ -90,13 +90,10 @@ export class HolidayFormComponent implements OnChanges {
           new CreateHolidayDTO(
             this.form.value.name!,
             new Date(this.form.value.date!),
-            Number(localStorage.getItem('organization')!)
+            this.#organizationsService.selectedOrganization()!.id
           )
         );
       }
     }
   }
-
-  private getDateOnlyString = (date: Date): string =>
-    date.toISOString().split('T')[0];
 }

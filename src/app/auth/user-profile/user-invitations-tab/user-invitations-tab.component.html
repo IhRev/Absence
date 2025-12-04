@@ -1,7 +1,9 @@
-<div class="container" *ngIf="invitations">
-  <h3 *ngIf="invitations.length === 0">You have no invitations!</h3>
-
-  <table class="table-form" *ngIf="invitations.length > 0">
+@if (invitations()) {
+<div class="container">
+  @if (invitations()!.length === 0) {
+  <h3>You have no invitations!</h3>
+  }@else {
+  <table class="table-form">
     <thead>
       <tr>
         <th>#</th>
@@ -11,17 +13,17 @@
       </tr>
     </thead>
     <tbody>
-      @for (invitation of invitations; track $index) {
+      @for (invitation of invitations(); track $index) {
       <tr class="item">
         <td>{{ invitation.num }}</td>
         <td>{{ invitation.inviter }}</td>
         <td>{{ invitation.organization }}</td>
         <td>
           <div class="btns">
-            <button class="accept-btn" (click)="accept(invitation.id)">
+            <button class="accept-btn" (click)="send(invitation.id, true)">
               <i class="fa-solid fa-check"></i>
             </button>
-            <button class="reject-btn" (click)="reject(invitation.id)">
+            <button class="reject-btn" (click)="send(invitation.id, false)">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
@@ -30,4 +32,6 @@
       }
     </tbody>
   </table>
+  }
 </div>
+}

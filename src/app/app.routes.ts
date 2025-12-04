@@ -9,9 +9,6 @@ import { HolidaysComponent } from './holidays/holidays.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { EventsComponent } from './admin-panel/events/events.component';
 import { ErrorPageComponent } from './common/error-page/error-page.component';
-import { UserGeneralTabComponent } from './auth/user-profile/user-general-tab/user-general-tab.component';
-import { UserInvitationsTabComponent } from './auth/user-profile/user-invitations-tab/user-invitations-tab.component';
-import { UserSecurityTabComponent } from './auth/user-profile/user-security-tab/user-security-tab.component';
 import { ChartsComponent } from './admin-panel/charts/charts.component';
 
 export const routes: Routes = [

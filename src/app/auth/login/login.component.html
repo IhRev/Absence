@@ -17,9 +17,9 @@
         required
         minlength="6"
       />
-      <p class="error-msg" *ngIf="(form.submitted && form.invalid) || errorMsg">
-        Incorrect password or email
-      </p>
+      @if ((form.submitted && form.invalid) || errorMsg()) {
+      <p class="error-msg">Incorrect password or email</p>
+      }
     </div>
 
     <button class="submit-btn">Log In</button>

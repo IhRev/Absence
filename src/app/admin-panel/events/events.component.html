@@ -1,7 +1,8 @@
-<div class="container" *ngIf="events">
-  <h3 *ngIf="events.length === 0">No events!</h3>
-
-  <div class="table-form" *ngIf="events.length > 0">
+<div class="container">
+  @if (events.length === 0) {
+  <h3>No events!</h3>
+  }@else {
+  <div class="table-form">
     <table>
       <thead>
         <tr>
@@ -16,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (event of events; track $index) {
+        @for (event of events(); track $index) {
         <tr class="item">
           <td>{{ event.num }}</td>
           <td>{{ event.user }}</td>
@@ -40,4 +41,5 @@
       </tbody>
     </table>
   </div>
+  }
 </div>

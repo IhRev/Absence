@@ -1,8 +1,8 @@
-<div class="container" *ngIf="isVisible">
+<div class="container">
   <div class="modal-dialog">
     <div class="header">
-      <h2 class="header-label">{{ title }}</h2>
-      <button class="close-btn" (click)="close()">
+      <h2 class="header-label">{{ title() }}</h2>
+      <button class="close-btn" (click)="closeModal.emit()">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>

@@ -1,52 +1,57 @@
-@if(!isProcessing){
+@if(!isProcessing()){
 <!-- Empty container  -->
-<div
-  class="empty-container"
-  *ngIf="organizations && organizations.length === 0"
->
+@if (organizationService.organizations() &&
+organizationService.organizations()!.length === 0) {
+<div class="empty-container">
   <h2>You have no organizations yet. Add your first organization!</h2>
   <button class="first-org-btn" (click)="openForm()">
     <i class="fa-solid fa-plus"></i> Add
   </button>
 </div>
-
+}
 <!-- Not empty container -->
 <div class="container">
   <!-- Message box  -->
+  @if (message()) {
   <div
-    *ngIf="message"
     class="msg-box"
     [ngClass]="{
-      'success-msg': isSuccess && message,
-      'error-msg': !isSuccess && message
+      'success-msg': isSuccess() && message(),
+      'error-msg': !isSuccess() && message()
     }"
   >
-    <span class="msg">{{ message }}</span>
-    <button (click)="message = null" class="close-btn">
+    <span class="msg">{{ message() }}</span>
+    <button (click)="message.set(null)" class="close-btn">
       <i class="fa-solid fa-xmark"></i>
     </button>
   </div>
-
+  }
   <!-- Blocks -->
-  <div class="organizations-container" *ngIf="organizations">
+  @if (organizationService.organizations()) {
+  <div class="organizations-container">
     <!-- Organizations list -->
 
     <!-- Organizations list content -->
     <ng-template #orgListBlockContent>
       <ul class="list-box">
+        @for (organization of organizationService.organizations(); track $index)
+        {
         <li
-          *ngFor="let organization of organizations"
           class="item"
           (click)="selectOrganization(organization)"
-          [class.active-item]="selectedOrganization === organization"
+          [class.active-item]="
+            organizationService.selectedOrganization() === organization
+          "
         >
           {{ organization.name }}
         </li>
+        }
       </ul>
     </ng-template>
 
     <!-- Desktop organizations list -->
-    <div class="list-block wide-screen" *ngIf="organizations.length > 0">
+    @if (organizationService.organizations()!.length > 0) {
+    <div class="list-block wide-screen">
       <div class="header">
         <h1 class="label">Organizations</h1>
         <button class="add-btn" (click)="openForm()">
@@ -55,6 +60,7 @@
       </div>
       <ng-container *ngTemplateOutlet="orgListBlockContent"></ng-container>
     </div>
+    }
 
     <!-- Mobile organizations list -->
     <app-wrappable-control [title]="'Organizations'" class="narrow-screen">
@@ -66,65 +72,76 @@
       <ng-container *ngTemplateOutlet="orgListBlockContent"></ng-container>
     </app-wrappable-control>
 
-    @if(members){
+    @if(members()){
     <hr class="wide-screen" />
 
     <!-- Organization details content -->
     <ng-template #orgDetailsContent>
-      <div class="org-details" *ngIf="selectedOrganization?.isAdmin">
-        <button class="invite-btn" (click)="openInviteForm()">
+      @if (organizationService.selectedOrganization()!.isAdmin) {
+      <div class="org-details">
+        <button class="invite-btn" (click)="isInviteFormOpened.set(true)">
           Invite user
         </button>
-        @if (selectedOrganization?.isOwner) {
-        <button class="edit-btn" (click)="openForm(selectedOrganization!)">
+        @if (organizationService.selectedOrganization()!.isOwner) {
+        <button
+          class="edit-btn"
+          (click)="openForm(organizationService.selectedOrganization()!)"
+        >
           Edit
         </button>
-        <button class="delete-btn" (click)="confirmationPasswordOpened = true">
+        <button
+          class="delete-btn"
+          (click)="confirmationPasswordOpened.set(true)"
+        >
           Delete
         </button>
         }
       </div>
+      }
       <div class="list-block">
         <div class="header">
           <h2 class="label">Members</h2>
         </div>
         <ul class="list-box">
+          @for (member of members(); track $index) {
           <li
-            *ngFor="let member of members"
             class="item"
             (click)="selectMember(member)"
-            [class.active-item]="selectedMember === member"
+            [class.active-item]="selectedMember() === member"
           >
             {{ member.fullName }}
-            <span *ngIf="member.isOwner" class="owner">owner</span>
-            <span *ngIf="!member.isOwner && member.isAdmin" class="owner"
-              >admin</span
-            >
+            @if(member.isOwner){
+            <span class="owner">owner</span>
+            } @if (!member.isOwner && member.isAdmin) {
+            <span class="owner">admin</span>
+            }
           </li>
+          }
         </ul>
       </div>
     </ng-template>
 
     <!-- Desktop organization details -->
     <div class="organization-block wide-screen">
-      <h1>{{ selectedOrganization!.name }}</h1>
+      <h1>{{ organizationService.selectedOrganization()!.name }}</h1>
       <ng-container *ngTemplateOutlet="orgDetailsContent"></ng-container>
     </div>
 
     <!-- Mobile organization details -->
     <app-wrappable-control
       class="narrow-screen"
-      [title]="selectedOrganization!.name"
+      [title]="organizationService.selectedOrganization()!.name"
     >
       <ng-container *ngTemplateOutlet="orgDetailsContent"></ng-container>
     </app-wrappable-control>
-    } @if (selectedMember && !selectedMember.isOwner &&
-    selectedOrganization?.isAdmin) {
+    } @if (selectedMember() && !selectedMember()!.isOwner &&
+    organizationService.selectedOrganization()!.isAdmin) {
     <hr class="wide-screen" />
 
     <!-- Member details content -->
     <ng-template #memberContent>
-      <div class="member-details" *ngIf="selectedOrganization?.isAdmin">
+      @if (organizationService.selectedOrganization()!.isAdmin) {
+      <div class="member-details">
         <button class="access-btn" (click)="openConfirmation(changeAccess)">
           Change access
         </button>
@@ -132,50 +149,48 @@
           Delete user
         </button>
       </div>
+      }
     </ng-template>
 
     <!-- Desktop member details -->
     <div class="member wide-screen">
-      <h1 class="label">{{ selectedMember.fullName }}</h1>
+      <h1 class="label">{{ selectedMember()!.fullName }}</h1>
       <ng-container *ngTemplateOutlet="memberContent"></ng-container>
     </div>
 
     <!-- Mobile member details -->
     <app-wrappable-control
       class="narrow-screen"
-      [title]="selectedMember.fullName"
+      [title]="selectedMember()!.fullName"
     >
       <ng-container *ngTemplateOutlet="memberContent"></ng-container>
     </app-wrappable-control>
     }
   </div>
+  }
 </div>
 } @else{
 <i class="fa-solid fa-spinner fa-spin load-icon"></i>
-}
-
+} @if(isFormOpened()){
 <app-organization-form
-  (closeModal)="closeForm()"
+  (closeModal)="isFormOpened.set(false)"
   (submitCreate)="add($event)"
   (submitEdit)="edit($event)"
-  [organization]="organization"
-  [isVisible]="isFormOpened"
+  [organization]="organization()"
 />
-
+} @if(isInviteFormOpened()){
 <app-invite-form
-  (closeModal)="closeInviteForm()"
+  (closeModal)="isInviteFormOpened.set(false)"
   (submitModal)="sendInvitation($event)"
-  [isVisible]="isInviteFormOpened"
 />
-
+} @if(confirmationPasswordOpened()) {
 <app-password-confirmation
-  [isVisible]="confirmationPasswordOpened"
-  (closed)="confirmationPasswordOpened = false"
+  (closed)="confirmationPasswordOpened.set(false)"
   (submitted)="passwordConfirmed($event)"
 />
-
+} @if(confirmationOpened()) {
 <app-confirmation
-  [isVisible]="confirmationOpened"
-  (closed)="confirmationOpened = false"
+  (closed)="confirmationOpened.set(false)"
   (submitted)="confirmationSubmitted()"
 />
+}

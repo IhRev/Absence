@@ -6,28 +6,30 @@
           [panelClass]="'mat-select-panel'"
           class="select"
           multiple
-          [(value)]="selectedMembersIds"
+          [value]="selectedMembersIds()"
+          (valueChange)="selectedMembersIds.set($event)"
           (closed)="loadData()"
         >
-          <mat-option
-            class="option"
-            *ngFor="let member of allMembers"
-            [value]="member.id"
-          >
+          @for (member of allMembers(); track $index) {
+          <mat-option class="option" [value]="member.id">
             {{ member.fullName }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-select
           [panelClass]="'mat-select-panel'"
           class="select"
-          [(value)]="selectedYear"
+          [value]="selectedYear()"
+          (valueChange)="selectedYear.set($event)"
           (closed)="loadData()"
         >
-          <mat-option class="option" *ngFor="let year of years" [value]="year">
+          @for (year of years(); track $index) {
+          <mat-option class="option" [value]="year">
             {{ year }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>

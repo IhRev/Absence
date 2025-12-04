@@ -1,20 +1,23 @@
-<div class="container" *ngIf="organization">
-  <div class="manage-panel" *ngIf="!isProcessing && organization.isAdmin">
+<div class="container">
+  @if (!isProcessing() && organizationService.selectedOrganization()!.isAdmin) {
+  <div class="manage-panel">
     <div
       class="msg-box"
       [ngClass]="{
-        'success-msg': isSuccess && message,
-        'error-msg': !isSuccess && message
+        'success-msg': isSuccess() && message(),
+        'error-msg': !isSuccess() && message()
       }"
     >
-      <span class="msg">{{ message }}</span>
-      <button *ngIf="message" (click)="closeMessage()" class="close-btn">
+      <span class="msg">{{ message() }}</span>
+      @if (message()) {
+      <button class="close-btn" (click)="message.set(null)">
         <i class="fa-solid fa-xmark"></i>
       </button>
+      }
     </div>
 
     <div class="btns">
-      <button class="filter-btn" (click)="filtersOpened = true">
+      <button class="filter-btn" (click)="filtersOpened.set(true)">
         <i class="fa-solid fa-filter"></i>
       </button>
       <button class="add-btn" (click)="openForm()">
@@ -22,23 +25,29 @@
       </button>
     </div>
   </div>
-
-  <div class="grid-list" *ngIf="!isProcessing">
-    <div class="grid-header grid-row" [class.admin-grid]="organization.isAdmin">
+  } @else if (!isProcessing()) {
+  <div class="grid-list">
+    <div
+      class="grid-header grid-row"
+      [class.admin-grid]="organizationService.selectedOrganization()!.isAdmin"
+    >
       <span>#</span>
       <span>Name</span>
       <span>Date</span>
-      <span *ngIf="organization.isAdmin">Actions</span>
+      @if (organizationService.selectedOrganization()!.isAdmin) {
+      <span>Actions</span>
+      }
     </div>
+    @for (holiday of holidays(); track $index) {
     <div
-      [class.admin-grid]="organization.isAdmin"
+      [class.admin-grid]="organizationService.selectedOrganization()!.isAdmin"
       class="grid-row grid-item-row"
-      *ngFor="let holiday of holidays"
     >
       <span data-label="#">{{ holiday.num }}</span>
       <span data-label="Name">{{ holiday.name }}</span>
       <span data-label="Date">{{ holiday.date | date : "dd.MM.yyyy" }}</span>
-      <span *ngIf="organization.isAdmin" data-label="Actions">
+      @if (organizationService.selectedOrganization()!.isAdmin) {
+      <span data-label="Actions">
         <div class="action-buttons">
           <button class="delete-btn" (click)="delete(holiday.id)">
             <i class="fa-solid fa-trash"></i>
@@ -48,21 +57,24 @@
           </button>
         </div>
       </span>
+      }
     </div>
+    }
   </div>
-  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
+  }@else {
+  <i class="fa-solid fa-spinner fa-spin load-icon"></i>
+  }
 </div>
-
+@if(isFormOpened()){
 <app-holiday-form
-  (closeModal)="closeForm()"
+  (closeModal)="isFormOpened.set(false)"
   (submitCreate)="create($event)"
   (submitEdit)="edit($event)"
-  [isVisible]="isFormOpened"
-  [holiday]="selectedHoliday"
+  [holiday]="selectedHoliday()"
 />
-
+} @if(filtersOpened()) {
 <app-holiday-filters
-  (closeModal)="filtersOpened = false"
+  (closeModal)="filtersOpened.set(false)"
   (submitModal)="applyFilters($event)"
-  [isVisible]="filtersOpened"
 />
+}

@@ -1,10 +1,6 @@
 <div class="container">
-  <form
-    [formGroup]="form"
-    (submit)="submit()"
-    class="change-password-form"
-    *ngIf="!isProcessing"
-  >
+  @if (!isProcessing()) {
+  <form [formGroup]="form" (submit)="submit()" class="change-password-form">
     <h2 class="header">Password</h2>
 
     <div class="input-item">
@@ -22,22 +18,24 @@
     <button class="submit-btn">Submit</button>
   </form>
 
-  <div class="management" *ngIf="!isProcessing">
+  <div class="management">
     <h2 class="header">Management</h2>
 
     <div class="buttons">
       <button (click)="logout()" class="logout-btn">Sign Out</button>
-      <button (click)="confirmationOpened = true" class="delete-btn">
+      <button (click)="confirmationOpened.set(true)" class="delete-btn">
         Delete Profile
       </button>
     </div>
   </div>
-
-  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
+  } @else {
+  <i class="fa-solid fa-spinner fa-spin load-icon"></i>
+  }
 </div>
 
+@if(confirmationOpened()){
 <app-password-confirmation
-  [isVisible]="confirmationOpened"
-  (closed)="confirmationOpened = false"
+  (closed)="confirmationOpened.set(false)"
   (submitted)="confirmationSubmitted($event)"
 />
+}

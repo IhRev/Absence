@@ -1,4 +1,4 @@
-<app-modal-form [isVisible]="isVisible" [title]="title" (closeModal)="close()">
+<app-modal-form [title]="title()" (closeModal)="closeModal.emit()">
   <form [formGroup]="form" (submit)="submit()">
     <div class="input-item">
       <label for="name">Name</label>

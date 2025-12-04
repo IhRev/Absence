@@ -11,12 +11,12 @@ import lgZoom from 'lightgallery/plugins/zoom';
   styleUrl: './about.component.css',
 })
 export class AboutComponent implements AfterViewInit, OnDestroy {
-  private lightGalleryInstance: any;
+  #lightGalleryInstance: any;
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     const element = document.getElementById('lightgallery');
     if (element) {
-      this.lightGalleryInstance = lightGallery(element, {
+      this.#lightGalleryInstance = lightGallery(element, {
         selector: '.gallery-item',
         plugins: [lgZoom],
         speed: 500,
@@ -35,9 +35,9 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
     items.forEach((item) => animationObserver.observe(item));
   }
 
-  ngOnDestroy(): void {
-    if (this.lightGalleryInstance) {
-      this.lightGalleryInstance.destroy();
+  ngOnDestroy() {
+    if (this.#lightGalleryInstance) {
+      this.#lightGalleryInstance.destroy();
     }
   }
 }

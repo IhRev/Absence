@@ -1,29 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   Absence,
-  AbsenceTypeDTO,
+  AbsenceDTO,
   CreateAbsenceDTO,
   EditAbsenceDTO,
 } from './models/absence.models';
 import { AbsenceFormComponent } from './absence-form/absence-form.component';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { AbsenceService } from './services/absence.service';
 import { AbsenceTypeService } from './services/absence-type.service';
 import { AbsenceFiltersComponent } from './absence-filters/absence-filters.component';
 import { AbsenceFilters } from './models/filters.models';
 import { NgClass } from '@angular/common';
+import { DateHelper } from '../common/helpers/date-helper';
 
 @Component({
   selector: 'absence-list',
   standalone: true,
-  imports: [
-    DatePipe,
-    AbsenceFormComponent,
-    AbsenceFiltersComponent,
-    NgClass,
-    NgIf,
-    NgFor,
-  ],
+  imports: [DatePipe, AbsenceFormComponent, AbsenceFiltersComponent, NgClass],
   templateUrl: './absences.component.html',
   styleUrls: [
     './absences.component.css',
@@ -31,207 +25,167 @@ import { NgClass } from '@angular/common';
   ],
 })
 export class AbsenceListComponent implements OnInit {
-  private static num = 0;
-  private types: AbsenceTypeDTO[] | null = null;
+  #num = 0;
+  readonly #absenceService = inject(AbsenceService);
+  readonly #absenceTypeService = inject(AbsenceTypeService);
 
-  public message: string | null = null;
-  public absences: Absence[] = [];
-  public isFormOpened: boolean = false;
-  public filtersOpened: boolean = false;
-  public selectedAbsence: Absence | null = null;
-  public isSuccess: boolean = false;
-  public isProcessing: boolean = false;
+  message = signal<string | null>(null);
+  isFormOpened = signal(false);
+  filtersOpened = signal(false);
+  isSuccess = signal(false);
+  isProcessing = signal(false);
+  absences = signal<Absence[]>([]);
+  selectedAbsence = signal<Absence | null>(null);
 
-  public constructor(
-    private readonly absenceService: AbsenceService,
-    private readonly absenceTypeService: AbsenceTypeService
-  ) {}
+  ngOnInit() {
+    this.#loadAbsences(
+      DateHelper.getStartOfTheCurrentYear(),
+      DateHelper.getEndOfTheCurrentYear()
+    );
+  }
 
-  public ngOnInit(): void {
-    this.closeMessage();
-    this.isProcessing = true;
-    this.absenceTypeService.types$.subscribe({
-      next: (value) => {
-        if (value) {
-          this.isProcessing = false;
-          this.types = value;
-          const currentYear = new Date().getFullYear();
-          this.loadAbsences(
-            new Date(currentYear, 0, 1),
-            new Date(currentYear, 11, 31)
+  create(absence: CreateAbsenceDTO) {
+    this.isFormOpened.set(false);
+    this.message.set(null);
+    this.isProcessing.set(true);
+    this.#absenceService.addAbsence(absence).subscribe({
+      next: (result) => {
+        if (result.isSuccess && result.data) {
+          const newAbsence = new Absence(
+            ++this.#num,
+            result.data,
+            absence.name,
+            this.#absenceTypeService.types.find((t) => t.id === absence.type)!,
+            absence.startDate,
+            absence.endDate
           );
+          this.absences.update((a) => [...a, newAbsence]);
         }
+        this.isProcessing.set(false);
+        this.isSuccess.set(result.isSuccess);
+        this.message.set(result.message);
       },
     });
   }
 
-  public openForm(absence?: Absence): void {
-    if (this.types) {
-      this.selectedAbsence = absence ? absence : null;
-      this.isFormOpened = true;
-    }
-  }
-
-  public closeForm(): void {
-    this.isFormOpened = false;
-  }
-
-  public create(absence: CreateAbsenceDTO): void {
-    this.closeMessage();
-    if (this.types) {
-      this.isProcessing = true;
-      this.absenceService.addAbsence(absence).subscribe({
-        next: (result) => {
-          if (result.isSuccess) {
-            if (result.data) {
-              this.absences.push(
-                new Absence(
-                  ++AbsenceListComponent.num,
-                  result.data,
-                  absence.name,
-                  this.types!.find((t) => t.id === absence.type)!,
-                  absence.startDate,
-                  absence.endDate
-                )
-              );
-            }
-          }
-          this.isSuccess = result.isSuccess;
-          this.message = result.message;
-          this.isProcessing = false;
-        },
-      });
-      this.closeForm();
-    }
-  }
-
-  public edit(absence: EditAbsenceDTO): void {
-    this.closeMessage();
-    this.isProcessing = true;
-    this.absenceService.editAbsence(absence).subscribe({
+  edit(absence: EditAbsenceDTO) {
+    this.isFormOpened.set(false);
+    this.message.set(null);
+    this.isProcessing.set(true);
+    this.#absenceService.editAbsence(absence).subscribe({
       next: (result) => {
         if (result.isSuccess) {
-          this.selectedAbsence!.name = absence.name;
-          this.selectedAbsence!.type = this.types!.find(
-            (t) => t.id === absence.type
-          )!;
-          this.selectedAbsence!.startDate = absence.startDate;
-          this.selectedAbsence!.endDate = absence.endDate;
+          this.selectedAbsence.update((a) => {
+            a!.name = absence.name;
+            a!.type = this.#absenceTypeService.types.find(
+              (t) => t.id === absence.type
+            )!;
+            a!.startDate = absence.startDate;
+            a!.endDate = absence.endDate;
+            return a;
+          });
         }
-        this.isSuccess = result.isSuccess;
-        this.message = result.message;
-        this.isProcessing = false;
+        this.isProcessing.set(false);
+        this.isSuccess.set(result.isSuccess);
+        this.message.set(result.message);
       },
     });
-    this.closeForm();
   }
 
-  public delete(id: number): void {
-    this.closeMessage();
-    this.isProcessing = true;
-    this.absenceService.deleteAbsence(id).subscribe({
+  delete(id: number) {
+    this.message.set(null);
+    this.isProcessing.set(true);
+    this.#absenceService.deleteAbsence(id).subscribe({
       next: (result) => {
         if (result.isSuccess) {
-          AbsenceListComponent.num = 0;
-          this.absences = this.absences.filter((a) => a.id !== id);
-          this.absences.forEach((a) => (a.num = ++AbsenceListComponent.num));
+          this.absences.update((prev) => {
+            this.#num = 0;
+            return prev
+              .filter((a) => a.id !== id)
+              .map((a) => {
+                a.num = ++this.#num;
+                return a;
+              });
+          });
         }
-        this.isSuccess = result.isSuccess;
-        this.isProcessing = false;
-        this.message = result.message;
+        this.isProcessing.set(false);
+        this.isSuccess.set(result.isSuccess);
+        this.message.set(result.message);
       },
     });
   }
 
-  public showFilters(): void {
-    if (this.types) {
-      this.filtersOpened = true;
+  applyFilters(filters: AbsenceFilters) {
+    this.filtersOpened.set(false);
+    this.message.set(null);
+    if (filters.membersIds) {
+      this.#loadAbsencesBySelectedUsers(
+        filters.startDate,
+        filters.endDate,
+        filters.membersIds
+      );
+    } else {
+      this.#loadAbsences(filters.startDate, filters.endDate);
     }
   }
 
-  public closeFilters(): void {
-    this.filtersOpened = false;
+  openForm(absence?: Absence) {
+    this.selectedAbsence.set(absence ? absence : null);
+    this.isFormOpened.set(true);
   }
 
-  public applyFilters(filters: AbsenceFilters): void {
-    if (this.types) {
-      this.closeMessage();
-      if (filters.membersIds) {
-        this.loadAbsencesBySelectedUsers(
-          filters.startDate,
-          filters.endDate,
-          filters.membersIds
-        );
-      } else {
-        this.loadAbsences(filters.startDate, filters.endDate);
-      }
-      this.closeFilters();
-    }
-  }
-
-  private loadAbsencesBySelectedUsers(
+  #loadAbsencesBySelectedUsers(
     startDate: Date,
     endDate: Date,
     usersIds: number[]
-  ): void {
-    this.isProcessing = true;
-    this.absences = [];
-    this.absenceService
+  ) {
+    this.isProcessing.set(true);
+    this.#absenceService
       .getAbsencesBySelectedUsers(startDate, endDate, usersIds)
       .subscribe({
         next: (result) => {
           if (result.isSuccess) {
-            AbsenceListComponent.num = 0;
-            result.data!.forEach((a) =>
-              this.absences.push(
-                new Absence(
-                  ++AbsenceListComponent.num,
-                  a.id,
-                  a.name,
-                  this.types!.find((t) => t.id === a.type)!,
-                  a.startDate,
-                  a.endDate
-                )
-              )
-            );
+            this.#setAbsences(result.data!);
           } else {
-            this.isSuccess = false;
-            this.message = result.message;
+            this.absences.set([]);
+            this.isSuccess.set(false);
+            this.message.set(result.message);
           }
-          this.isProcessing = false;
+          this.isProcessing.set(false);
         },
       });
   }
 
-  private loadAbsences(startDate: Date, endDate: Date): void {
-    this.isProcessing = true;
-    this.absences = [];
-    this.absenceService.getAbsences(startDate, endDate).subscribe({
+  #loadAbsences(startDate: Date, endDate: Date) {
+    this.isProcessing.set(true);
+    this.#absenceService.getAbsences(startDate, endDate).subscribe({
       next: (result) => {
         if (result.isSuccess) {
-          AbsenceListComponent.num = 0;
-          result.data!.forEach((a) =>
-            this.absences.push(
-              new Absence(
-                ++AbsenceListComponent.num,
-                a.id,
-                a.name,
-                this.types!.find((t) => t.id === a.type)!,
-                a.startDate,
-                a.endDate
-              )
-            )
-          );
+          this.#setAbsences(result.data!);
         } else {
-          this.isSuccess = false;
-          this.message = result.message;
+          this.absences.set([]);
+          this.isSuccess.set(false);
+          this.message.set(result.message);
         }
-        this.isProcessing = false;
+        this.isProcessing.set(false);
       },
     });
   }
 
-  public closeMessage(): void {
-    this.message = null;
+  #setAbsences(absences: AbsenceDTO[]) {
+    this.#num = 0;
+    this.absences.set(
+      absences.map(
+        (a) =>
+          new Absence(
+            ++this.#num,
+            a.id,
+            a.name,
+            this.#absenceTypeService.types.find((t) => t.id === a.type)!,
+            a.startDate,
+            a.endDate
+          )
+      )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { ModalFormComponent } from '../modal-form/modal-form.component';
 
 @Component({
@@ -9,15 +9,6 @@ import { ModalFormComponent } from '../modal-form/modal-form.component';
   styleUrl: './confirmation.component.css',
 })
 export class ConfirmationComponent {
-  @Input() public isVisible: boolean = false;
-  @Output() public submitted = new EventEmitter();
-  @Output() public closed = new EventEmitter();
-
-  public submit(): void {
-    this.submitted.emit();
-  }
-
-  public close(): void {
-    this.closed.emit();
-  }
+  submitted = output();
+  closed = output();
 }

@@ -3,7 +3,7 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   InvitationDTO,
   InviteUserToOrganizationDTO,
@@ -13,50 +13,49 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { OrganizationsService } from './organizations.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InvitationsService {
-  public constructor(
-    private readonly client: HttpClient,
-    private readonly router: Router
-  ) {}
+  readonly #client = inject(HttpClient);
+  readonly #router = inject(Router);
+  readonly #organizationsService = inject(OrganizationsService);
 
-  public get(): Observable<DataResult<InvitationDTO[]>> {
-    return this.client
+  get(): Observable<DataResult<InvitationDTO[]>> {
+    return this.#client
       .get<InvitationDTO[]>(`${environment.apiUrl}/invitations`)
       .pipe(
         map((res: InvitationDTO[]) => DataResult.success<InvitationDTO[]>(res)),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(DataResult.fail<InvitationDTO[]>());
         })
       );
   }
 
-  public send(userEmail: string): Observable<Result> {
-    var organizationId = localStorage.getItem('organization')!;
+  send(userEmail: string): Observable<Result> {
     var dto = new InviteUserToOrganizationDTO(
       userEmail,
-      Number(organizationId)
+      this.#organizationsService.selectedOrganization()!.id
     );
-    return this.client.post(`${environment.apiUrl}/invitations`, dto).pipe(
+    return this.#client.post(`${environment.apiUrl}/invitations`, dto).pipe(
       map(() => Result.success('User invited successfully')),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
         if (error.status === 400) {
           return of(Result.fail(error.error));
         }
-        navigateToErrorPage(this.router, error);
+        navigateToErrorPage(this.#router, error);
         return of(Result.fail());
       })
     );
   }
 
-  public accept(initationId: number, accepted: boolean): Observable<Result> {
-    return this.client
+  accept(initationId: number, accepted: boolean): Observable<Result> {
+    return this.#client
       .post(`${environment.apiUrl}/invitations/${initationId}`, null, {
         params: new HttpParams().set('accepted', accepted),
       })
@@ -64,7 +63,7 @@ export class InvitationsService {
         map(() => Result.success()),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );

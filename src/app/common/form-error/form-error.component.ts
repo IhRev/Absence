@@ -1,24 +1,23 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-form-error',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [],
   templateUrl: './form-error.component.html',
   styleUrl: './form-error.component.css',
 })
 export class FormErrorComponent {
-  @Input() form!: FormGroup;
-  @Input() name!: string;
+  form = input<FormGroup>();
+  name = input<string>();
 
-  public get isInvalid(): boolean {
-    const control = this.form.get(this.name);
+  get isInvalid(): boolean {
+    const control = this.form()!.get(this.name()!);
     return !!control && control.touched && control.dirty;
   }
 
-  public getErrorMessage(errorKey: string, errorValue: any): string {
+  getErrorMessage(errorKey: string, errorValue: any): string {
     switch (errorKey) {
       case 'required':
         return 'This field is required.';
@@ -33,8 +32,8 @@ export class FormErrorComponent {
     }
   }
 
-  public getErrors(): { key: string; value: any }[] {
-    const control = this.form.get(this.name);
+  getErrors(): { key: string; value: any }[] {
+    const control = this.form()!.get(this.name()!);
     const errors = control?.errors;
     return errors
       ? Object.entries(errors).map(([key, value]) => ({ key, value }))

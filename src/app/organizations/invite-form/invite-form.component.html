@@ -1,4 +1,4 @@
-<app-modal-form [isVisible]="isVisible" title="Invite" (closeModal)="close()">
+<app-modal-form title="Invite" (closeModal)="closeModal.emit()">
   <form [formGroup]="form" (submit)="submit()">
     <div class="input-item">
       <label for="email">Email</label>

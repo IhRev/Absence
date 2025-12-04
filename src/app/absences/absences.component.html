@@ -1,20 +1,23 @@
 <div class="container">
-  <div class="manage-panel" *ngIf="!isProcessing">
+  @if (!isProcessing()) {
+  <div class="manage-panel">
     <div
       class="msg-box"
       [ngClass]="{
-        'success-msg': isSuccess && message,
-        'error-msg': !isSuccess && message
+        'success-msg': isSuccess() && message(),
+        'error-msg': !isSuccess() && message()
       }"
     >
-      <span class="msg">{{ message }}</span>
-      <button *ngIf="message" (click)="closeMessage()" class="close-btn">
+      <span class="msg">{{ message() }}</span>
+      @if(message()){
+      <button (click)="message.set(null)" class="close-btn">
         <i class="fa-solid fa-xmark"></i>
       </button>
+      }
     </div>
 
     <div class="btns">
-      <button class="filter-btn" (click)="showFilters()">
+      <button class="filter-btn" (click)="filtersOpened.set(true)">
         <i class="fa-solid fa-filter"></i>
       </button>
 
@@ -23,8 +26,8 @@
       </button>
     </div>
   </div>
-
-  <div class="grid-list" *ngIf="!isProcessing">
+  } @if(!isProcessing()){
+  <div class="grid-list">
     <div class="grid-header grid-row">
       <span>#</span>
       <span>Name</span>
@@ -33,7 +36,8 @@
       <span>End Date</span>
       <span>Actions</span>
     </div>
-    <div class="grid-row grid-item-row" *ngFor="let absence of absences">
+    @for (absence of absences(); track $index) {
+    <div class="grid-row grid-item-row">
       <span data-label="#">{{ absence.num }}</span>
       <span data-label="Name">{{ absence.name }}</span>
       <span data-label="Type">{{ absence.type.name }}</span>
@@ -54,21 +58,23 @@
         </div>
       </span>
     </div>
+    }
   </div>
-
-  <i class="fa-solid fa-spinner fa-spin load-icon" *ngIf="isProcessing"></i>
+  } @if (isProcessing()) {
+  <i class="fa-solid fa-spinner fa-spin load-icon"></i>
+  }
 </div>
 
+@if(isFormOpened()){
 <app-absence-form
-  (closeModal)="closeForm()"
+  (closeModal)="isFormOpened.set(false)"
   (submitCreate)="create($event)"
   (submitEdit)="edit($event)"
-  [isVisible]="isFormOpened"
-  [absence]="selectedAbsence"
+  [absence]="selectedAbsence()"
 />
-
+} @if(filtersOpened()){
 <app-absence-filters
-  (closeModal)="closeFilters()"
+  (closeModal)="filtersOpened.set(false)"
   (submitModal)="applyFilters($event)"
-  [isVisible]="filtersOpened"
 />
+}

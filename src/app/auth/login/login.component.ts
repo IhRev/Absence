@@ -1,40 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { UserCredentials } from '../models/auth.models';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink, NgIf],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  public errorMsg: string | null = '';
+  readonly #authService = inject(AuthService);
+  readonly #router = inject(Router);
 
-  public constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router
-  ) {}
+  errorMsg = signal<string | null>(null);
 
   login(form: NgForm) {
     if (form.invalid) {
       return;
     }
 
-    var email = form.form.value.email;
-    var password = form.form.value.password;
-    this.authService.login(new UserCredentials(email, password)).subscribe({
-      next: (res) => {
-        if (res.isSuccess) {
-          this.router.navigate(['/home']);
-        } else {
-          this.errorMsg = res.message!;
-        }
-      },
-    });
+    this.#authService
+      .login(
+        new UserCredentials(form.form.value.email, form.form.value.password)
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.#router.navigate(['/home']);
+          } else {
+            this.errorMsg.set(res.message);
+          }
+        },
+      });
   }
 }

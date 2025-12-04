@@ -1,6 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import {
+  catchError,
+  EMPTY,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import {
   AuthResponse,
   ChangePasswordRequest,
@@ -9,7 +18,7 @@ import {
   UserCredentials,
   UserDetails,
 } from '../models/auth.models';
-import { DataResult, Result } from '../../common/models/result.models';
+import { Result } from '../../common/models/result.models';
 import { Router } from '@angular/router';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
 import { environment } from '../../../environments/environment';
@@ -18,48 +27,43 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private loggedIn = new BehaviorSubject<boolean>(this.tokenExists());
+  readonly #client = inject(HttpClient);
+  readonly #router = inject(Router);
 
-  public loggedIn$ = this.loggedIn.asObservable();
+  loggedIn = signal<boolean>(!!localStorage.getItem('accessToken'));
+  userDetails = signal<UserDetails | null>(null);
 
-  public constructor(
-    private readonly client: HttpClient,
-    private readonly router: Router
-  ) {}
+  load(): Observable<any> {
+    if (!this.loggedIn()) {
+      return EMPTY;
+    }
 
-  private tokenExists(): boolean {
-    return !!localStorage.getItem('accessToken');
+    return this.#loadUserDetails().pipe(
+      catchError((e) => {
+        console.error(e);
+        return throwError(() => e);
+      })
+    );
   }
 
-  // user
-  public getUserDetails(): Observable<DataResult<UserDetails>> {
-    return this.client
-      .get<UserDetails>(`${environment.apiUrl}/users/details`)
-      .pipe(
-        map((res) => DataResult.success<UserDetails>(res)),
-        catchError((error: HttpErrorResponse) => {
-          console.error(error);
-          navigateToErrorPage(this.router, error);
-          return of(DataResult.fail<UserDetails>());
-        })
-      );
-  }
-
-  public updateUserDetails(userDetails: UserDetails): Observable<Result> {
-    return this.client
+  updateUserDetails(userDetails: UserDetails): Observable<Result> {
+    return this.#client
       .put(`${environment.apiUrl}/users/details`, userDetails)
       .pipe(
-        map(() => Result.success()),
+        map(() => {
+          this.userDetails.set(userDetails);
+          return Result.success();
+        }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  public changePassword(request: ChangePasswordRequest): Observable<Result> {
-    return this.client
+  changePassword(request: ChangePasswordRequest): Observable<Result> {
+    return this.#client
       .put(`${environment.apiUrl}/users/change_password`, request)
       .pipe(
         map(() => {
@@ -71,21 +75,22 @@ export class AuthService {
           if (error.status === 400) {
             return of(Result.fail(error.error));
           }
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  public deleteProfile(password: string): Observable<Result> {
-    return this.client
+  deleteProfile(password: string): Observable<Result> {
+    return this.#client
       .delete(`${environment.apiUrl}/users`, {
         body: new DeleteUserRequest(password),
       })
       .pipe(
         map(() => {
           localStorage.clear();
-          this.loggedIn.next(false);
+          this.loggedIn.set(false);
+          this.userDetails.set(null);
           return Result.success();
         }),
         catchError((error: HttpErrorResponse) => {
@@ -93,41 +98,46 @@ export class AuthService {
           if (error.status === 400) {
             return of(Result.fail(error.error));
           }
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  // auth
-  public login(credentials: UserCredentials): Observable<Result> {
-    return this.client
+  login(credentials: UserCredentials): Observable<Result> {
+    return this.#client
       .post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
       .pipe(
         map((res) => {
           if (res.isSuccess) {
             localStorage.setItem('accessToken', res.accessToken!);
             localStorage.setItem('refreshToken', res.refreshToken!);
-            this.loggedIn.next(true);
+            this.loggedIn.set(true);
             return Result.success();
           }
           return Result.fail(res.message!);
+        }),
+        switchMap((res) => {
+          if (res.isSuccess) {
+            return this.#loadUserDetails().pipe(map(() => Result.success()));
+          }
+          return of(Result.fail(res.message!));
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
           if (error.status === 400) {
             return of(Result.fail('Incorrect password or email'));
           }
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  public refreshToken(): Observable<Result> {
+  refreshToken(): Observable<Result> {
     const refreshToken = localStorage.getItem('refreshToken');
     const accessToken = localStorage.getItem('accessToken');
-    return this.client
+    return this.#client
       .post<AuthResponse>(`${environment.apiUrl}/auth/refresh_token`, {
         refreshToken: refreshToken,
         accessToken: accessToken,
@@ -148,36 +158,47 @@ export class AuthService {
       );
   }
 
-  public register(registerDTO: RegisterDTO): Observable<Result> {
-    return this.client
+  register(registerDTO: RegisterDTO): Observable<Result> {
+    return this.#client
       .post<any>(`${environment.apiUrl}/auth/register`, registerDTO)
       .pipe(
         map(() => Result.success()),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  public logout(): Observable<Result> {
-    return this.client.post(`${environment.apiUrl}/auth/logout`, null).pipe(
+  logout(): Observable<Result> {
+    return this.#client.post(`${environment.apiUrl}/auth/logout`, null).pipe(
       map(() => {
         this.logoutLocally();
         return Result.success();
       }),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
-        navigateToErrorPage(this.router, error);
+        navigateToErrorPage(this.#router, error);
         return of(Result.fail());
       })
     );
   }
 
-  public logoutLocally(): void {
+  logoutLocally() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    this.loggedIn.next(false);
+    this.loggedIn.set(false);
+    this.userDetails.set(null);
+  }
+
+  #loadUserDetails(): Observable<any> {
+    return this.#client
+      .get<UserDetails>(`${environment.apiUrl}/users/details`)
+      .pipe(
+        tap((res) => {
+          this.userDetails.set(res);
+        })
+      );
   }
 }

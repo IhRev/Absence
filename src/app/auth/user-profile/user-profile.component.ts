@@ -1,5 +1,5 @@
-import { Component, Input, input, OnInit } from '@angular/core';
-import { NgClass, NgIf } from '@angular/common';
+import { Component, inject, Input, input, OnInit, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserSecurityTabComponent } from './user-security-tab/user-security-tab.component';
 import { UserGeneralTabComponent } from './user-general-tab/user-general-tab.component';
@@ -15,37 +15,32 @@ import { ActivatedRoute } from '@angular/router';
     UserGeneralTabComponent,
     UserSecurityTabComponent,
     UserInvitationsTabComponent,
-    NgIf,
     NgClass,
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent implements OnInit {
-  public activeTab: string = 'general';
-  public message: Message | null = null;
+  readonly #route = inject(ActivatedRoute);
 
-  constructor(private readonly route: ActivatedRoute) {}
+  activeTab = signal('general');
+  message = signal<Message | null>(null);
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      var tabName = params['tabName'];
+  ngOnInit() {
+    this.#route.queryParams.subscribe((params) => {
+      const tabName = params['tabName'];
       if (tabName) {
-        this.activeTab = tabName;
+        this.activeTab.set(tabName);
       }
     });
   }
 
-  public displayMessage(message: Message): void {
-    this.message = message;
+  displayMessage(message: Message) {
+    this.message.set(message);
   }
 
-  public closeMessage(): void {
-    this.message = null;
-  }
-
-  public switchTab(tabName: string): void {
-    this.activeTab = tabName;
-    this.message = null;
+  switchTab(tabName: string) {
+    this.activeTab.set(tabName);
+    this.message.set(null);
   }
 }

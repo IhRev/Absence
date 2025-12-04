@@ -1,5 +1,7 @@
-<div *ngIf="isInvalid">
-  <p class="text-danger" *ngFor="let error of getErrors()">
-    *{{ getErrorMessage(error.key, error.value) }}
-  </p>
+@if (isInvalid) {
+<div>
+  @for (error of getErrors(); track $index) {
+  <p class="text-danger">*{{ getErrorMessage(error.key, error.value) }}</p>
+  }
 </div>
+}

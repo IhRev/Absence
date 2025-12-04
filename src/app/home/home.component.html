@@ -1,5 +1,6 @@
 <div class="container">
-  <div class="not-logged-in-container" *ngIf="!loggedIn">
+  @if (!authService.loggedIn()) {
+  <div class="not-logged-in-container">
     <h1 class="hidden">
       Welcome to the Absence.com <br />
       Easily manage employee <span>absences</span> across your organization
@@ -32,13 +33,14 @@
       </div>
     </div>
   </div>
-
-  <div class="logged-in-container" *ngIf="loggedIn">
+  } @else {
+  <div class="logged-in-container">
     <h2 class="label">
-      Hello <span class="name">{{ user?.firstName }}</span
+      Hello <span class="name">{{ authService.userDetails()!.firstName }}</span
       >, wanna take some free days?<br />You are just a few clicks away from the
       vacation <i class="fa-solid fa-face-smile"></i><br />Just
       <a class="absences-link" routerLink="/absences">click here</a>
     </h2>
   </div>
+  }
 </div>

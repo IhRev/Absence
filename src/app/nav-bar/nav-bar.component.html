@@ -1,4 +1,4 @@
-<nav class="nav-bar" [class.mobile-nav-bar]="isMenuOpen">
+<nav class="nav-bar" [class.mobile-nav-bar]="isMenuOpen()">
   <div class="container main-nav centralized">
     <div class="logo">
       <a href="#">
@@ -6,96 +6,100 @@
       </a>
     </div>
 
-    <div class="menu-toggle" (click)="isMenuOpen = !isMenuOpen">
+    <div class="menu-toggle" (click)="toggleMenu()">
       <i class="fa-solid fa-bars"></i>
     </div>
 
-    <div class="menu-container" [class.mobile-menu]="isMenuOpen">
+    <div class="menu-container" [class.mobile-menu]="isMenuOpen()">
       <a (click)="linkClicked()" routerLink="/home" routerLinkActive="active"
         >Home</a
       >
-      <a
-        (click)="linkClicked()"
-        *ngIf="!isLoggedIn"
-        routerLink="/about"
-        routerLinkActive="active"
+      @if (!authService.loggedIn()) {
+      <a (click)="linkClicked()" routerLink="/about" routerLinkActive="active"
         >About</a
       >
-      <a
-        (click)="linkClicked()"
-        *ngIf="organization && organization.isAdmin"
-        routerLink="/admin"
-        routerLinkActive="active"
+      } @if (organizationService.selectedOrganization() &&
+      organizationService.selectedOrganization()!.isAdmin) {
+      <a (click)="linkClicked()" routerLink="/admin" routerLinkActive="active"
         >Admin</a
       >
+      } @if (authService.loggedIn()) {
       <a
         (click)="linkClicked()"
-        *ngIf="isLoggedIn"
         routerLink="/organizations"
         routerLinkActive="active"
         >Organizations
       </a>
+      } @if (organizationService.selectedOrganization()) {
       <a
         (click)="linkClicked()"
-        *ngIf="organization"
         routerLink="/holidays"
         routerLinkActive="active"
         >Holidays</a
       >
       <a
         (click)="linkClicked()"
-        *ngIf="organization"
         routerLink="/absences"
         routerLinkActive="active"
         >Absences</a
       >
-      <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
-        <a (click)="linkClicked()" routerLink="/login" routerLinkActive="active"
-          >Login</a
-        >
-      </ng-container>
-      <ng-template #loggedInTemplate>
-        <a
-          *ngIf="!isMenuOpen"
-          (click)="linkClicked()"
-          routerLink="/profile"
-          routerLinkActive="active"
-          >My Profile</a
-        >
-        <a *ngIf="isMenuOpen" (click)="linkClicked('profile')">My Profile</a>
-        @if (isSubmenuOpen && isMenuOpen) {
-        <a
-          class="sub-menu-link"
-          (click)="linkClicked()"
-          routerLink="/profile"
-          [queryParams]="{ tabName: 'general' }"
-          routerLinkActive="active"
-          >General</a
-        >
-        <a
-          class="sub-menu-link"
-          (click)="linkClicked()"
-          routerLink="/profile"
-          [queryParams]="{ tabName: 'security' }"
-          routerLinkActive="active"
-          >Security</a
-        >
-        <a
-          class="sub-menu-link"
-          (click)="linkClicked()"
-          routerLink="/profile"
-          [queryParams]="{ tabName: 'invitations' }"
-          routerLinkActive="active"
-          >Invitations</a
-        >
-        }
-      </ng-template>
+      } @if (!authService.loggedIn()) {
+      <a (click)="linkClicked()" routerLink="/login" routerLinkActive="active">
+        Login
+      </a>
+      } @else { @if (!isMenuOpen()) {
+      <a
+        (click)="linkClicked()"
+        routerLink="/profile"
+        routerLinkActive="active"
+      >
+        My Profile
+      </a>
+      } @else{
+
+      <a (click)="linkClicked('profile')">My Profile</a>
+
+      @if (isSubmenuOpen()) {
+      <a
+        class="sub-menu-link"
+        (click)="linkClicked()"
+        routerLink="/profile"
+        [queryParams]="{ tabName: 'general' }"
+        routerLinkActive="active"
+      >
+        General
+      </a>
+
+      <a
+        class="sub-menu-link"
+        (click)="linkClicked()"
+        routerLink="/profile"
+        [queryParams]="{ tabName: 'security' }"
+        routerLinkActive="active"
+      >
+        Security
+      </a>
+
+      <a
+        class="sub-menu-link"
+        (click)="linkClicked()"
+        routerLink="/profile"
+        [queryParams]="{ tabName: 'invitations' }"
+        routerLinkActive="active"
+      >
+        Invitations
+      </a>
+      } } }
     </div>
   </div>
 
   <div class="sub-nav">
     <div class="container centralized sub-nav-info">
-      <p *ngIf="organization">Organization: {{ organization.name }}</p>
+      @if (organizationService.selectedOrganization()) {
+      <p>
+        Organization: {{ organizationService.selectedOrganization()!.name }}
+      </p>
+      }
     </div>
   </div>
 </nav>

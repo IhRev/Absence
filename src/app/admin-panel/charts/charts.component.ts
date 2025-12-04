@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Chart, ChartConfiguration, ChartType } from 'chart.js/auto';
 import { AbsenceDTO } from '../../absences/models/absence.models';
 import { AbsenceService } from '../../absences/services/absence.service';
@@ -7,22 +7,28 @@ import { MemberDTO } from '../../organizations/models/organizations.models';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { NgFor } from '@angular/common';
 import { HolidaysService } from '../../holidays/services/holidays.service';
-import { HolidayDTO } from '../../holidays/models/holidays.models';
+import { DateHelper } from '../../common/helpers/date-helper';
 
 @Component({
   selector: 'app-charts',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, MatInputModule, NgFor],
+  imports: [MatFormFieldModule, MatSelectModule, MatInputModule],
   templateUrl: './charts.component.html',
   styleUrl: './charts.component.css',
 })
 export class ChartsComponent implements OnInit {
-  public allMembers: MemberDTO[] | null = null;
-  public selectedMembersIds: number[] = [];
-  public chart: any = [];
-  private monthes: string[] = [
+  readonly #absenceService = inject(AbsenceService);
+  readonly #holidaysService = inject(HolidaysService);
+  readonly #organizationsService = inject(OrganizationsService);
+  #barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      title: { display: false },
+    },
+  };
+  #monthes: string[] = [
     'January',
     'February',
     'March',
@@ -36,45 +42,56 @@ export class ChartsComponent implements OnInit {
     'November',
     'December',
   ];
-  years: number[] = [];
-  selectedYear: number = 0;
 
-  private barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      title: { display: false },
-    },
-  };
+  chart: any = [];
+  allMembers = signal<MemberDTO[] | null>(null);
+  selectedMembersIds = signal<number[]>([]);
+  years = signal<number[]>([]);
+  selectedYear = signal(0);
 
-  constructor(
-    private readonly absenceService: AbsenceService,
-    private readonly holidaysService: HolidaysService,
-    private readonly organizationsService: OrganizationsService
-  ) {}
+  ngOnInit() {
+    var currentYear = DateHelper.getCurrentYear();
+    const years: number[] = [];
+    for (let i = currentYear - 10; i <= currentYear; i++) {
+      years.push(i);
+    }
+    this.years.set(years);
+    this.selectedYear.set(currentYear);
+
+    const organization = this.#organizationsService.selectedOrganization();
+    if (organization && organization.isAdmin) {
+      this.#organizationsService.getMembers().subscribe((res) => {
+        if (res.isSuccess) {
+          this.allMembers.set(res.data!);
+          this.selectedMembersIds.set(this.allMembers()!.map((m) => m.id));
+          this.#createChart();
+          this.loadData();
+        }
+      });
+    }
+  }
 
   loadData() {
-    this.absenceService
-      .getAbsencesBySelectedUsers(
-        new Date(this.selectedYear, 0, 1),
-        new Date(this.selectedYear, 11, 31),
-        this.selectedMembersIds
-      )
+    const start = DateHelper.getStartOfTheYear(this.selectedYear());
+    const end = DateHelper.getEndOfTheYear(this.selectedYear());
+    this.#absenceService
+      .getAbsencesBySelectedUsers(start, end, this.selectedMembersIds())
       .subscribe({
         next: (absencesRes) => {
           if (absencesRes.isSuccess) {
-            var organization = Number(localStorage.getItem('organization'));
-            this.holidaysService
+            this.#holidaysService
               .getHolidays(
-                organization,
-                new Date(this.selectedYear, 0, 1),
-                new Date(this.selectedYear, 11, 31)
+                this.#organizationsService.selectedOrganization()!.id,
+                start,
+                end
               )
               .subscribe({
                 next: (holidaysRes) => {
                   if (holidaysRes.isSuccess) {
-                    const holidays = holidaysRes.data!.map((h) => h.date);
-                    this.updateChartData(absencesRes.data!, holidays);
+                    this.#updateChartData(
+                      absencesRes.data!,
+                      holidaysRes.data!.map((h) => h.date)
+                    );
                   }
                 },
               });
@@ -83,32 +100,11 @@ export class ChartsComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
-    var currentYear = new Date().getFullYear();
-    for (let i = currentYear - 10; i <= currentYear; i++) {
-      this.years.push(i);
-    }
-    this.selectedYear = currentYear;
-
-    this.organizationsService.selectedOrganization$.subscribe((value) => {
-      if (value && value.isAdmin) {
-        this.organizationsService.getMembers().subscribe((res) => {
-          if (res.isSuccess) {
-            this.allMembers = res.data!;
-            this.selectedMembersIds = this.allMembers.map((m) => m.id);
-            this.createChart();
-            this.loadData();
-          }
-        });
-      }
-    });
-  }
-
-  createChart() {
+  #createChart() {
     this.chart = new Chart('canvas', {
       type: 'bar',
       data: {
-        labels: this.monthes,
+        labels: this.#monthes,
         datasets: [
           {
             label: 'Absence',
@@ -117,11 +113,11 @@ export class ChartsComponent implements OnInit {
           },
         ],
       },
-      options: this.barChartOptions,
+      options: this.#barChartOptions,
     });
   }
 
-  updateChartData(absences: AbsenceDTO[], holidays: Date[]) {
+  #updateChartData(absences: AbsenceDTO[], holidays: Date[]) {
     const counts = Array(12).fill(0);
     for (const absence of absences) {
       for (

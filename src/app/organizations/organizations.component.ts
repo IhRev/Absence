@@ -1,5 +1,5 @@
-import { NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import {
   CreateOrganizationDTO,
   EditOrganizationDTO,
@@ -19,8 +19,6 @@ import { ConfirmationComponent } from '../common/confirmation/confirmation.compo
   selector: 'app-organizations',
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     OrganizationFormComponent,
     InviteFormComponent,
     PasswordConfirmationComponent,
@@ -33,189 +31,171 @@ import { ConfirmationComponent } from '../common/confirmation/confirmation.compo
   styleUrl: './organizations.component.css',
 })
 export class OrganizationsComponent implements OnInit {
-  public organizations: Organization[] | null = null;
-  public members: MemberDTO[] | null = null;
-  public selectedOrganization: Organization | null = null;
-  public selectedMember: MemberDTO | null = null;
-  public isFormOpened: boolean = false;
-  public isInviteFormOpened: boolean = false;
-  public organization: Organization | null = null;
-  public confirmationPasswordOpened: boolean = false;
-  public confirmationOpened: boolean = false;
-  public isProcessing: boolean = false;
-  public message: string | null = null;
-  public isSuccess: boolean = false;
-  public isMobile: boolean = false;
+  readonly #invitationsService = inject(InvitationsService);
+  readonly #breakingObserver = inject(BreakpointObserver);
 
-  public constructor(
-    private readonly organizationService: OrganizationsService,
-    private readonly invitationsService: InvitationsService,
-    private readonly breakingObserver: BreakpointObserver
-  ) {}
+  readonly organizationService = inject(OrganizationsService);
+  members = signal<MemberDTO[] | null>(null);
+  selectedMember = signal<MemberDTO | null>(null);
+  organization = signal<Organization | null>(null);
+  message = signal<string | null>(null);
+  isFormOpened = signal(false);
+  isInviteFormOpened = signal(false);
+  confirmationPasswordOpened = signal(false);
+  confirmationOpened = signal(false);
+  isProcessing = signal(false);
+  isSuccess = signal(false);
+  isMobile = signal(false);
 
-  public ngOnInit(): void {
-    this.breakingObserver.observe([Breakpoints.Handset]).subscribe((res) => {
-      this.isMobile = res.matches;
+  ngOnInit() {
+    this.#breakingObserver.observe([Breakpoints.Handset]).subscribe((res) => {
+      this.isMobile.set(res.matches);
     });
-    this.organizationService.organizations$.subscribe((value) => {
-      this.organizations = value;
-    });
-    this.organizationService.selectedOrganization$.subscribe((value) => {
-      if (value) {
-        this.selectedOrganization = value;
-        this.loadMembers();
+
+    effect(() => {
+      if (this.organizationService.selectedOrganization()) {
+        this.#loadMembers();
       } else {
-        this.selectedOrganization = null;
-        this.selectedMember = null;
-        this.members = null;
+        this.selectedMember.set(null);
+        this.members.set(null);
       }
     });
   }
 
-  public selectOrganization(selected: Organization): void {
-    if (selected === this.selectedOrganization) {
+  selectOrganization(selected: Organization) {
+    if (selected === this.organizationService.selectedOrganization()) {
       this.organizationService.unselectOrganization();
     } else {
       this.organizationService.selectOrganization(selected);
     }
   }
 
-  public selectMember(selected: MemberDTO): void {
-    if (selected === this.selectedMember) {
-      this.selectedMember = null;
+  selectMember(selected: MemberDTO) {
+    if (selected === this.selectedMember()) {
+      this.selectedMember.set(null);
     } else {
-      this.selectedMember = selected;
+      this.selectedMember.set(selected);
     }
   }
 
-  public add(organization: CreateOrganizationDTO): void {
-    this.isProcessing = true;
+  add(organization: CreateOrganizationDTO) {
+    this.isFormOpened.set(false);
+    this.isProcessing.set(true);
     this.organizationService.add(organization).subscribe({
       next: (res) => {
-        this.message = res.message;
-        this.isSuccess = res.isSuccess;
-        this.isFormOpened = false;
-        this.isProcessing = false;
+        this.message.set(res.message);
+        this.isSuccess.set(res.isSuccess);
+        this.isProcessing.set(false);
       },
     });
   }
 
-  public openForm(organization?: Organization): void {
-    this.isFormOpened = true;
-    this.organization = organization ? organization : null;
+  openForm(organization?: Organization) {
+    this.isFormOpened.set(true);
+    this.organization.set(organization ? organization : null);
   }
 
-  public closeForm(): void {
-    this.isFormOpened = false;
-  }
-
-  public openInviteForm(): void {
-    this.isInviteFormOpened = true;
-  }
-
-  public closeInviteForm(): void {
-    this.isInviteFormOpened = false;
-  }
-
-  public sendInvitation(email: string): void {
-    this.isProcessing = true;
-    this.invitationsService.send(email).subscribe({
+  sendInvitation(email: string) {
+    this.isInviteFormOpened.set(false);
+    this.isProcessing.set(true);
+    this.#invitationsService.send(email).subscribe({
       next: (res) => {
-        this.message = res.message;
-        this.isSuccess = res.isSuccess;
-        this.isInviteFormOpened = false;
-        this.isProcessing = false;
+        this.message.set(res.message);
+        this.isSuccess.set(res.isSuccess);
+        this.isProcessing.set(false);
       },
     });
   }
 
-  public changeAccess(): void {
-    this.isProcessing = true;
+  changeAccess() {
+    this.isProcessing.set(true);
     this.organizationService
       .changeAccess(
-        this.selectedOrganization!.id,
-        this.selectedMember!.id,
+        this.organizationService.selectedOrganization()!.id,
+        this.selectedMember()!.id,
         true
       )
       .subscribe({
         next: (res) => {
           if (res.isSuccess) {
-            this.selectedMember!.isAdmin = true;
+            this.selectedMember.update((s) =>
+              s ? { ...s, isAdmin: true } : s
+            );
           }
-          this.isProcessing = false;
-          this.message = res.message;
-          this.isSuccess = res.isSuccess;
+          this.isProcessing.set(false);
+          this.message.set(res.message);
+          this.isSuccess.set(res.isSuccess);
         },
       });
   }
 
-  public deleteUser(): void {
-    this.isProcessing = true;
-    var id = this.selectedMember!.id;
+  deleteUser() {
+    this.isProcessing.set(true);
+    var id = this.selectedMember()!.id;
     this.organizationService
-      .deleteMember(this.selectedOrganization!.id, this.selectedMember!.id)
+      .deleteMember(this.organizationService.selectedOrganization()!.id, id)
       .subscribe({
         next: (res) => {
           if (res.isSuccess) {
-            this.members = this.members!.filter((m) => m.id != id);
-            this.selectedMember = null;
+            this.selectedMember.set(null);
+            this.members.update((prev) => prev!.filter((m) => m.id != id));
           }
-          this.isProcessing = false;
-          this.message = res.message;
-          this.isSuccess = res.isSuccess;
+          this.isProcessing.set(false);
+          this.message.set(res.message);
+          this.isSuccess.set(res.isSuccess);
         },
       });
   }
 
-  public edit(organization: EditOrganizationDTO): void {
-    this.isProcessing = true;
+  edit(organization: EditOrganizationDTO) {
+    this.isFormOpened.set(false);
+    this.isProcessing.set(true);
     this.organizationService.edit(organization).subscribe({
       next: (res) => {
-        this.message = res.message;
-        this.isSuccess = res.isSuccess;
-        this.isFormOpened = false;
-        this.isProcessing = false;
+        this.message.set(res.message);
+        this.isSuccess.set(res.isSuccess);
+        this.isProcessing.set(false);
       },
     });
   }
 
-  private loadMembers(): void {
-    this.isProcessing = true;
+  passwordConfirmed(password: string) {
+    this.confirmationPasswordOpened.set(false);
+    this.isProcessing.set(true);
+    this.organizationService
+      .delete(this.organizationService.selectedOrganization()!.id, password)
+      .subscribe({
+        next: (res) => {
+          this.message.set(res.message);
+          this.isSuccess.set(res.isSuccess);
+          this.isProcessing.set(false);
+        },
+      });
+  }
+
+  openConfirmation(methodAfterConfirmation: () => void) {
+    this.confirmationOpened.set(true);
+    this.#methodAfterConfirmation = methodAfterConfirmation;
+  }
+
+  confirmationSubmitted() {
+    this.confirmationOpened.set(false);
+    this.#methodAfterConfirmation();
+  }
+
+  #methodAfterConfirmation!: () => void;
+
+  #loadMembers() {
+    this.isProcessing.set(true);
     this.organizationService.getMembers().subscribe({
       next: (res) => {
         if (res.isSuccess) {
-          this.selectedMember = null;
-          this.members = res.data!;
-          this.selectedMember = res.data!.find((m) => m.isOwner)!;
+          this.selectedMember.set(null);
+          this.members.set(res.data!);
+          this.selectedMember.set(res.data!.find((m) => m.isOwner)!);
         }
-        this.isProcessing = false;
+        this.isProcessing.set(false);
       },
     });
-  }
-
-  public passwordConfirmed(password: string): void {
-    this.confirmationPasswordOpened = false;
-    this.isProcessing = true;
-    this.organizationService
-      .delete(this.selectedOrganization!.id, password)
-      .subscribe({
-        next: (res) => {
-          this.message = res.message;
-          this.isSuccess = res.isSuccess;
-          this.isProcessing = false;
-        },
-      });
-  }
-
-  private methodAfterConfirmation!: () => void;
-
-  public openConfirmation(methodAfterConfirmation: () => void) {
-    this.confirmationOpened = true;
-    this.methodAfterConfirmation = methodAfterConfirmation;
-  }
-
-  public confirmationSubmitted() {
-    this.confirmationOpened = false;
-    this.methodAfterConfirmation();
   }
 }

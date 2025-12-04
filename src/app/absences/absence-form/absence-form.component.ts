@@ -1,12 +1,11 @@
 import {
   Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
 } from '@angular/core';
-import { NgFor } from '@angular/common';
 import {
   FormControl,
   FormGroup,
@@ -16,19 +15,19 @@ import {
 } from '@angular/forms';
 import {
   Absence,
-  AbsenceTypeDTO,
   CreateAbsenceDTO,
   EditAbsenceDTO,
 } from '../models/absence.models';
 import { AbsenceTypeService } from '../services/absence-type.service';
 import { ModalFormComponent } from '../../common/modal-form/modal-form.component';
 import { FormErrorComponent } from '../../common/form-error/form-error.component';
+import { DateHelper } from '../../common/helpers/date-helper';
+import { OrganizationsService } from '../../organizations/services/organizations.service';
 
 @Component({
   selector: 'app-absence-form',
   standalone: true,
   imports: [
-    NgFor,
     FormsModule,
     ModalFormComponent,
     ReactiveFormsModule,
@@ -40,17 +39,15 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
     '../../common/styles/modal-dialog-styles.css',
   ],
 })
-export class AbsenceFormComponent implements OnInit, OnChanges {
-  @Input() public isVisible = false;
-  @Input() public absence: Absence | null = null;
-  @Output() public closeModal = new EventEmitter();
-  @Output() public submitCreate = new EventEmitter<CreateAbsenceDTO>();
-  @Output() public submitEdit = new EventEmitter<EditAbsenceDTO>();
+export class AbsenceFormComponent {
+  readonly #organizationsService = inject(OrganizationsService);
 
-  public title!: string;
-  public message!: string;
-  public types: AbsenceTypeDTO[] = [];
-  public form = new FormGroup({
+  absence = input<Absence | null>(null);
+  closeModal = output();
+  submitCreate = output<CreateAbsenceDTO>();
+  submitEdit = output<EditAbsenceDTO>();
+  title = signal('');
+  form = new FormGroup({
     name: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
@@ -60,50 +57,37 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
   });
+  readonly absenceTypeService = inject(AbsenceTypeService);
 
-  public constructor(private readonly absenceTypeService: AbsenceTypeService) {}
-
-  public ngOnInit(): void {
-    this.absenceTypeService.types$.subscribe({
-      next: (value) => {
-        if (value) {
-          this.types = value;
-        }
-      },
-    });
-  }
-
-  public ngOnChanges(): void {
-    if (this.isVisible) {
-      if (this.absence) {
+  constructor() {
+    effect(() => {
+      const absence = this.absence()!;
+      if (absence) {
         this.form.setValue({
-          name: this.absence.name,
-          selectedType: this.absence?.type.id,
-          startDate: this.getDateOnlyString(new Date(this.absence.startDate)),
-          endDate: this.getDateOnlyString(new Date(this.absence.endDate)),
+          name: absence.name,
+          selectedType: absence.type.id,
+          startDate: DateHelper.getDateOnlyString(new Date(absence.startDate)),
+          endDate: DateHelper.getDateOnlyString(new Date(absence.endDate)),
         });
-        this.title = 'Edit';
+        queueMicrotask(() => this.title.set('Edit'));
       } else {
         this.form.setValue({
           name: 'Absence',
-          selectedType: this.types[0].id,
-          startDate: this.getDateOnlyString(new Date()),
-          endDate: this.getDateOnlyString(new Date()),
+          selectedType: this.absenceTypeService.types[0].id,
+          startDate: DateHelper.getDateOnlyString(new Date()),
+          endDate: DateHelper.getDateOnlyString(new Date()),
         });
-        this.title = 'Add';
+        queueMicrotask(() => this.title.set('Add'));
       }
-    }
+    });
   }
 
-  public close(): void {
-    this.closeModal.emit();
-  }
-
-  public submit(): void {
-    if (this.absence) {
+  submit() {
+    const absence = this.absence();
+    if (absence) {
       this.submitEdit.emit(
         new EditAbsenceDTO(
-          this.absence.id,
+          absence.id,
           this.form.controls.name.value!,
           this.form.controls.selectedType.value!,
           new Date(this.form.controls.startDate.value!),
@@ -117,12 +101,9 @@ export class AbsenceFormComponent implements OnInit, OnChanges {
           this.form.controls.selectedType.value!,
           new Date(this.form.controls.startDate.value!),
           new Date(this.form.controls.endDate.value!),
-          Number(localStorage.getItem('organization'))
+          this.#organizationsService.selectedOrganization()!.id
         )
       );
     }
   }
-
-  private getDateOnlyString = (date: Date): string =>
-    date.toISOString().split('T')[0];
 }

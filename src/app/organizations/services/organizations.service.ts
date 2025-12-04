@@ -3,7 +3,7 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import {
   CreateOrganizationDTO,
   DeleteOrganizationRequest,
@@ -23,120 +23,74 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class OrganizationsService {
-  private selectedOrganization = new BehaviorSubject<Organization | null>(null);
-  private organizations = new BehaviorSubject<OrganizationDTO[] | null>(null);
+  readonly #client = inject(HttpClient);
+  readonly #router = inject(Router);
+  readonly #authService = inject(AuthService);
 
-  public selectedOrganization$ = this.selectedOrganization.asObservable();
-  public organizations$ = this.organizations.asObservable();
+  organizations = signal<OrganizationDTO[] | null>(null);
+  selectedOrganization = signal<Organization | null>(null);
 
-  public constructor(
-    private readonly client: HttpClient,
-    private readonly authService: AuthService,
-    private readonly router: Router
-  ) {
-    this.authService.loggedIn$.subscribe((status) => {
-      if (status) {
+  constructor() {
+    effect(() => {
+      if (this.#authService.loggedIn()) {
         this.load();
       } else {
-        this.unload();
+        this.#unload();
       }
     });
   }
 
-  private unload(): void {
-    this.selectedOrganization.next(null);
-    this.organizations.next(null);
-  }
-
-  private load(): void {
-    this.client
-      .get<OrganizationDTO[]>(`${environment.apiUrl}/organizations`)
-      .pipe(
-        map((res: OrganizationDTO[]) => {
-          var organizations = res.map(
-            (dto) =>
-              new Organization(dto.id, dto.name, dto.isAdmin, dto.isOwner)
-          );
-          return DataResult.success<Organization[]>(organizations);
-        }),
-        catchError((e: HttpErrorResponse) => {
-          console.error(e);
-          navigateToErrorPage(this.router, e);
-          return of(DataResult.fail<Organization[]>());
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          if (res.isSuccess) {
-            this.organizations.next(res.data!);
-
-            var organizationId = localStorage.getItem('organization');
-            if (organizationId) {
-              const organization = res.data!.find(
-                (o) => o.id === Number(organizationId)
-              )!;
-              this.selectedOrganization.next(organization);
-            }
-          }
-        },
-      });
-  }
-
-  public add(
-    organization: CreateOrganizationDTO
-  ): Observable<DataResult<number>> {
-    return this.client
+  add(organization: CreateOrganizationDTO): Observable<Result> {
+    return this.#client
       .post<number>(`${environment.apiUrl}/organizations`, organization)
       .pipe(
         map((res: number) => {
-          var organizations = [
-            ...this.organizations.value!,
+          this.organizations.update((prev) => [
+            ...prev!,
             new Organization(res, organization.name, true, true),
-          ];
-          this.organizations.next(organizations);
-          return DataResult.success<number>(
-            res,
-            'New organization added successfully'
-          );
+          ]);
+          return Result.success('New organization added successfully');
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
           if (error.status === 400) {
-            return of(DataResult.fail<number>(error.error));
+            return of(Result.fail(error.error));
           }
-          navigateToErrorPage(this.router, error);
-          return of(DataResult.fail<number>());
+          navigateToErrorPage(this.#router, error);
+          return of(Result.fail());
         })
       );
   }
 
-  public getMembers(): Observable<DataResult<MemberDTO[]>> {
-    return this.client
+  getMembers(): Observable<DataResult<MemberDTO[]>> {
+    return this.#client
       .get<MemberDTO[]>(
-        `${environment.apiUrl}/organizations/${this.selectedOrganization.value?.id}/members`
+        `${environment.apiUrl}/organizations/${
+          this.selectedOrganization()!.id
+        }/members`
       )
       .pipe(
         map((res: MemberDTO[]) => DataResult.success<MemberDTO[]>(res)),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(DataResult.fail<MemberDTO[]>());
         })
       );
   }
 
-  public selectOrganization(organization: Organization): void {
+  selectOrganization(organization: Organization) {
     localStorage.setItem('organization', organization.id.toString());
-    this.selectedOrganization.next(organization);
+    this.selectedOrganization.set(organization);
   }
 
-  public unselectOrganization(): void {
+  unselectOrganization() {
     localStorage.removeItem('organization');
-    this.selectedOrganization.next(null);
+    this.selectedOrganization.set(null);
   }
 
-  public edit(organization: EditOrganizationDTO): Observable<Result> {
-    return this.client
+  edit(organization: EditOrganizationDTO): Observable<Result> {
+    return this.#client
       .put(`${environment.apiUrl}/organizations`, organization)
       .pipe(
         map(() => {
@@ -146,12 +100,10 @@ export class OrganizationsService {
             true,
             true
           );
-          this.organizations.next(
-            this.organizations.value!.map((u) =>
-              u.id === organization.id ? edited : u
-            )
+          this.organizations.update((prev) =>
+            prev!.map((o) => (o.id === edited.id ? edited : o))
           );
-          this.selectedOrganization.next(edited);
+          this.selectedOrganization.set(edited);
           return Result.success('Organization edited successfully');
         }),
         catchError((error: HttpErrorResponse) => {
@@ -159,38 +111,33 @@ export class OrganizationsService {
           if (error.status === 400) {
             return of(Result.fail(error.error));
           }
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  public delete(id: number, password: string): Observable<Result> {
-    return this.client
+  delete(id: number, password: string): Observable<Result> {
+    return this.#client
       .delete(`${environment.apiUrl}/organizations/${id}`, {
         body: new DeleteOrganizationRequest(password),
       })
       .pipe(
         map(() => {
-          this.organizations.next(
-            this.organizations.value!.filter((u) => u.id != id)
-          );
-          this.selectedOrganization.next(null);
+          this.organizations.update((prev) => prev!.filter((o) => o.id != id));
+          this.selectedOrganization.set(null);
           return Result.success('Your organization deleted successfully');
         }),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  public deleteMember(
-    organizationId: number,
-    memberId: number
-  ): Observable<Result> {
-    return this.client
+  deleteMember(organizationId: number, memberId: number): Observable<Result> {
+    return this.#client
       .delete(
         `${environment.apiUrl}/organizations/${organizationId}/members/${memberId}`
       )
@@ -200,18 +147,18 @@ export class OrganizationsService {
         ),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
   }
 
-  public changeAccess(
+  changeAccess(
     organizationId: number,
     memberId: number,
     isAdmin: boolean
   ): Observable<Result> {
-    return this.client
+    return this.#client
       .put(
         `${environment.apiUrl}/organizations/${organizationId}/members/${memberId}`,
         null,
@@ -221,9 +168,48 @@ export class OrganizationsService {
         map(() => Result.success('Member access changed successfully')),
         catchError((error: HttpErrorResponse) => {
           console.error(error);
-          navigateToErrorPage(this.router, error);
+          navigateToErrorPage(this.#router, error);
           return of(Result.fail());
         })
       );
+  }
+
+  load() {
+    this.#client
+      .get<OrganizationDTO[]>(`${environment.apiUrl}/organizations`)
+      .pipe(
+        map((res: OrganizationDTO[]) =>
+          DataResult.success<Organization[]>(
+            res.map(
+              (dto) =>
+                new Organization(dto.id, dto.name, dto.isAdmin, dto.isOwner)
+            )
+          )
+        ),
+        catchError((e: HttpErrorResponse) => {
+          console.error(e);
+          navigateToErrorPage(this.#router, e);
+          return of(DataResult.fail<Organization[]>());
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.organizations.set(res.data!);
+
+            var organizationId = localStorage.getItem('organization');
+            if (organizationId) {
+              this.selectedOrganization.set(
+                res.data!.find((o) => o.id === Number(organizationId))!
+              );
+            }
+          }
+        },
+      });
+  }
+
+  #unload() {
+    this.selectedOrganization.set(null);
+    this.organizations.set(null);
   }
 }

@@ -5,7 +5,7 @@
       <li>
         <button
           (click)="switchTab('general')"
-          [class.active]="activeTab === 'general'"
+          [class.active]="activeTab() === 'general'"
         >
           General
         </button>
@@ -13,7 +13,7 @@
       <li>
         <button
           (click)="switchTab('security')"
-          [class.active]="activeTab === 'security'"
+          [class.active]="activeTab() === 'security'"
         >
           Security
         </button>
@@ -21,7 +21,7 @@
       <li>
         <button
           (click)="switchTab('invitations')"
-          [class.active]="activeTab === 'invitations'"
+          [class.active]="activeTab() === 'invitations'"
         >
           Invitations
         </button>
@@ -29,28 +29,23 @@
     </ul>
     <hr />
     <div class="tab">
+      @if (message()) {
       <div
-        *ngIf="message"
-        [ngClass]="{ 'success-msg':message.isSuccess, 'error-msg':!message.isSuccess, }"
+        [ngClass]="{ 'success-msg':message()!.isSuccess, 'error-msg':!message()!.isSuccess, }"
         class="msg-box"
       >
-        <span class="msg">{{ message.text }}</span>
-        <button (click)="closeMessage()" class="close-btn">
+        <span class="msg">{{ message()!.text }}</span>
+        <button (click)="message.set(null)" class="close-btn">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <app-user-general-tab
-        (displayMessage)="displayMessage($event)"
-        *ngIf="activeTab === 'general'"
-      />
-      <app-user-security-tab
-        (displayMessage)="displayMessage($event)"
-        *ngIf="activeTab === 'security'"
-      />
-      <app-user-invitations-tab
-        (displayMessage)="displayMessage($event)"
-        *ngIf="activeTab === 'invitations'"
-      />
+      } @if (activeTab() === 'general') {
+      <app-user-general-tab (displayMessage)="displayMessage($event)" />
+      }@else if (activeTab() === 'security') {
+      <app-user-security-tab (displayMessage)="displayMessage($event)" />
+      }@else if (activeTab() === 'invitations') {
+      <app-user-invitations-tab (displayMessage)="displayMessage($event)" />
+      }
     </div>
   </div>
 </div>

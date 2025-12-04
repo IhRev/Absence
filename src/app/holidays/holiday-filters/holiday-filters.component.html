@@ -1,8 +1,4 @@
-<app-modal-form
-  [isVisible]="isVisible"
-  [title]="'Filters'"
-  (closeModal)="close()"
->
+<app-modal-form [title]="'Filters'" (closeModal)="closeModal.emit()">
   <form [formGroup]="form" (submit)="submit()">
     <div class="input-item">
       <label for="startDate">From</label>

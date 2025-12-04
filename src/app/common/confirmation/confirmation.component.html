@@ -1,13 +1,9 @@
-<app-modal-form
-  [isVisible]="isVisible"
-  title="Are you sure?"
-  (closeModal)="close()"
->
+<app-modal-form title="Are you sure?" (closeModal)="closed.emit()">
   <div class="btns">
-    <button class="accept-btn" (click)="submit()">
+    <button class="accept-btn" (click)="submitted.emit()">
       <i class="fa-solid fa-check"></i>
     </button>
-    <button class="reject-btn" (click)="close()">
+    <button class="reject-btn" (click)="closed.emit()">
       <i class="fa-solid fa-xmark"></i>
     </button>
   </div>

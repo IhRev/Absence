@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -18,7 +18,10 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-  public form = new FormGroup({
+  readonly #authService = inject(AuthService);
+  readonly #router = inject(Router);
+
+  form = new FormGroup({
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
     }),
@@ -29,17 +32,12 @@ export class RegisterComponent {
     lastName: new FormControl('', { validators: [Validators.required] }),
   });
 
-  public constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router
-  ) {}
-
-  public submit(): void {
+  submit() {
     if (this.form.invalid) {
       return;
     }
 
-    this.authService
+    this.#authService
       .register(
         new RegisterDTO(
           this.form.value.firstName!,
@@ -50,7 +48,7 @@ export class RegisterComponent {
       .subscribe({
         next: (res) => {
           if (res.isSuccess) {
-            this.router.navigate(['/login']);
+            this.#router.navigate(['/login']);
           }
         },
       });

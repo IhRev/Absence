@@ -1,28 +1,31 @@
-<app-modal-form
-  [isVisible]="isVisible"
-  [title]="'Filters'"
-  (closeModal)="close()"
->
+<app-modal-form [title]="'Filters'" (closeModal)="closeModal.emit()">
   <form [formGroup]="form" (submit)="submit()">
     <div class="input-item">
       <label for="startDate">From</label>
       <input id="startDate" type="date" formControlName="startDate" />
       <app-form-error [form]="form" [name]="'startDate'" />
     </div>
+
     <div class="input-item">
       <label for="endDate">To</label>
       <input id="endDate" type="date" formControlName="endDate" />
       <app-form-error [form]="form" [name]="'endDate'" />
     </div>
-    <div class="input-item" *ngIf="members">
+
+    @if(members()){
+    <div class="input-item">
       <label for="member">Member</label>
       <select id="member" formControlName="selectedMembers" multiple>
-        <option *ngFor="let member of members" [ngValue]="member.id">
+        @for (member of members(); track $index) {
+        <option [ngValue]="member.id">
           {{ member.fullName }}
         </option>
+        }
       </select>
       <app-form-error [form]="form" [name]="'endDate'" />
     </div>
+    }
+
     <button class="submit-btn">Submit</button>
   </form>
 </app-modal-form>

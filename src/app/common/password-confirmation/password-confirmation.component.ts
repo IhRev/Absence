@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -19,20 +19,15 @@ import { FormErrorComponent } from '../form-error/form-error.component';
   ],
 })
 export class PasswordConfirmationComponent {
-  @Input() public isVisible: boolean = false;
-  @Output() public submitted = new EventEmitter<string>();
-  @Output() public closed = new EventEmitter();
-  public form = new FormGroup({
+  submitted = output<string>();
+  closed = output();
+  form = new FormGroup({
     password: new FormControl('', [Validators.minLength(8)]),
   });
 
-  public submit(): void {
+  submit() {
     if (this.form.valid) {
       this.submitted.emit(this.form.value.password!);
     }
-  }
-
-  public close(): void {
-    this.closed.emit();
   }
 }
