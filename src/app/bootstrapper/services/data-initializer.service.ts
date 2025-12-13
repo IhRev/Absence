@@ -1,0 +1,53 @@
+import { effect, inject, Injectable, signal } from '@angular/core';
+import { AuthService } from '../../auth/services/auth.service';
+import { AbsenceTypeService } from '../../absences/services/absence-type.service';
+import { EventTypesService } from '../../admin-panel/services/event-types.service';
+import { OrganizationsService } from '../../organizations/services/organizations.service';
+import { catchError, forkJoin, lastValueFrom, of } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DataInitializerService {
+  #authService = inject(AuthService);
+  #absenceTypeService = inject(AbsenceTypeService);
+  #eventTypesService = inject(EventTypesService);
+  #organizationsService = inject(OrganizationsService);
+
+  isLoading = signal(true);
+  initialized = false;
+
+  constructor() {
+    effect(
+      async () => {
+        this.isLoading.set(true);
+        if (this.#authService.initialized()) {
+          if (this.#authService.loggedIn()) {
+            await this.#loadAll();
+          } else {
+            this.#unloadAll();
+          }
+        }
+        this.initialized = true;
+        this.isLoading.set(false);
+      },
+      { allowSignalWrites: true }
+    );
+  }
+
+  #loadAll(): Promise<void> {
+    return lastValueFrom(
+      forkJoin([
+        this.#absenceTypeService.load(),
+        this.#eventTypesService.load(),
+        this.#organizationsService.load(),
+      ]).pipe(catchError((err) => of([])))
+    ).then(() => {});
+  }
+
+  #unloadAll() {
+    this.#absenceTypeService.unload();
+    this.#eventTypesService.unload();
+    this.#organizationsService.unload();
+  }
+}

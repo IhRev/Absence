@@ -1,10 +1,8 @@
 <nav class="nav-bar" [class.mobile-nav-bar]="isMenuOpen()">
   <div class="container main-nav centralized">
-    <div class="logo">
-      <a href="#">
-        <img src="assets/logo.png" alt="Absence.com" />
-      </a>
-    </div>
+    <a class="logo-link" href="#">
+      <img src="assets/logo.png" alt="Absence.com" />
+    </a>
 
     <div class="menu-toggle" (click)="toggleMenu()">
       <i class="fa-solid fa-bars"></i>

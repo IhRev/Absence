@@ -32,13 +32,18 @@ export class AuthService {
 
   loggedIn = signal<boolean>(!!localStorage.getItem('accessToken'));
   userDetails = signal<UserDetails | null>(null);
+  initialized = signal(false);
+
+  constructor() {}
 
   load(): Observable<any> {
     if (!this.loggedIn()) {
+      this.initialized.set(true);
       return EMPTY;
     }
 
     return this.#loadUserDetails().pipe(
+      tap(() => this.initialized.set(true)),
       catchError((e) => {
         console.error(e);
         return throwError(() => e);

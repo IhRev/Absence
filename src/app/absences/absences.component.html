@@ -26,7 +26,6 @@
       </button>
     </div>
   </div>
-  } @if(!isProcessing()){
   <div class="grid-list">
     <div class="grid-header grid-row">
       <span>#</span>
@@ -60,7 +59,7 @@
     </div>
     }
   </div>
-  } @if (isProcessing()) {
+  } @else {
   <i class="fa-solid fa-spinner fa-spin load-icon"></i>
   }
 </div>

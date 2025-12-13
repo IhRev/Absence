@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 export class EventTypesService {
   readonly #client = inject(HttpClient);
 
-  types!: EventTypeDTO[];
+  types: EventTypeDTO[] | null = null;
 
   load(): Observable<any> {
     return this.#client
@@ -22,5 +22,9 @@ export class EventTypesService {
           return throwError(() => e);
         })
       );
+  }
+
+  unload() {
+    this.types = null;
   }
 }

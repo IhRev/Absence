@@ -55,7 +55,7 @@ export class AbsenceListComponent implements OnInit {
             ++this.#num,
             result.data,
             absence.name,
-            this.#absenceTypeService.types.find((t) => t.id === absence.type)!,
+            this.#absenceTypeService.types!.find((t) => t.id === absence.type)!,
             absence.startDate,
             absence.endDate
           );
@@ -77,7 +77,7 @@ export class AbsenceListComponent implements OnInit {
         if (result.isSuccess) {
           this.selectedAbsence.update((a) => {
             a!.name = absence.name;
-            a!.type = this.#absenceTypeService.types.find(
+            a!.type = this.#absenceTypeService.types!.find(
               (t) => t.id === absence.type
             )!;
             a!.startDate = absence.startDate;
@@ -181,7 +181,7 @@ export class AbsenceListComponent implements OnInit {
             ++this.#num,
             a.id,
             a.name,
-            this.#absenceTypeService.types.find((t) => t.id === a.type)!,
+            this.#absenceTypeService.types!.find((t) => t.id === a.type)!,
             a.startDate,
             a.endDate
           )

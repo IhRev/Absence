@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Absences</title>
-  </head>
-  <body>
-    <div class="page-container">
-      @if (!isErrorPage()) {
-      <nav-bar />
-      }
-      <main class="content centralized">
-        <router-outlet />
-      </main>
-      <app-footer />
-    </div>
-  </body>
-</html>
+@if (initializer.isLoading()!) {
+<app-bootstrapper />
+}@else {
+<div class="page-container">
+  @if (!isErrorPage()) {
+  <nav-bar />
+  }
+  <main class="content centralized">
+    <router-outlet />
+  </main>
+  <app-footer />
+</div>
+}

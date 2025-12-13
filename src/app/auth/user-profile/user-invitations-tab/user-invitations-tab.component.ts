@@ -2,6 +2,7 @@ import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { InvitationsService } from '../../../organizations/services/invitations.service';
 import { Message } from '../../models/user-profile.models';
 import { Invitation } from '../../models/invitations.models';
+import { OrganizationsService } from '../../../organizations/services/organizations.service';
 
 @Component({
   selector: 'app-user-invitations-tab',
@@ -12,6 +13,7 @@ import { Invitation } from '../../models/invitations.models';
 })
 export class UserInvitationsTabComponent implements OnInit {
   readonly #invitationsService = inject(InvitationsService);
+  readonly #organizationsService = inject(OrganizationsService);
   #lastInvitationNum: number = 0;
 
   invitations = signal<Invitation[] | null>(null);
@@ -57,6 +59,7 @@ export class UserInvitationsTabComponent implements OnInit {
                 return i;
               });
           });
+          this.#organizationsService.load().subscribe();
         } else {
           this.#displayMsg(false, res.message);
         }

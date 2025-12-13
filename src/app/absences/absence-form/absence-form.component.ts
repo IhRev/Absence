@@ -73,7 +73,7 @@ export class AbsenceFormComponent {
       } else {
         this.form.setValue({
           name: 'Absence',
-          selectedType: this.absenceTypeService.types[0].id,
+          selectedType: this.absenceTypeService.types![0].id,
           startDate: DateHelper.getDateOnlyString(new Date()),
           endDate: DateHelper.getDateOnlyString(new Date()),
         });

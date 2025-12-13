@@ -3,11 +3,13 @@ import { catchError, EMPTY, switchMap, throwError } from 'rxjs';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { DataInitializerService } from '../../bootstrapper/services/data-initializer.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const accessToken = localStorage.getItem('accessToken');
   const router = inject(Router);
   const authService = inject(AuthService);
+  const initializer = inject(DataInitializerService);
 
   const cloned = accessToken
     ? req.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } })
@@ -26,7 +28,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               return next(retryReq);
             }
             authService.logoutLocally();
-            router.navigate(['/login']);
+            if (initializer.initialized) {
+              router.navigate(['/login']);
+            }
             return EMPTY;
           })
         );

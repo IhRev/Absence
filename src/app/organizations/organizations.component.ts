@@ -47,18 +47,23 @@ export class OrganizationsComponent implements OnInit {
   isSuccess = signal(false);
   isMobile = signal(false);
 
+  constructor() {
+    effect(
+      () => {
+        if (this.organizationService.selectedOrganization()) {
+          this.#loadMembers();
+        } else {
+          this.selectedMember.set(null);
+          this.members.set(null);
+        }
+      },
+      { allowSignalWrites: true }
+    );
+  }
+
   ngOnInit() {
     this.#breakingObserver.observe([Breakpoints.Handset]).subscribe((res) => {
       this.isMobile.set(res.matches);
-    });
-
-    effect(() => {
-      if (this.organizationService.selectedOrganization()) {
-        this.#loadMembers();
-      } else {
-        this.selectedMember.set(null);
-        this.members.set(null);
-      }
     });
   }
 

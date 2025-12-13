@@ -1,5 +1,5 @@
 <div class="container">
-  @if (!isProcessing() && loaded()) {
+  @if (!isProcessing()) {
   <form (submit)="edit()" [formGroup]="form" class="profile-form">
     <div class="input-item">
       <label for="Email">Email </label>
@@ -20,7 +20,7 @@
 
     <button class="submit-btn">Edit</button>
   </form>
-  }@else if (isProcessing()) {
+  }@else {
   <i class="fa-solid fa-spinner fa-spin load-icon"></i>
   }
 </div>

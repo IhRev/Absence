@@ -10,7 +10,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 export class AbsenceTypeService {
   readonly #client = inject(HttpClient);
 
-  types!: AbsenceTypeDTO[];
+  types: AbsenceTypeDTO[] | null = null;
 
   load(): Observable<any> {
     return this.#client
@@ -22,5 +22,9 @@ export class AbsenceTypeService {
           return throwError(() => e);
         })
       );
+  }
+
+  unload() {
+    this.types = null;
   }
 }

@@ -3,7 +3,7 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
   CreateOrganizationDTO,
   DeleteOrganizationRequest,
@@ -12,33 +12,23 @@ import {
   Organization,
   OrganizationDTO,
 } from '../models/organizations.models';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { DataResult, Result } from '../../common/models/result.models';
-import { AuthService } from '../../auth/services/auth.service';
 import { navigateToErrorPage } from '../../common/services/error-utilities';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { catchError, map, Observable, of } from 'rxjs';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrganizationsService {
+  readonly #authService = inject(AuthService);
   readonly #client = inject(HttpClient);
   readonly #router = inject(Router);
-  readonly #authService = inject(AuthService);
 
-  organizations = signal<OrganizationDTO[] | null>(null);
+  organizations = signal<Organization[] | null>(null);
   selectedOrganization = signal<Organization | null>(null);
-
-  constructor() {
-    effect(() => {
-      if (this.#authService.loggedIn()) {
-        this.load();
-      } else {
-        this.#unload();
-      }
-    });
-  }
 
   add(organization: CreateOrganizationDTO): Observable<Result> {
     return this.#client
@@ -80,12 +70,12 @@ export class OrganizationsService {
   }
 
   selectOrganization(organization: Organization) {
-    localStorage.setItem('organization', organization.id.toString());
+    this.#saveOrganizationLocally(organization.id);
     this.selectedOrganization.set(organization);
   }
 
   unselectOrganization() {
-    localStorage.removeItem('organization');
+    this.#removeOrganizationLocally();
     this.selectedOrganization.set(null);
   }
 
@@ -126,6 +116,7 @@ export class OrganizationsService {
         map(() => {
           this.organizations.update((prev) => prev!.filter((o) => o.id != id));
           this.selectedOrganization.set(null);
+          this.#removeOrganizationLocally();
           return Result.success('Your organization deleted successfully');
         }),
         catchError((error: HttpErrorResponse) => {
@@ -174,42 +165,59 @@ export class OrganizationsService {
       );
   }
 
-  load() {
-    this.#client
+  load(): Observable<any> {
+    return this.#client
       .get<OrganizationDTO[]>(`${environment.apiUrl}/organizations`)
       .pipe(
-        map((res: OrganizationDTO[]) =>
-          DataResult.success<Organization[]>(
+        map((res: OrganizationDTO[]) => {
+          this.organizations.set(
             res.map(
               (dto) =>
                 new Organization(dto.id, dto.name, dto.isAdmin, dto.isOwner)
             )
-          )
-        ),
+          );
+          var organizationId = this.#getSavedOrganization();
+          if (organizationId) {
+            const organization = this.organizations()!.find(
+              (o) => o.id === organizationId
+            );
+            if (organization) {
+              this.selectedOrganization.set(organization);
+            } else {
+              this.#removeOrganizationLocally();
+            }
+          }
+        }),
         catchError((e: HttpErrorResponse) => {
           console.error(e);
           navigateToErrorPage(this.#router, e);
           return of(DataResult.fail<Organization[]>());
         })
-      )
-      .subscribe({
-        next: (res) => {
-          if (res.isSuccess) {
-            this.organizations.set(res.data!);
-
-            var organizationId = localStorage.getItem('organization');
-            if (organizationId) {
-              this.selectedOrganization.set(
-                res.data!.find((o) => o.id === Number(organizationId))!
-              );
-            }
-          }
-        },
-      });
+      );
   }
 
-  #unload() {
+  unload() {
     this.selectedOrganization.set(null);
     this.organizations.set(null);
+  }
+
+  #saveOrganizationLocally(organization: number) {
+    localStorage.setItem(
+      `${this.#authService.userDetails()!.id}:organization`,
+      organization.toString()
+    );
+  }
+
+  #removeOrganizationLocally() {
+    localStorage.removeItem(
+      `${this.#authService.userDetails()!.id}:organization`
+    );
+  }
+
+  #getSavedOrganization(): number | undefined {
+    const organization = localStorage.getItem(
+      `${this.#authService.userDetails()!.id}:organization`
+    );
+    return organization ? Number(organization) : undefined;
   }
 }

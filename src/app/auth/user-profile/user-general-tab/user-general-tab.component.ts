@@ -26,12 +26,16 @@ export class UserGeneralTabComponent implements OnInit {
     firstName: new FormControl('', { validators: [Validators.required] }),
     lastName: new FormControl('', { validators: [Validators.required] }),
   });
-  loaded = signal(false);
   isProcessing = signal(false);
   displayMessage = output<Message>();
 
   ngOnInit() {
-    this.form.setValue(this.#authService.userDetails()!);
+    const details = this.#authService.userDetails()!;
+    this.form.setValue({
+      email: details.email,
+      firstName: details.firstName,
+      lastName: details.lastName,
+    });
   }
 
   edit() {
@@ -43,6 +47,7 @@ export class UserGeneralTabComponent implements OnInit {
     this.#authService
       .updateUserDetails(
         new UserDetails(
+          this.#authService.userDetails()!.id,
           this.form.value.firstName!,
           this.form.value.lastName!,
           this.form.value.email!

@@ -56,11 +56,11 @@ export class EventsComponent implements OnInit {
                   e.name,
                   e.startDate,
                   e.endDate,
-                  this.#absenceTypeService.types.find(
+                  this.#absenceTypeService.types!.find(
                     (t) => t.id === e.absenceType
                   )!.name,
                   e.user,
-                  this.#typesService.types.find(
+                  this.#typesService.types!.find(
                     (t) => t.id === e.absenceEventType
                   )!.name
                 )
