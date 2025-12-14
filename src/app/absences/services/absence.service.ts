@@ -31,9 +31,9 @@ export class AbsenceService {
   ): Observable<DataResult<AbsenceDTO[]>> {
     return this.#client
       .get<AbsenceDTO[]>(
-        `${
-          environment.apiUrl
-        }/organizations/${this.#organizationsService.selectedOrganization()}/absences`,
+        `${environment.apiUrl}/organizations/${
+          this.#organizationsService.selectedOrganization()!.id
+        }/absences`,
         {
           params: new HttpParams()
             .set('startDate', DateHelper.getDateOnlyString(startDate))
