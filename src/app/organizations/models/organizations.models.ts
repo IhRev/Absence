@@ -22,11 +22,13 @@ export class Organization {
   ) {}
 }
 
-export interface MemberDTO {
-  id: number;
-  fullName: string;
-  isAdmin: boolean;
-  isOwner: boolean;
+export class MemberDTO {
+  public constructor(
+    public id: number,
+    public fullName: string,
+    public isAdmin: boolean,
+    public isOwner: boolean
+  ) {}
 }
 
 export class DeleteOrganizationRequest {

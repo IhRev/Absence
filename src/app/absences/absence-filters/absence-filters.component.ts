@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, output, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import { AbsenceFilters } from '../models/filters.models';
 import {
   FormControl,
@@ -28,12 +35,11 @@ import { DateHelper } from '../../common/helpers/date-helper';
     '../../common/styles/modal-dialog-styles.css',
   ],
 })
-export class AbsenceFiltersComponent implements OnInit {
-  readonly #organizationsService = inject(OrganizationsService);
-
+export class AbsenceFiltersComponent {
+  readonly organizationsService = inject(OrganizationsService);
   closeModal = output();
   submitModal = output<AbsenceFilters>();
-  members = signal<MemberDTO[] | null>(null);
+  members = input<MemberDTO[]>([]);
   form = new FormGroup({
     startDate: new FormControl<string>(
       DateHelper.getDateOnlyString(DateHelper.getStartOfTheCurrentYear()),
@@ -45,17 +51,6 @@ export class AbsenceFiltersComponent implements OnInit {
     ),
     selectedMembers: new FormControl<number[]>([]),
   });
-
-  ngOnInit() {
-    const organization = this.#organizationsService.selectedOrganization();
-    if (organization && organization.isAdmin) {
-      this.#organizationsService.getMembers().subscribe((res) => {
-        if (res.isSuccess) {
-          this.members.set(res.data!);
-        }
-      });
-    }
-  }
 
   submit() {
     if (this.form.valid) {

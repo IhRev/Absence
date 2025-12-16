@@ -1,8 +1,11 @@
+import { MemberDTO } from '../../organizations/models/organizations.models';
+
 export class AbsenceDTO {
   constructor(
     public id: number,
     public name: string,
     public type: number,
+    public userId: number,
     public startDate: Date,
     public endDate: Date
   ) {}
@@ -14,6 +17,7 @@ export class Absence {
     public id: number,
     public name: string,
     public type: AbsenceTypeDTO,
+    public member: MemberDTO,
     public startDate: Date,
     public endDate: Date
   ) {}

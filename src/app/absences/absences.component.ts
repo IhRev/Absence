@@ -13,6 +13,9 @@ import { AbsenceFiltersComponent } from './absence-filters/absence-filters.compo
 import { AbsenceFilters } from './models/filters.models';
 import { NgClass } from '@angular/common';
 import { DateHelper } from '../common/helpers/date-helper';
+import { OrganizationsService } from '../organizations/services/organizations.service';
+import { MemberDTO } from '../organizations/models/organizations.models';
+import { AuthService } from '../auth/services/auth.service';
 
 @Component({
   selector: 'absence-list',
@@ -28,7 +31,10 @@ export class AbsenceListComponent implements OnInit {
   #num = 0;
   readonly #absenceService = inject(AbsenceService);
   readonly #absenceTypeService = inject(AbsenceTypeService);
+  readonly #organizationsService = inject(OrganizationsService);
+  readonly #authService = inject(AuthService);
 
+  members = signal<MemberDTO[]>([]);
   message = signal<string | null>(null);
   isFormOpened = signal(false);
   filtersOpened = signal(false);
@@ -38,10 +44,34 @@ export class AbsenceListComponent implements OnInit {
   selectedAbsence = signal<Absence | null>(null);
 
   ngOnInit() {
-    this.#loadAbsences(
-      DateHelper.getStartOfTheCurrentYear(),
-      DateHelper.getEndOfTheCurrentYear()
-    );
+    const organization = this.#organizationsService.selectedOrganization()!;
+    if (organization.isAdmin) {
+      this.isProcessing.set(true);
+      this.#organizationsService.getMembers().subscribe((res) => {
+        if (res.isSuccess) {
+          this.members.set(res.data!);
+          this.isProcessing.set(false);
+          this.#loadAbsences(
+            DateHelper.getStartOfTheCurrentYear(),
+            DateHelper.getEndOfTheCurrentYear()
+          );
+        }
+      });
+    } else {
+      this.members.set([
+        new MemberDTO(
+          this.#authService.userDetails()!.id,
+          this.#authService.userDetails()!.firstName +
+            this.#authService.userDetails()!.lastName,
+          this.#organizationsService.selectedOrganization()!.isAdmin,
+          this.#organizationsService.selectedOrganization()!.isOwner
+        ),
+      ]);
+      this.#loadAbsences(
+        DateHelper.getStartOfTheCurrentYear(),
+        DateHelper.getEndOfTheCurrentYear()
+      );
+    }
   }
 
   create(absence: CreateAbsenceDTO) {
@@ -56,6 +86,9 @@ export class AbsenceListComponent implements OnInit {
             result.data,
             absence.name,
             this.#absenceTypeService.types!.find((t) => t.id === absence.type)!,
+            this.members().find(
+              (m) => m.id === this.#authService.userDetails()!.id
+            )!,
             absence.startDate,
             absence.endDate
           );
@@ -182,6 +215,7 @@ export class AbsenceListComponent implements OnInit {
             a.id,
             a.name,
             this.#absenceTypeService.types!.find((t) => t.id === a.type)!,
+            this.members().find((m) => m.id === a.userId)!,
             a.startDate,
             a.endDate
           )

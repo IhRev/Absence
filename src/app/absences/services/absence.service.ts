@@ -60,9 +60,9 @@ export class AbsenceService {
   ): Observable<DataResult<AbsenceDTO[]>> {
     return this.#client
       .post<AbsenceDTO[]>(
-        `${
-          environment.apiUrl
-        }/organizations/${this.#organizationsService.selectedOrganization()}/absences`,
+        `${environment.apiUrl}/organizations/${
+          this.#organizationsService.selectedOrganization()!.id
+        }/absences`,
         usersIds,
         {
           params: new HttpParams()

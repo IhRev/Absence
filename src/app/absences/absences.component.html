@@ -29,6 +29,7 @@
   <div class="grid-list">
     <div class="grid-header grid-row">
       <span>#</span>
+      <span>Member</span>
       <span>Name</span>
       <span>Type</span>
       <span>Start Date</span>
@@ -38,6 +39,7 @@
     @for (absence of absences(); track $index) {
     <div class="grid-row grid-item-row">
       <span data-label="#">{{ absence.num }}</span>
+      <span data-label="Member">{{ absence.member.fullName }}</span>
       <span data-label="Name">{{ absence.name }}</span>
       <span data-label="Type">{{ absence.type.name }}</span>
       <span data-label="Start Date">{{
@@ -75,5 +77,6 @@
 <app-absence-filters
   (closeModal)="filtersOpened.set(false)"
   (submitModal)="applyFilters($event)"
+  [members]="members()"
 />
 }
