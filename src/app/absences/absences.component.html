@@ -39,7 +39,7 @@
     @for (absence of absences(); track $index) {
     <div class="grid-row grid-item-row">
       <span data-label="#">{{ absence.num }}</span>
-      <span data-label="Member">{{ absence.member.fullName }}</span>
+      <span data-label="Member">{{ absence.member | membername }}</span>
       <span data-label="Name">{{ absence.name }}</span>
       <span data-label="Type">{{ absence.type.name }}</span>
       <span data-label="Start Date">{{

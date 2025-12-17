@@ -16,11 +16,18 @@ import { DateHelper } from '../common/helpers/date-helper';
 import { OrganizationsService } from '../organizations/services/organizations.service';
 import { MemberDTO } from '../organizations/models/organizations.models';
 import { AuthService } from '../auth/services/auth.service';
+import { MemberNameTransformPipe } from '../common/pipes/member-name-transform.pipe';
 
 @Component({
   selector: 'absence-list',
   standalone: true,
-  imports: [DatePipe, AbsenceFormComponent, AbsenceFiltersComponent, NgClass],
+  imports: [
+    DatePipe,
+    AbsenceFormComponent,
+    AbsenceFiltersComponent,
+    NgClass,
+    MemberNameTransformPipe,
+  ],
   templateUrl: './absences.component.html',
   styleUrls: [
     './absences.component.css',

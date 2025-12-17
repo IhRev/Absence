@@ -19,6 +19,7 @@ import { FormErrorComponent } from '../../common/form-error/form-error.component
 import { OrganizationsService } from '../../organizations/services/organizations.service';
 import { MemberDTO } from '../../organizations/models/organizations.models';
 import { DateHelper } from '../../common/helpers/date-helper';
+import { MemberNameTransformPipe } from '../../common/pipes/member-name-transform.pipe';
 
 @Component({
   selector: 'app-absence-filters',
@@ -28,6 +29,7 @@ import { DateHelper } from '../../common/helpers/date-helper';
     ModalFormComponent,
     ReactiveFormsModule,
     FormErrorComponent,
+    MemberNameTransformPipe,
   ],
   templateUrl: './absence-filters.component.html',
   styleUrls: [

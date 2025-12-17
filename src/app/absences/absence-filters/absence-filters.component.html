@@ -17,9 +17,7 @@
       <label for="member">Member</label>
       <select id="member" formControlName="selectedMembers" multiple>
         @for (member of members(); track $index) {
-        <option [ngValue]="member.id">
-          {{ member.fullName }}
-        </option>
+        <option [ngValue]="member.id">{{ member | membername }}</option>
         }
       </select>
       <app-form-error [form]="form" [name]="'endDate'" />

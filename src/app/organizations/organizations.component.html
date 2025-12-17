@@ -109,7 +109,7 @@ organizationService.organizations()!.length === 0) {
             (click)="selectMember(member)"
             [class.active-item]="selectedMember() === member"
           >
-            {{ member.fullName }}
+            {{ member | membername }}
             @if(member.isOwner){
             <span class="owner">owner</span>
             } @if (!member.isOwner && member.isAdmin) {

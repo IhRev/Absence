@@ -14,6 +14,7 @@ import { PasswordConfirmationComponent } from '../common/password-confirmation/p
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { WrappableControlComponent } from '../common/wrappable-control/wrappable-control.component';
 import { ConfirmationComponent } from '../common/confirmation/confirmation.component';
+import { MemberNameTransformPipe } from '../common/pipes/member-name-transform.pipe';
 
 @Component({
   selector: 'app-organizations',
@@ -26,6 +27,7 @@ import { ConfirmationComponent } from '../common/confirmation/confirmation.compo
     WrappableControlComponent,
     NgTemplateOutlet,
     ConfirmationComponent,
+    MemberNameTransformPipe,
   ],
   templateUrl: './organizations.component.html',
   styleUrl: './organizations.component.css',
